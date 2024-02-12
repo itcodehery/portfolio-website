@@ -1,0 +1,11 @@
+@font-face {
+    font-family: "Circular Standard";
+    src: url("../src/fonts/circular-std-medium-500.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  body {
+    padding: 0;
+    margin: 0;
+  }
