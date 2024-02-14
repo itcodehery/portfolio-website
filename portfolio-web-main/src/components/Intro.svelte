@@ -1,12 +1,20 @@
 <script>
+    import { fade } from "svelte/transition";
     import Tag from "./Tag.svelte";
+
+    import { onMount } from 'svelte';
+
+  let isVisible = false;
+
+  onMount(() => {
+    setTimeout(() => {
+      isVisible = true;
+    }, 1000);
+  });
 </script>
 
 <style>
     section {
-        background-image: url("/home-bg.png");
-        background-position: center;
-        background-size: contain;
         background-color: rgba(4, 33, 37, 1);
         background-repeat: no-repeat;
         font-family: 'Circular Standard', sans-serif;
@@ -23,7 +31,11 @@
     }
 
     .globalwrapper {
+        background-image: url("/home-bg.png");
+        background-position: center;
+        background-size: cover;
         margin-top: 100px;
+        padding: 280px;
         align-items: center;
         align-content: center;
         align-self: center;
@@ -64,7 +76,8 @@
 </style>
 
 <section>
-    <div class="globalwrapper">
+    {#if isVisible}
+    <div  class="globalwrapper" transition:fade={{duration:2000}}>
         <div class="text-container">
             <h4>Hello!</h4>
             <h1>I'm Hari Prasad</h1>
@@ -75,4 +88,5 @@
             <Tag name="Musician"/>
         </div>
     </div>
+    {/if}
 </section>

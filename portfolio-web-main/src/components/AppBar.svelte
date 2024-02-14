@@ -1,20 +1,41 @@
 <script lang="ts">
-    function openLink (url:string) {
-        window.open(url, '_blank');
+    function openLink(url: string) {
+        window.open(url, "_blank");
     }
 
-    function scrollToCategory(category:string) {
+    function scrollToCategory(category: string) {
         const categoryElement = document.getElementById(category);
-        if(categoryElement) {
-            categoryElement.scrollIntoView({behavior: "smooth"});
+        if (categoryElement) {
+            categoryElement.scrollIntoView({ behavior: "smooth" });
         }
     }
 </script>
 
+<header class="app-bar">
+    <div class="app-bar_container">
+        <div>
+            <h2 style="font-weight: lighter;">Hari Prasad</h2>
+        </div>
+        <nav class="app-bar__nav">
+            <button
+                class="secondary-but"
+                on:click={() => scrollToCategory("portfolio")}>Portfolio</button
+            >
+            <button
+                class="secondary-but"
+                on:click={() => openLink("https://linktr.ee/itwritshery")}
+                >Linktree</button
+            >
+        </nav>
+        <button class="primary-button">Contact</button>
+    </div>
+</header>
+
 <style>
-    @import '../fontimport.css';
+    /* @import "../fontimport.css"; */
 
     .app-bar {
+        /* hide appbar on scroll */
         position: fixed;
         top: 5%;
         left: 50%;
@@ -25,8 +46,8 @@
         padding: 20px;
         height: 50px;
         width: 98%;
-        color: #DAF4D2;
-        font-family: 'Circular Standard', sans-serif;
+        color: #daf4d2;
+        font-family: "Circular Standard", sans-serif;
         font-weight: lighter;
         justify-content: center;
         align-items: center;
@@ -52,28 +73,28 @@
     .primary-button {
         /* convert bg color #073B42 to rgba */
         background-color: rgba(7, 59, 66, 1);
-        color: #DAF4D2;
+        color: #daf4d2;
         padding: 25px 50px;
         font-size: 14px;
         border: none;
         border-radius: 200px;
-        font-family: 'Circular Standard', sans-serif;
+        font-family: "Circular Standard", sans-serif;
         cursor: pointer;
         transition: ease-in 300ms;
     }
 
     .primary-button:hover {
-        background-color: rgb(5, 42, 47);
+        background-color: rgb(5, 42, 47, 0.3);
     }
 
     .secondary-but {
         background-color: rgba(7, 59, 66, 0.1);
-        color: #DAF4D2;
+        color: #daf4d2;
         padding: 25px 50px;
-        border:none;
+        border: none;
         border-radius: 200px;
         font-size: 14px;
-        font-family: 'Circular Standard', sans-serif;
+        font-family: "Circular Standard", sans-serif;
         border: none;
         border-radius: 200px;
         cursor: pointer;
@@ -81,19 +102,6 @@
     }
 
     .secondary-but:hover {
-        background-color: rgba(7,59,66,0.3);
+        background-color: rgba(7, 59, 66, 0.3);
     }
 </style>
-
-<header class="app-bar">
-    <div class="app-bar_container">
-        <div>
-            <h2 style="font-weight: lighter;">Hari Prasad</h2>
-        </div>
-        <nav class="app-bar__nav">
-            <button class="secondary-but" on:click={() => scrollToCategory("portfolio")}>Portfolio</button>
-            <button class="secondary-but" on:click={() => openLink("https://linktr.ee/itwritshery")}>Linktree</button>
-        </nav>
-        <button class="primary-button">Contact</button>
-    </div>
-</header>

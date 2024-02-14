@@ -1,12 +1,57 @@
 <script>
+    import { onMount } from "svelte";
     import MeCard from "./MeCard.svelte";
+    import { fade, fly } from "svelte/transition";
+
+    let isVisible = false;
+
+    onMount(() => {
+        // get element by id
+        const element = document.getElementById("globalwrap");
+        // when the element is in view, set isVisible to true
+        if (element) {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            isVisible = true;
+                        }
+                    });
+                },
+                {
+                    threshold: 0.5,
+                },
+            );
+            observer.observe(element);
+        }
+    });
 </script>
+
+<section>
+    <div class="global-wrapper" id="globalwrap">
+        {#if isVisible}
+            <div class="leftwrapper" transition:fly={{ duration: 2000 }}>
+                <MeCard />
+            </div>
+        {/if}
+        <div class="rightwrapper">
+            <div class="text-container">
+                <h4>I am a</h4>
+                <h1>Frontend</h1>
+                <h1>Developer and</h1>
+                <h1>Designer</h1>
+            </div>
+        </div>
+    </div>
+</section>
 
 <style>
     section {
-        background-color: #DAF4D2;
+        background-color: #daf4d2;
+        background-image: url("/who-bg.png");
+        background-size: cover;
         background-repeat: no-repeat;
-        font-family: 'Circular Standard', sans-serif;
+        font-family: "Circular Standard", sans-serif;
         color: rgba(4, 33, 37, 1);
         display: flex;
         flex-direction: row;
@@ -26,7 +71,7 @@
         align-self: center;
         text-align: center;
     }
-    
+
     .leftwrapper {
         align-items: center;
         align-content: center;
@@ -35,6 +80,7 @@
         justify-content: center;
         justify-items: center;
         padding: 20px 120px;
+        margin-right: 200px;
     }
 
     .text-container {
@@ -65,19 +111,3 @@
         flex-direction: row;
     }
 </style>
-
-<section>
-    <div class="global-wrapper">
-        <div class="leftwrapper">
-            <MeCard/>
-        </div>
-        <div class="rightwrapper">
-            <div class="text-container">
-                <h4>I am a</h4>
-                <h1>Frontend</h1>
-                <h1>Developer and</h1>
-                <h1>Designer</h1>
-            </div>
-        </div>
-    </div>
-</section>
