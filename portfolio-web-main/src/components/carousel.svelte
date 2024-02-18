@@ -105,6 +105,11 @@
 </section>
 
 <style>
+  @media (max-width: 768px) {
+    section {
+      display: none;
+    }
+  }
   .carouselwrap {
     display: flex;
     flex-direction: column;
@@ -139,6 +144,8 @@
     transition: transform 0.5s ease;
     margin: 20px;
     padding: 0;
+    border: none;
+    border-radius: 10px;
   }
 
   button {

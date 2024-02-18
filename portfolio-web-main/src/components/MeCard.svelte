@@ -24,7 +24,6 @@
         align-content: center;
         justify-content: center;
         justify-items: center;
-        rotate: 4deg;
         transition: ease-in 300ms;
         transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }

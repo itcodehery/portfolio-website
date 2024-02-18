@@ -11,7 +11,7 @@
 
 {#if name == "Designer"}
     <button
-        on:click={() => openLink("/")}
+        on:click={() => scrollTo(0, 800)}
         transition:fade={{ delay: 1000, duration: 1000 }}
     >
         <p>{name}</p>

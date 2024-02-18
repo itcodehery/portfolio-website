@@ -2,53 +2,20 @@
     import { goto } from "$app/navigation";
     import { afterUpdate, onDestroy, onMount } from "svelte";
     import Carousel from "./carousel.svelte";
-
-    let isMobile = false;
-
-    function checkScreenWidth() {
-        isMobile = window.innerWidth < 600;
-    }
-
-    onMount(() => {
-        checkScreenWidth();
-
-        window.addEventListener("resize", checkScreenWidth);
-
-        afterUpdate(() => {
-            checkScreenWidth();
-        });
-
-        onDestroy(() => {
-            window.removeEventListener("resize", checkScreenWidth);
-        });
-    });
 </script>
 
-{#if !isMobile}
-    <section id="portfolio">
-        <div class="global-wrap">
-            <!-- a marquee title -->
-            <div class="text-container">
-                <span>MY DESIGN PORTFOLIO</span>
-                <button on:click={() => goto("/portfolio")}>View All</button>
-            </div>
-            <div class="global-wrapper">
-                <Carousel />
-            </div>
+<section id="portfolio">
+    <div class="global-wrap">
+        <!-- a marquee title -->
+        <div class="text-container">
+            <span>MY DESIGN PORTFOLIO</span>
+            <button on:click={() => goto("/portfolio")}>View All</button>
         </div>
-    </section>
-{:else}
-    <section id="portfolio">
-        <div class="global-wrap">
-            <div class="text-container">
-                <span>MY DESIGN PORTFOLIO</span>
-                <button on:click={() => goto("/portfolio")}
-                    >View my Portfolio</button
-                >
-            </div>
+        <div class="global-wrapper">
+            <Carousel />
         </div>
-    </section>
-{/if}
+    </div>
+</section>
 
 <style>
     section {
@@ -101,6 +68,10 @@
 
         .global-wrap {
             height: 100%;
+        }
+
+        .global-wrapper {
+            display: none;
         }
     }
 
