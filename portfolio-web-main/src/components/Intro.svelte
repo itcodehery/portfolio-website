@@ -1,24 +1,28 @@
 <script>
     import { fade } from "svelte/transition";
     import Tag from "./Tag.svelte";
-
-    import { onMount } from 'svelte';
-
-  let isVisible = false;
-
-  onMount(() => {
-    setTimeout(() => {
-      isVisible = true;
-    }, 1000);
-  });
 </script>
+
+<section>
+    <div class="globalwrapper" transition:fade={{ duration: 2000 }}>
+        <div class="text-container">
+            <h4>Hello!</h4>
+            <h1>I'm Hari Prasad</h1>
+        </div>
+        <div class="tags-container">
+            <Tag name="Designer" />
+            <Tag name="Coder" />
+            <Tag name="Musician" />
+        </div>
+    </div>
+</section>
 
 <style>
     section {
         background-color: rgba(4, 33, 37, 1);
         background-repeat: no-repeat;
-        font-family: 'Circular Standard', sans-serif;
-        color: #DAF4D2;
+        font-family: "Circular Standard", sans-serif;
+        color: #daf4d2;
         display: flex;
         flex-direction: column;
         height: 870px;
@@ -73,20 +77,22 @@
         flex-direction: row;
         gap: 10px;
     }
-</style>
 
-<section>
-    {#if isVisible}
-    <div  class="globalwrapper" transition:fade={{duration:2000}}>
-        <div class="text-container">
-            <h4>Hello!</h4>
-            <h1>I'm Hari Prasad</h1>
-        </div>
-        <div class="tags-container">
-            <Tag name="Designer"/>
-            <Tag name="Coder"/>
-            <Tag name="Musician"/>
-        </div>
-    </div>
-    {/if}
-</section>
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 48px;
+        }
+
+        h4 {
+            font-size: 18px;
+        }
+
+        .tags-container {
+            scale: 0.8;
+        }
+
+        .globalwrapper {
+            background-size: contain;
+        }
+    }
+</style>

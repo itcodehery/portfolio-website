@@ -13,7 +13,7 @@
 
 <footer>
     <div class="footwrap">
-        <button class="pill-wrap" on:click={() => openMail}>
+        <button class="pill-wrap" on:click={openMail}>
             <div class="icon-section">
                 <div class="circl-outer-wrap">
                     <div class="circl-inner-wrap">
@@ -30,7 +30,7 @@
             </div>
         </button>
 
-        <button class="pill-wrap" on:click={() => copyToClipboard}>
+        <button class="pill-wrap" on:click={copyToClipboard}>
             <div class="icon-section">
                 <div class="circl-outer-wrap">
                     <div class="circl-inner-wrap">
@@ -62,6 +62,17 @@
         height: 80px;
         color: #daf4d2;
         font-family: "Circular Standard", sans-serif;
+    }
+
+    @media (max-width: 768px) {
+        footer {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-wrap {
+            display: none;
+        }
     }
     .footwrap {
         border: none;
@@ -101,7 +112,7 @@
         scale: 0.9;
     }
 
-    .pill-wrap:focus {
+    .pill-wrap:active {
         background-color: #052428;
         scale: 0.9;
     }

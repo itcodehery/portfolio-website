@@ -1,30 +1,35 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
+
     function openLink(url: string) {
         window.open(url, "_blank");
     }
 
-    function scrollToCategory(category: string) {
-        const categoryElement = document.getElementById(category);
-        if (categoryElement) {
-            categoryElement.scrollIntoView({ behavior: "smooth" });
-        }
+    function navigateTo(link: string) {
+        goto(link);
     }
 </script>
 
 <header class="app-bar">
     <div class="app-bar_container">
-        <div>
-            <h2 style="font-weight: lighter;">Hari Prasad</h2>
+        <div class="home-wrap">
+            <button class="home-button" on:click={() => navigateTo("/")}
+                ><h2
+                    style="font-weight: lighter; letter-spacing: -0.2px; display: flex;"
+                >
+                    Hari Prasad
+                </h2></button
+            >
         </div>
         <nav class="app-bar__nav">
             <button
                 class="secondary-but"
-                on:click={() => scrollToCategory("portfolio")}>Portfolio</button
+                on:click={() => openLink("https://linktr.ee/itwritshery")}
+                >Linktree</button
             >
             <button
                 class="secondary-but"
-                on:click={() => openLink("https://linktr.ee/itwritshery")}
-                >Linktree</button
+                on:click={() => navigateTo("/portfolio")}>Portfolio</button
             >
         </nav>
         <button class="primary-button">Contact</button>
@@ -61,8 +66,42 @@
         height: 50px;
     }
 
+    @media (max-width: 768px) {
+        .app-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: none;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 50px;
+            padding: 10px;
+        }
+
+        .app-bar_container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .primary-button {
+            padding: 4px;
+        }
+
+        .secondary-but {
+            padding: 4px 4px;
+        }
+
+        .home-wrap {
+            display: none;
+        }
+    }
+
     h2 {
         padding-left: 10px;
+        font-family: "Circular Standard", sans-serif;
     }
 
     .app-bar__nav {
@@ -79,12 +118,17 @@
         border: none;
         border-radius: 200px;
         font-family: "Circular Standard", sans-serif;
+        font-weight: lighter;
         cursor: pointer;
         transition: ease-in 300ms;
     }
 
     .primary-button:hover {
         background-color: rgb(5, 42, 47, 0.3);
+    }
+
+    .primary-button:active {
+        scale: 0.9;
     }
 
     .secondary-but {
@@ -95,6 +139,7 @@
         border-radius: 200px;
         font-size: 14px;
         font-family: "Circular Standard", sans-serif;
+        font-weight: lighter;
         border: none;
         border-radius: 200px;
         cursor: pointer;
@@ -103,5 +148,18 @@
 
     .secondary-but:hover {
         background-color: rgba(7, 59, 66, 0.3);
+    }
+
+    .home-button {
+        background-color: transparent;
+        color: var(--lime-light);
+        border: none;
+        border-radius: 200px;
+        font-size: 14px;
+        font-family: "Circular Standard", sans-serif;
+        border: none;
+        border-radius: 200px;
+        cursor: pointer;
+        transition: ease-in 300ms;
     }
 </style>

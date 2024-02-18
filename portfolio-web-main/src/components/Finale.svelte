@@ -20,6 +20,21 @@
         height: 98%;
     }
 
+    @media (max-width: 768px) {
+        .finale {
+            display: flex;
+            height: 60px;
+        }
+
+        h2 {
+            display: none;
+        }
+
+        p {
+            display: none;
+        }
+    }
+
     section {
         background-color: var(--lime-light);
         color: var(--cyan-dark);

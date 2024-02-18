@@ -29,6 +29,15 @@
         transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
+    @media (max-width: 768px) {
+        .card-wrapper {
+            position: relative;
+            top: 0;
+            z-index: 0;
+            scale: 0.9;
+        }
+    }
+
     .card-wrapper:hover {
         rotate: -4deg;
     }

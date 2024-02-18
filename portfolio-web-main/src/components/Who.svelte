@@ -1,14 +1,12 @@
 <script>
     import { onMount } from "svelte";
     import MeCard from "./MeCard.svelte";
-    import { fade, fly } from "svelte/transition";
+    import { fly } from "svelte/transition";
 
     let isVisible = false;
 
     onMount(() => {
-        // get element by id
         const element = document.getElementById("globalwrap");
-        // when the element is in view, set isVisible to true
         if (element) {
             const observer = new IntersectionObserver(
                 (entries) => {
@@ -109,5 +107,34 @@
     .global-wrapper {
         display: flex;
         flex-direction: row;
+    }
+
+    @media (max-width: 768px) {
+        section {
+            background-size: auto;
+        }
+        .global-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .leftwrapper {
+            margin-right: 0px;
+            padding: 20px 20px;
+        }
+
+        h1 {
+            font-size: 48px;
+            letter-spacing: -3px;
+        }
+
+        h4 {
+            font-size: 24px;
+            letter-spacing: -1px;
+        }
+
+        .text-container {
+            line-height: 34px;
+        }
     }
 </style>

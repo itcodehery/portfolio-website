@@ -1,24 +1,54 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
+    import { afterUpdate, onDestroy, onMount } from "svelte";
     import Carousel from "./carousel.svelte";
 
-    function handleClick() {
-        window.open(
-            "https://www.figma.com/file/6lUhI6edjVVi2N4mEIq9wu/All-Concept-Finals?type=design&node-id=0%3A1&mode=design&t=JjXUthBvDO1YWEYY-1",
-            "_blank",
-        );
+    let isMobile = false;
+
+    function checkScreenWidth() {
+        isMobile = window.innerWidth < 600;
     }
+
+    onMount(() => {
+        checkScreenWidth();
+
+        window.addEventListener("resize", checkScreenWidth);
+
+        afterUpdate(() => {
+            checkScreenWidth();
+        });
+
+        onDestroy(() => {
+            window.removeEventListener("resize", checkScreenWidth);
+        });
+    });
 </script>
 
-<section id="portfolio">
-    <!-- a marquee title -->
-    <div class="text-container">
-        <span>MY DESIGN PORTFOLIO</span>
-        <button on:click={() => handleClick()}>View in Figma</button>
-    </div>
-    <div class="global-wrapper">
-        <Carousel />
-    </div>
-</section>
+{#if !isMobile}
+    <section id="portfolio">
+        <div class="global-wrap">
+            <!-- a marquee title -->
+            <div class="text-container">
+                <span>MY DESIGN PORTFOLIO</span>
+                <button on:click={() => goto("/portfolio")}>View All</button>
+            </div>
+            <div class="global-wrapper">
+                <Carousel />
+            </div>
+        </div>
+    </section>
+{:else}
+    <section id="portfolio">
+        <div class="global-wrap">
+            <div class="text-container">
+                <span>MY DESIGN PORTFOLIO</span>
+                <button on:click={() => goto("/portfolio")}
+                    >View my Portfolio</button
+                >
+            </div>
+        </div>
+    </section>
+{/if}
 
 <style>
     section {
@@ -54,6 +84,24 @@
         letter-spacing: 10px;
         overflow: hidden;
         white-space: no-wrap;
+    }
+
+    @media (max-width: 768px) {
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            letter-spacing: 5px;
+        }
+
+        span {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .global-wrap {
+            height: 100%;
+        }
     }
 
     button {

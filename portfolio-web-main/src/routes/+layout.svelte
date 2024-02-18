@@ -1,20 +1,17 @@
 <script lang="ts">
     import AppBar from "../components/AppBar.svelte";
     import FooterContact from "../components/FooterContact.svelte";
-
-
 </script>
 
-<style>
-
-</style>
-
 <header>
-    <AppBar/>
+    <AppBar />
 </header>
 
-<slot/>
+<slot />
 
 <footer>
-    <FooterContact/>
+    <FooterContact />
 </footer>
+
+<style>
+</style>

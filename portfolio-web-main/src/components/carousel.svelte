@@ -3,7 +3,6 @@
   import Icon from "@iconify/svelte";
 
   let isDetailsVisible = false;
-  let currentDetails = "";
 
   let images = [
     {
@@ -27,13 +26,13 @@
       details:
         "A design of a roadmap app. The goal was to make the app more user-friendly and easy to use.",
     },
-    {
-      url: "/carousel/twitch.png",
-      alt: "twitch",
-      name: "Twitch Redesign",
-      details:
-        "A redesign of the Twitch website. The goal was to redesign on an inspiration more than practicality.",
-    },
+    // {
+    //   url: "/carousel/twitch.png",
+    //   alt: "twitch",
+    //   name: "Twitch Redesign",
+    //   details:
+    //     "A redesign of the Twitch website. The goal was to redesign on an inspiration more than practicality.",
+    // },
     {
       url: "/carousel/whatsapp.png",
       alt: "whatsapp",
@@ -130,7 +129,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    height: 300px;
+    height: 260px;
     overflow: hidden;
   }
 
