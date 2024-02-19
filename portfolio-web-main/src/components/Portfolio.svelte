@@ -1,7 +1,15 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { afterUpdate, onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
     import Carousel from "./carousel.svelte";
+
+    let isMobile = false;
+
+    onMount(() => {
+        if (window.innerWidth < 768) {
+            isMobile = true;
+        }
+    });
 </script>
 
 <section id="portfolio">
@@ -9,7 +17,9 @@
         <!-- a marquee title -->
         <div class="text-container">
             <span>MY DESIGN PORTFOLIO</span>
-            <button on:click={() => goto("/portfolio")}>View All</button>
+            <button on:click={() => goto("/portfolio")}
+                >{isMobile ? "View Portfolio" : "View All"}</button
+            >
         </div>
         <div class="global-wrapper">
             <Carousel />
@@ -51,28 +61,7 @@
         letter-spacing: 10px;
         overflow: hidden;
         white-space: no-wrap;
-    }
-
-    @media (max-width: 768px) {
-        .text-container {
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            letter-spacing: 5px;
-        }
-
-        span {
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
-
-        .global-wrap {
-            height: 100%;
-        }
-
-        .global-wrapper {
-            display: none;
-        }
+        text-align: center;
     }
 
     button {
@@ -82,7 +71,6 @@
         background-color: var(--cyan-dark);
         color: var(--lime-light);
         padding: 2px 25px;
-        margin-left: 20px;
         border: none;
         gap: 14px;
         align-items: center;
@@ -110,5 +98,49 @@
     .global-wrapper {
         display: flex;
         flex-direction: row;
+    }
+
+    .global-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        justify-items: center;
+        justify-self: center;
+        align-self: center;
+        align-content: center;
+    }
+
+    @media (max-width: 768px) {
+        section {
+            height: 500px;
+            flex-direction: column;
+        }
+
+        .text-container {
+            height: 160px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-items: center;
+            justify-self: center;
+            align-self: center;
+            align-content: center;
+            text-align: center;
+        }
+
+        span {
+            font-size: 36px;
+            align-self: center;
+            align-items: center;
+            justify-content: center;
+            justify-items: center;
+            justify-self: center;
+            margin-bottom: 20px;
+        }
+
+        .global-wrapper {
+            display: none;
+        }
     }
 </style>

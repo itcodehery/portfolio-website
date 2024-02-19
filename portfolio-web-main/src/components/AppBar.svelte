@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import Icon from "@iconify/svelte";
 
     function openLink(url: string) {
         window.open(url, "_blank");
@@ -22,14 +23,24 @@
             >
         </div>
         <nav class="app-bar__nav">
-            <button
-                class="secondary-but"
-                on:click={() => openLink("https://linktr.ee/itwritshery")}
-                >Linktree</button
+            <button class="secondary-but" on:click={() => navigateTo("/links")}
+                ><div class="icon_id">
+                    <Icon icon="material-symbols:link" width="24" />
+                </div>
+                <p class="button_text">Links</p></button
             >
+            <div class="name_container">
+                <button class="home-button" on:click={() => navigateTo("/")}
+                    >Hari Prasad</button
+                >
+            </div>
             <button
                 class="secondary-but"
-                on:click={() => navigateTo("/portfolio")}>Portfolio</button
+                on:click={() => navigateTo("/portfolio")}
+                ><div class="icon_id">
+                    <Icon icon="material-symbols:design-services" width="24" />
+                </div>
+                <p class="button_text">Portfolio</p></button
             >
         </nav>
         <button class="primary-button">Contact</button>
@@ -66,47 +77,22 @@
         height: 50px;
     }
 
-    @media (max-width: 768px) {
-        .app-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            transform: none;
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            height: 50px;
-            padding: 10px;
-        }
-
-        .app-bar_container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .primary-button {
-            padding: 4px;
-        }
-
-        .secondary-but {
-            padding: 4px 4px;
-        }
-
-        .home-wrap {
-            display: none;
-        }
+    .name_container {
+        font-weight: lighter;
+        letter-spacing: -0.2px;
+        display: none;
     }
 
-    h2 {
-        padding-left: 10px;
-        font-family: "Circular Standard", sans-serif;
+    .icon_id {
+        display: none;
+        padding: 0;
+        margin: 0;
     }
 
-    .app-bar__nav {
+    .button_text {
         display: flex;
-        gap: 1rem;
+        padding: 0;
+        margin: 0;
     }
 
     .primary-button {
@@ -135,19 +121,95 @@
         background-color: rgba(7, 59, 66, 0.1);
         color: #daf4d2;
         padding: 25px 50px;
+        font-size: 14px;
         border: none;
         border-radius: 200px;
-        font-size: 14px;
         font-family: "Circular Standard", sans-serif;
         font-weight: lighter;
-        border: none;
-        border-radius: 200px;
         cursor: pointer;
         transition: ease-in 300ms;
     }
 
     .secondary-but:hover {
         background-color: rgba(7, 59, 66, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .app-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: none;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 50px;
+            padding: 10px;
+        }
+
+        .app-bar_container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .primary-button {
+            display: none;
+            padding: 4px 4px;
+            margin: 4px;
+        }
+
+        .primary-button:active {
+            scale: 0.95;
+        }
+
+        .secondary-but {
+            padding: 20px 40px;
+            margin: 4px;
+        }
+
+        .secondary-but:active {
+            scale: 0.9;
+        }
+
+        .home-wrap {
+            display: none;
+        }
+
+        .app-bar__nav {
+            display: none;
+        }
+
+        .name_container {
+            display: flex;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .icon_id {
+            display: flex;
+            padding: 0;
+            margin: 0;
+        }
+
+        .button_text {
+            display: none;
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    h2 {
+        padding-left: 10px;
+        font-family: "Circular Standard", sans-serif;
+    }
+
+    .app-bar__nav {
+        display: flex;
+        gap: 1rem;
     }
 
     .home-button {
