@@ -68,6 +68,8 @@
         align-content: center;
         align-self: center;
         text-align: center;
+        transition: all 0.5s ease-in-out;
+        transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .leftwrapper {

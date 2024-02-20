@@ -93,6 +93,9 @@
         padding-bottom: 280px;
         background-color: rgba(4, 33, 37, 1);
         background-image: url("/home-bg.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
         height: 100vh;
     }
 
@@ -119,7 +122,7 @@
         justify-content: center;
         margin: 10px;
         padding: 20px;
-        border: none;
+        border: 2px solid #daf4d210;
         border-radius: 10px;
         background-color: #052b30;
     }
@@ -210,6 +213,11 @@
 
         .main-button:hover {
             scale: 0.98;
+        }
+
+        .main-button:active {
+            background-color: #cde5c6;
+            scale: 0.9;
         }
     }
 </style>

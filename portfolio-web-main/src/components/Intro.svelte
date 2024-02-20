@@ -4,7 +4,7 @@
 </script>
 
 <section>
-    <div class="globalwrapper" transition:fade={{ duration: 2000 }}>
+    <div class="globalwrapper" in:fade={{ duration: 2000 }}>
         <div class="text-container">
             <h4>Hello!</h4>
             <h1>I'm Hari Prasad</h1>

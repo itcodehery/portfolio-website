@@ -2,10 +2,9 @@ body {
     background-color: rgba(4, 33, 37, 1);
     display: flex;
     flex-direction: column;
-    background: fixed;
     color: var(--lime-light);
     margin: 0;
-    padding: 120px 60px 30px 30px;
+    padding: 120px 60px;
     font-family: "Circular Standard";
 }
 
@@ -39,7 +38,8 @@ h1 {
 
 @media (max-width: 768px) {
     .gridview {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
     }
 }
 
@@ -76,7 +76,7 @@ h1 {
     align-self: center;
     align-content: center;
     background-color: var(--cyan-dark);
-    border: none;
+    border: 2px solid #daf4d210;
     border-radius: 20px;
     padding: 20px;
     margin: 20px;
@@ -99,6 +99,10 @@ h1 {
 
 .listItem img:hover {
     scale: 0.98;
+}
+
+.listItem img:active {
+    scale: 0.9;
 }
 
 h3 {
