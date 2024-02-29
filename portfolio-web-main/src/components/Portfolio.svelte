@@ -101,10 +101,10 @@
         margin-top: 5px;
     }
 
-    .global-wrapper {
+    /* .global-wrapper {
         display: flex;
         flex-direction: row;
-    }
+    } */
 
     .global-wrap {
         display: flex;

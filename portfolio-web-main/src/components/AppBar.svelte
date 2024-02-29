@@ -88,6 +88,7 @@
         justify-content: center;
         align-items: center;
         align-self: center;
+        z-index: 3;
     }
 
     .app-bar_container {

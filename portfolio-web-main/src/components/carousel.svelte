@@ -122,6 +122,7 @@
     margin: 10px;
     height: 400px;
     width: 100%;
+    scale: 0.95;
   }
 
   .carouselinnerwrap {
