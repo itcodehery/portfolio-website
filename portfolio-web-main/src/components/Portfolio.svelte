@@ -90,6 +90,12 @@
         background-color: #042429;
     }
 
+    button:active {
+        scale: 0.9;
+        border: 1px solid var(--lime-light);
+        background-color: #042429;
+    }
+
     span {
         font-size: 48px;
         margin-top: 5px;

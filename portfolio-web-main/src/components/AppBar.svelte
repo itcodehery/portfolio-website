@@ -1,14 +1,23 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import Icon from "@iconify/svelte";
-
-    function openLink(url: string) {
-        window.open(url, "_blank");
-    }
+    import Alert from "./Alert.svelte";
 
     function navigateTo(link: string) {
         goto(link);
     }
+
+    let showAlert = false;
+    let alertMessage = "";
+
+    const showAlertMessage = (message: string) => {
+        // for duration of 3 seconds, show the alert
+        alertMessage = message;
+        showAlert = true;
+        setTimeout(() => {
+            showAlert = false;
+        }, 5000);
+    };
 </script>
 
 <header class="app-bar">
@@ -43,8 +52,19 @@
                 <p class="button_text">Portfolio</p></button
             >
         </nav>
-        <button class="primary-button">Contact</button>
+        <button
+            class="primary-button"
+            on:click={() =>
+                showAlertMessage(
+                    "Email: haririo321@gmail.com \nPhone: +91 90080 15121",
+                )}>Contact</button
+        >
     </div>
+    {#if showAlert}
+        <div class="alert-container">
+            <Alert message={alertMessage} />
+        </div>
+    {/if}
 </header>
 
 <style>
@@ -132,6 +152,18 @@
 
     .secondary-but:hover {
         background-color: rgba(7, 59, 66, 0.3);
+    }
+
+    .alert-container {
+        position: fixed;
+        top: 8;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: ease-in 300ms;
     }
 
     @media (max-width: 768px) {

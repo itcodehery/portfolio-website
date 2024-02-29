@@ -53,6 +53,9 @@
         <p>I do a lotta stuff.</p>
         <div class="category">
             <h3>Career and Code</h3>
+            <!-- <p style="font-weight: 100; font-size:medium; text-align:center;">
+                Each of these links have their own descriptions of me
+            </p> -->
             {#each links.filter((link) => link.category === "Career and Code") as link}
                 <button
                     class="main-button"
@@ -171,7 +174,7 @@
 
     @media (max-width: 768px) {
         .main-button {
-            min-width: 300px;
+            min-width: 320px;
         }
 
         h1 {
