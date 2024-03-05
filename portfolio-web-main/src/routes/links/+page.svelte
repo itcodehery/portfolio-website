@@ -1,5 +1,5 @@
 <script>
-    import { goto } from "$app/navigation";
+    import Icon from "@iconify/svelte";
 
     //create links for all the buttons in the code below
     const links = [
@@ -17,6 +17,16 @@
             name: "Codecademy",
             url: "https://www.codecademy.com/profiles/itwritshery",
             category: "Career and Code",
+        },
+        {
+            name: "Codewars",
+            url: "https://www.codewars.com/users/itcodehery",
+            category: "Career and Code",
+        },
+        {
+            name: "Linktree",
+            url: "https://linktr.ee/itwritshery",
+            category: "What's these?",
         },
         {
             name: "Spotify Artist Profile",
@@ -50,6 +60,7 @@
     <div class="global-wrapper">
         <img src="/me.jpg" alt="me" width="100" height="100" />
         <h1>My Links</h1>
+        <Icon icon="material-symbols:link" width="24" />
         <p>I do a lotta stuff.</p>
         <div class="category">
             <h3>Career and Code</h3>
@@ -81,6 +92,7 @@
                 >
             {/each}
         </div>
+        <div class="gap" />
     </div>
 </main>
 
@@ -99,7 +111,7 @@
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
-        height: 100vh;
+        height: 120vh;
     }
 
     .global-wrapper {
@@ -170,6 +182,10 @@
 
     .main-button:active {
         background-color: #cde5c6;
+    }
+
+    .gap {
+        height: 90px;
     }
 
     @media (max-width: 768px) {

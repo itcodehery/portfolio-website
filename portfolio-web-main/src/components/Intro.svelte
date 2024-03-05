@@ -7,7 +7,7 @@
     <div class="globalwrapper" in:fade={{ duration: 2000 }}>
         <div class="text-container">
             <h4>Hello!</h4>
-            <h1>I'm Hari Prasad</h1>
+            <span class="typing-text"><h1>I'm Hari Prasad</h1></span>
         </div>
         <div class="tags-container">
             <Tag name="Designer" />

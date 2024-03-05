@@ -73,9 +73,9 @@
     .app-bar {
         /* hide appbar on scroll */
         position: fixed;
-        top: 5%;
+        /* top: 5%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%); */
         background-color: rgba(4, 33, 37, 0.5);
         backdrop-filter: blur(7px);
         -webkit-backdrop-filter: blur(7px);

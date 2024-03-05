@@ -62,6 +62,7 @@
         height: 80px;
         color: #daf4d2;
         font-family: "Circular Standard", sans-serif;
+        z-index: 3;
     }
 
     @media (max-width: 768px) {
