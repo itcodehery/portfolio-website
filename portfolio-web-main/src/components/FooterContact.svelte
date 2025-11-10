@@ -2,7 +2,7 @@
     import Icon from "@iconify/svelte";
 
     function openMail() {
-        window.open("mailto:haririo321@gmail.com");
+        window.open("mailto:hariprasadbk@proton.me");
     }
 
     function copyToClipboard() {
@@ -26,7 +26,7 @@
             </div>
             <div class="text-wrap">
                 <p style="font-size: 12px;">Email</p>
-                <p>haririo321@gmail.com</p>
+                <p>hariprasadbk@proton.me</p>
             </div>
         </button>
 
@@ -60,8 +60,7 @@
         justify-content: space-around;
         align-items: center;
         height: 80px;
-        color: #daf4d2;
-        font-family: "Circular Standard", sans-serif;
+font-family: "DM Sans", sans-serif;
         z-index: 3;
     }
 

@@ -1,41 +1,46 @@
-<script>
-    import { onMount } from "svelte";
-    import MeCard from "./MeCard.svelte";
+<script lang="ts">
+    import FlippableCard from "./FlippableCard.svelte";
     import { fly } from "svelte/transition";
 
-    let isVisible = false;
+    let isVisible = $state(false);
+    let element: HTMLElement | null = $state(null);
 
-    onMount(() => {
-        const element = document.getElementById("globalwrap");
-        if (element) {
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            isVisible = true;
+    $effect(() => {
+        if (!element) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        isVisible = true;
+                        if (element) {
+                            observer.unobserve(element);
                         }
-                    });
-                },
-                {
-                    threshold: 0.5,
-                },
-            );
-            observer.observe(element);
-        }
+                    }
+                });
+            },
+            {
+                threshold: 0.5,
+            }
+        );
+
+        observer.observe(element);
+
+        return () => observer.disconnect();
     });
 </script>
 
 <section>
-    <div class="global-wrapper" id="globalwrap">
+    <div class="global-wrapper" bind:this={element}>
         {#if isVisible}
             <div class="leftwrapper" transition:fly={{ duration: 2000 }}>
-                <MeCard />
+                <FlippableCard />
             </div>
         {/if}
         <div class="rightwrapper">
             <div class="text-container">
                 <h4>I am a</h4>
-                <h1>Frontend</h1>
+                <h1>Full Stack App</h1>
                 <h1>Developer and</h1>
                 <h1>Designer</h1>
             </div>
@@ -49,7 +54,7 @@
         background-image: url("/who-bg.png");
         background-size: cover;
         background-repeat: no-repeat;
-        font-family: "Circular Standard", sans-serif;
+        font-family: "DM Sans", sans-serif;
         color: rgba(4, 33, 37, 1);
         display: flex;
         flex-direction: row;
@@ -92,8 +97,8 @@
 
     h1 {
         font-size: 72px;
-        font-weight: lighter;
-        letter-spacing: -5px;
+        font-weight: 500;
+        letter-spacing: -2px;
         margin: 0px;
         padding-bottom: 10px;
     }
@@ -102,8 +107,7 @@
         margin: 0px;
         font-size: 24px;
         padding-bottom: 10px;
-        font-weight: lighter;
-        letter-spacing: -2px;
+        font-weight: 400;
     }
 
     .global-wrapper {

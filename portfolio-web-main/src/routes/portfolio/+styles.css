@@ -5,13 +5,13 @@ body {
     color: var(--lime-light);
     margin: 0;
     padding: 120px 60px;
-    font-family: "Circular Standard";
+    font-family: "DM Sans", sans-serif;
 }
 
 h1 {
     margin: 0;
     padding: 0px 0px;
-    font-weight: lighter;
+    font-weight: 400;
     font-size: 48px;
     letter-spacing: -1px;
 }
@@ -109,14 +109,14 @@ h3 {
     margin: 5px;
     font-size: 26px;
     padding: 10px 0px;
-    font-weight: lighter;
+    font-weight: 500;
     letter-spacing: -0.2px;
 }
 
 button {
     min-height: 44px;
     min-width: 80px;
-    font-family: "Circular Standard", sans-serif;
+    font-family: "DM Sans", sans-serif;
     background-color: var(--cyan-dark);
     color: var(--lime-light);
     padding: 2px 25px;
@@ -148,5 +148,5 @@ button:active {
 p {
     margin: 0;
     padding: 10px 0px;
-    font-weight: lighter;
+    font-weight: 400;
 }

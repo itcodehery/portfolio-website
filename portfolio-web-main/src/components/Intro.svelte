@@ -1,6 +1,6 @@
 <script>
-    import { fade } from "svelte/transition";
     import Tag from "./Tag.svelte";
+    import { fade } from "svelte/transition";
 </script>
 
 <section>
@@ -24,7 +24,7 @@
         background-image: url("/home-bg.png");
         background-position: center;
         background-size: contain;
-        font-family: "Circular Standard", sans-serif;
+        font-family: "DM Sans", sans-serif;
         color: #daf4d2;
         display: flex;
         flex-direction: column;
@@ -55,8 +55,7 @@
 
     h1 {
         font-size: 72px;
-        font-weight: lighter;
-        letter-spacing: -2px;
+        font-weight: 400;
         margin: 0px;
         padding-bottom: 10px;
     }
@@ -65,7 +64,7 @@
         margin: 0px;
         font-size: 24px;
         padding-bottom: 10px;
-        font-weight: lighter;
+        font-weight: 400;
     }
 
     .tags-container {

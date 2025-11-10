@@ -1,83 +1,36 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
 
-  // Hardcoded images data
-  let images = [
-    {
-      url: "/carousel/blogger.png",
-      alt: "blogger",
-      name: "Blogger Redesign",
-      details: "A redesign of the Blogger website, following Google's Material Design 3 Language.",
-    },
-    {
-      url: "/carousel/deepstash.png",
-      alt: "deepstash",
-      name: "Deepstash Redesign",
-      details: "A redesign of the Deepstash app to be more eye-catching and simple.",
-    },
-    {
-      url: "/carousel/roadmap.png",
-      alt: "roadmap",
-      name: "Roadmap App Design",
-      details: "A design of a roadmap app, with easy to access features and a modern look.",
-    },
-    {
-      url: "/carousel/whatsapp.png",
-      alt: "whatsapp",
-      name: "Whatsapp Redesign",
-      details: "A redesign of the Whatsapp app, with a more modern look and a better user experience.",
-    },
-    {
-      url: "/carousel/youtube.png",
-      alt: "youtube",
-      name: "YouTube Redesign",
-      details: "A redesign of the YouTube website, inspired by Apple's Cupertino Design System.",
-    },
-  ];
+  let { projects }: { projects: any[] } = $props();
 
   let currentIndex = $state(0);
-  let isHovering = $state(false);
-  let interval: any;
 
   const goToIndex = (index: number) => {
     currentIndex = index;
   };
 
-  const nextImage = () => {
-    currentIndex = (currentIndex + 1) % images.length;
+  const nextProject = () => {
+    currentIndex = (currentIndex + 1) % projects.length;
   };
 
-  const prevImage = () => {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
+  const prevProject = () => {
+    currentIndex = (currentIndex - 1 + projects.length) % projects.length;
   };
 
-  // Lifecycle management for the interval
-  $effect(() => {
-    if (isHovering) {
-      clearInterval(interval);
-    } else {
-      interval = setInterval(nextImage, 4000);
-    }
-    // Cleanup function
-    return () => {
-      clearInterval(interval);
-    };
-  });
+  function openLink(url: string) {
+    window.open(url, "_blank");
+  }
 </script>
 
-<div 
-  class="carousel-container"
-  onmouseenter={() => isHovering = true}
-  onmouseleave={() => isHovering = false}
->
+<div class="carousel-container">
   <div class="carousel-main-wrapper">
-    <button onclick={prevImage} aria-label="Previous Project" class="nav-button left">
+    <button onclick={prevProject} aria-label="Previous Project" class="nav-button left">
       <Icon icon="material-symbols:chevron-left" style="color: #DAF4D2; scale: 2;" />
     </button>
 
     <div class="carousel">
-      <div class="image-wrapper">
-        {#each images as image, index}
+      <div class="project-card-wrapper">
+        {#each projects as project, index}
           <div
             class="carousel-item"
             style:transform={`
@@ -87,30 +40,33 @@
               rotateY(${(index - currentIndex) * -45}deg)
             `}
             style:opacity={index === currentIndex ? 1 : 0.3}
-            style:z-index={images.length - Math.abs(index - currentIndex)}
+            style:z-index={projects.length - Math.abs(index - currentIndex)}
             onclick={() => goToIndex(index)}
             role="button"
             tabindex="0"
-            aria-label={`View project ${image.name}`}
+            aria-label={`View project ${project.name}`}
           >
-            <img src={image.url} alt={image.alt} />
+            <div class="project-card-content" onclick={() => openLink(project.url)}>
+              <h3>{project.name}</h3>
+              <p>{project.description}</p>
+            </div>
           </div>
         {/each}
       </div>
     </div>
 
-    <button onclick={nextImage} aria-label="Next Project" class="nav-button right">
+    <button onclick={nextProject} aria-label="Next Project" class="nav-button right">
       <Icon icon="material-symbols:chevron-right" style="color: #DAF4D2; scale: 2;" />
     </button>
   </div>
 
   <div class="details-container">
     <Icon icon="material-symbols:info-outline" width="20px" />
-    <p>{images[currentIndex].details}</p>
+    <p>{projects[currentIndex].description}</p>
   </div>
 
   <div class="dots-container">
-    {#each images as _, index}
+    {#each projects as _, index}
       <button
         class="dot"
         class:active={index === currentIndex}
@@ -137,18 +93,18 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    position: relative;
+    position: relative; /* For absolute positioning of buttons */
   }
 
   .carousel {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 300px; /* Adjust height for text content */
     perspective: 1000px;
     overflow: hidden;
   }
 
-  .image-wrapper {
+  .project-card-wrapper {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -164,20 +120,37 @@
     bottom: 0;
     margin: auto;
     width: 50%;
-    max-width: 400px;
+    max-width: 400px; /* Adjust max-width for text content */
     height: auto;
+    min-height: 200px; /* Ensure enough height for content */
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
     cursor: pointer;
+    background-color: rgba(7, 59, 66, 0.8); /* Card background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .carousel-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  .project-card-content {
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--lime-light);
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #daf4d2a0;
   }
 
   .details-container {
@@ -231,7 +204,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(7, 59, 66, 0.7);
+    background-color: rgba(7, 59, 66, 0.7); /* Darker background */
     border: none;
     border-radius: 50%;
     width: 50px;
@@ -240,7 +213,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 10;
+    z-index: 10; /* Ensure buttons are above carousel items */
     transition: background-color 0.3s ease;
   }
 
@@ -249,16 +222,34 @@
   }
 
   .nav-button.left {
-    left: 10%;
+    left: 10%; /* Adjust positioning as needed */
   }
 
   .nav-button.right {
-    right: 10%;
+    right: 10%; /* Adjust positioning as needed */
   }
 
   @media (max-width: 768px) {
     .carousel-container {
-      display: none; /* Hiding on mobile as per original design */
+      /* Adjust for mobile if needed, or keep hidden as per original design */
+      padding: 1rem 0;
+    }
+    .carousel-item {
+      width: 80%; /* Wider cards on mobile */
+      max-width: none;
+    }
+    h3 {
+      font-size: 1.2rem;
+    }
+    p {
+      font-size: 0.8rem;
+    }
+    .nav-button.left {
+      left: 2%; /* Adjust positioning for smaller screens */
+    }
+
+    .nav-button.right {
+      right: 2%; /* Adjust positioning for smaller screens */
     }
   }
 </style>

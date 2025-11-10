@@ -15,9 +15,10 @@
         align-items: center;
         justify-content: space-between;
         gap: 20px;
-        font-family: "Circular Standard", sans-serif;
+        font-family: "DM Sans", sans-serif;
         padding: 20px;
         height: 98%;
+        border-top: var(--cyan-dark) 10px;
     }
 
     @media (max-width: 768px) {

@@ -16,7 +16,7 @@
     <div class="global-wrap">
         <!-- a marquee title -->
         <div class="text-container">
-            <span>MY DESIGN PORTFOLIO</span>
+            <span>My Design Portfolio</span>
             <button on:click={() => goto("/portfolio")}
                 >{isMobile ? "View Portfolio" : "View All"}</button
             >
@@ -32,8 +32,7 @@
         background-image: url("/portfolio-bg.png");
         background-size: cover;
         background-color: rgba(4, 33, 37, 1);
-        background-repeat: no-repeat;
-        font-family: "Circular Standard", sans-serif;
+        font-family: "DM Sans", sans-serif;
         color: #daf4d2;
         display: flex;
         flex-direction: column;
@@ -58,7 +57,7 @@
         height: 40px;
         width: 100%;
         padding: 20px;
-        letter-spacing: 10px;
+        letter-spacing: -1px;
         overflow: hidden;
         white-space: no-wrap;
         text-align: center;

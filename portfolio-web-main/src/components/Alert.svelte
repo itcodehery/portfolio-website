@@ -1,10 +1,7 @@
 <script>
     import Icon from "@iconify/svelte";
 
-    /**
-     * @type {any}
-     */
-    export let message;
+    let { message } = $props();
 </script>
 
 <div class="alert" id="alert">

@@ -7,8 +7,8 @@
         goto(link);
     }
 
-    let showAlert = false;
-    let alertMessage = "";
+    let showAlert = $state(false);
+    let alertMessage = $state("");
 
     const showAlertMessage = (message: string) => {
         // for duration of 3 seconds, show the alert
@@ -25,7 +25,7 @@
         <div class="home-wrap">
             <button class="home-button" on:click={() => navigateTo("/")}
                 ><h2
-                    style="font-weight: lighter; letter-spacing: -0.2px; display: flex;"
+                    style="font-weight: 500; letter-spacing: -0.2px; display: flex;"
                 >
                     Hari Prasad
                 </h2></button
@@ -57,7 +57,8 @@
             on:click={() =>
                 showAlertMessage(
                     "Email: haririo321@gmail.com \nPhone: +91 90080 15121",
-                )}>Contact</button
+                )}
+        >Contact</button
         >
     </div>
     {#if showAlert}
@@ -83,8 +84,8 @@
         height: 50px;
         width: 98%;
         color: #daf4d2;
-        font-family: "Circular Standard", sans-serif;
-        font-weight: lighter;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 400;
         justify-content: center;
         align-items: center;
         align-self: center;
@@ -99,7 +100,7 @@
     }
 
     .name_container {
-        font-weight: lighter;
+        font-weight: 400;
         letter-spacing: -0.2px;
         display: none;
     }
@@ -124,8 +125,8 @@
         font-size: 14px;
         border: none;
         border-radius: 200px;
-        font-family: "Circular Standard", sans-serif;
-        font-weight: lighter;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 500;
         cursor: pointer;
         transition: ease-in 300ms;
     }
@@ -145,8 +146,8 @@
         font-size: 14px;
         border: none;
         border-radius: 200px;
-        font-family: "Circular Standard", sans-serif;
-        font-weight: lighter;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 500;
         cursor: pointer;
         transition: ease-in 300ms;
     }
@@ -237,7 +238,7 @@
 
     h2 {
         padding-left: 10px;
-        font-family: "Circular Standard", sans-serif;
+        font-family: "DM Sans", sans-serif;
     }
 
     .app-bar__nav {
@@ -251,7 +252,7 @@
         border: none;
         border-radius: 200px;
         font-size: 14px;
-        font-family: "Circular Standard", sans-serif;
+        font-family: "DM Sans", sans-serif;
         border: none;
         border-radius: 200px;
         cursor: pointer;

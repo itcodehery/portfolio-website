@@ -1,5 +1,4 @@
 <script lang="ts">
-    import "../../fontimport.css";
     let images = [
         {
             url: "/carousel/blogger.png",
@@ -53,7 +52,7 @@
     }
 </script>
 
-<body>
+<main>
     <div class="center">
         <h1>My Design Portfolio</h1>
         <button on:click={() => handleClick()}>View in Figma</button>
@@ -72,7 +71,7 @@
         </div>
         <div style="margin:0; padding: 0; height: 40px;" />
     </div>
-</body>
+</main>
 
 <style>
     @import "./+styles.css";
@@ -85,7 +84,7 @@
         margin-top: 50px;
     }
 
-    body {
+    main {
         background-color: rgba(4, 33, 37, 1);
     }
 </style>

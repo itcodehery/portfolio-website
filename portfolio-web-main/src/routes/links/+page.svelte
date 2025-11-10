@@ -1,242 +1,239 @@
 <script>
-    import Icon from "@iconify/svelte";
+	import Icon from '@iconify/svelte';
 
-    //create links for all the buttons in the code below
-    const links = [
-        {
-            name: "LinkedIn",
-            url: "https://www.linkedin.com/in/hari-prasad-43285a24a/",
-            category: "Career and Code",
-        },
-        {
-            name: "GitHub",
-            url: "https://github.com/itcodehery",
-            category: "Career and Code",
-        },
-        {
-            name: "Codecademy",
-            url: "https://www.codecademy.com/profiles/itwritshery",
-            category: "Career and Code",
-        },
-        {
-            name: "Codewars",
-            url: "https://www.codewars.com/users/itcodehery",
-            category: "Career and Code",
-        },
-        {
-            name: "Linktree",
-            url: "https://linktr.ee/itwritshery",
-            category: "What's these?",
-        },
-        {
-            name: "Spotify Artist Profile",
-            url: "https://open.spotify.com/artist/5uzY3x7q567a2Fmg7fKbWh?si=tNyS3kdmSmqSOnwsi34jxg&utm_source=copy-link",
-            category: "Creative",
-        },
-        {
-            name: "My YouTube Channel",
-            url: "https://youtube.com/channel/UCKsrfag-JNkGQ2YJmElAkQQ",
-            category: "Creative",
-        },
-        {
-            name: "Blog Posts on Hobservations",
-            url: "https://hobservationsda.blogspot.com/?m=1",
-            category: "Creative",
-        },
-        {
-            name: "My Taste in Music",
-            url: "https://open.spotify.com/playlist/6Rq8atjLtB5oRtzE7eC8Gs?si=1iesUHXxT4yz81wR5Xytjg&utm_source=copy-link",
-            category: "What's these?",
-        },
-        {
-            name: "The Vox Technologia Collective",
-            url: "https://vox-tech-collective.vercel.app/",
-            category: "What's these?",
-        },
-    ];
+	//create links for all the buttons in the code below
+	const links = [
+		{
+			name: 'LinkedIn',
+			url: 'https://www.linkedin.com/in/hari-prasad-43285a24a/',
+			category: 'Career and Code',
+			icon: 'mdi:linkedin'
+		},
+		{
+			name: 'GitHub',
+			url: 'https://github.com/itcodehery',
+			category: 'Career and Code',
+			icon: 'mdi:github'
+		},
+		{
+			name: 'Codecademy',
+			url: 'https://www.codecademy.com/profiles/itwritshery',
+			category: 'Career and Code',
+			icon: 'mdi:code-braces'
+		},
+		{
+			name: 'Codewars',
+			url: 'https://www.codewars.com/users/itcodehery',
+			category: 'Career and Code',
+			icon: 'cib:codewars'
+		},
+		{
+			name: 'Linktree',
+			url: 'https://linktr.ee/itwritshery',
+			category: 'Miscellaneous',
+			icon: 'simple-icons:linktree'
+		},
+		{
+			name: 'Spotify Artist Profile',
+			url: 'https://open.spotify.com/artist/5uzY3x7q567a2Fmg7fKbWh?si=tNyS3kdmSmqSOnwsi34jxg&utm_source=copy-link',
+			category: 'Creative',
+			icon: 'mdi:spotify'
+		},
+		{
+			name: 'My YouTube Channel',
+			url: 'https://youtube.com/channel/UCKsrfag-JNkGQ2YJmElAkQQ',
+			category: 'Creative',
+			icon: 'mdi:youtube'
+		},
+		{
+			name: 'Blog Posts on Hobservations',
+			url: 'https://hobservationsda.blogspot.com/?m=1',
+			category: 'Creative',
+			icon: 'mdi:blogger'
+		},
+		{
+			name: 'My Taste in Music',
+			url: 'https://open.spotify.com/playlist/6Rq8atjLtB5oRtzE7eC8Gs?si=1iesUHXxT4yz81wR5Xytjg&utm_source=copy-link',
+			category: 'Miscellaneous',
+			icon: 'mdi:music'
+		},
+		{
+			name: 'The Vox Technologia Collective',
+			url: 'https://vox-tech-collective.vercel.app/',
+			category: 'Miscellaneous',
+			icon: 'mdi:web'
+		}
+	];
 </script>
 
 <main>
-    <div class="global-wrapper">
-        <img src="/me.jpg" alt="me" width="100" height="100" />
-        <h1>My Links</h1>
-        <Icon icon="material-symbols:link" width="24" />
-        <p>I do a lotta stuff.</p>
-        <div class="category">
-            <h3>Career and Code</h3>
-            <!-- <p style="font-weight: 100; font-size:medium; text-align:center;">
-                Each of these links have their own descriptions of me
-            </p> -->
-            {#each links.filter((link) => link.category === "Career and Code") as link}
-                <button
-                    class="main-button"
-                    on:click={() => window.open(link.url)}>{link.name}</button
-                >
-            {/each}
-        </div>
-        <div class="category">
-            <h3>Creative</h3>
-            {#each links.filter((link) => link.category === "Creative") as link}
-                <button
-                    class="main-button"
-                    on:click={() => window.open(link.url)}>{link.name}</button
-                >
-            {/each}
-        </div>
-        <div class="category">
-            <h3>What're these?</h3>
-            {#each links.filter((link) => link.category === "What's these?") as link}
-                <button
-                    class="main-button"
-                    on:click={() => window.open(link.url)}>{link.name}</button
-                >
-            {/each}
-        </div>
-        <div class="gap" />
-    </div>
+	<div class="global-wrapper">
+		<img src="/me.jpg" alt="me" width="100" height="100" />
+		<h1>My Links</h1>
+		<p>I do a lotta stuff. Here are some links to my online presence.</p>
+
+		<div class="categories-wrapper">
+			<div class="category">
+				<h3>Career and Code</h3>
+				<div class="links-container">
+					{#each links.filter((link) => link.category === 'Career and Code') as link}
+						<button class="link-button" on:click={() => window.open(link.url)}>
+							<Icon icon={link.icon} width="24" />
+							<span>{link.name}</span>
+						</button>
+					{/each}
+				</div>
+			</div>
+
+			<div class="category">
+				<h3>Creative</h3>
+				<div class="links-container">
+					{#each links.filter((link) => link.category === 'Creative') as link}
+						<button class="link-button" on:click={() => window.open(link.url)}>
+							<Icon icon={link.icon} width="24" />
+							<span>{link.name}</span>
+						</button>
+					{/each}
+				</div>
+			</div>
+
+			<div class="category">
+				<h3>Miscellaneous</h3>
+				<div class="links-container">
+					{#each links.filter((link) => link.category === 'Miscellaneous') as link}
+						<button class="link-button" on:click={() => window.open(link.url)}>
+							<Icon icon={link.icon} width="24" />
+							<span>{link.name}</span>
+						</button>
+					{/each}
+				</div>
+			</div>
+		</div>
+	</div>
 </main>
 
 <style>
-    main {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-family: "Circular Standard", sans-serif;
-        color: #daf4d2;
-        padding-top: 320px;
-        padding-bottom: 280px;
-        background-color: rgba(4, 33, 37, 1);
-        background-image: url("/home-bg.png");
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        height: 120vh;
-    }
+	main {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		font-family: 'DM Sans', sans-serif;
+		color: #daf4d2;
+		padding: 5rem 2rem;
+		background-color: rgba(4, 33, 37, 1);
+		background-image: url('/home-bg.png');
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		min-height: 100vh;
+	}
 
-    .global-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+	.global-wrapper {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+        padding-top: 40px;
+		max-width: 1200px;
+	}
 
-    img {
-        border-radius: 50%;
-        margin: 10px;
-    }
+	img {
+		border-radius: 50%;
+		margin-bottom: 1rem;
+		width: 100px;
+		height: 100px;
+		border: 3px solid #daf4d2;
+	}
 
-    p {
-        padding-bottom: 20px;
-    }
+	h1 {
+		font-size: 2.8em;
+		font-weight: 500;
+		letter-spacing: -1px;
+		margin: 0;
+	}
 
-    .category {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 10px;
-        padding: 20px;
-        border: 2px solid #daf4d210;
-        border-radius: 10px;
-        background-color: #052b30;
-    }
+	p {
+		font-size: 1.2em;
+		margin: 0.5rem 0 2rem 0;
+		text-align: center;
+		max-width: 600px;
+	}
 
-    h1 {
-        font-size: 2.8em;
-        font-weight: lighter;
-        letter-spacing: -1px;
-        margin: 10px;
-    }
+	.categories-wrapper {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 2rem;
+		width: 100%;
+	}
 
-    h3 {
-        font-size: 1.5em;
-        margin: 10px;
-        font-weight: lighter;
-    }
+	.category {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 2rem;
+		border: 1px solid #daf4d21a;
+		border-radius: 16px;
+		background-color: #052b30;
+	}
 
-    p {
-        font-size: 1.2em;
-        margin: 10px;
-    }
+	h3 {
+		font-size: 1.8em;
+		margin-bottom: 1.5rem;
+		font-weight: 500;
+		color: #daf4d2;
+	}
 
-    .main-button {
-        background-color: #daf4d2;
-        color: #042125;
-        border: none;
-        padding: 20px 30px;
-        font-family: "Circular Standard", sans-serif;
-        font-size: 6px;
-        min-width: 800px;
-        margin: 10px;
-        border-radius: 10px;
-        font-size: 1.2em;
-        cursor: pointer;
-        transition: ease-in 300ms;
-        transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+	.links-container {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1rem;
+		width: 100%;
+	}
 
-    .main-button:hover {
-        scale: 0.98;
-    }
+	.link-button {
+		background-color: #daf4d2;
+		color: #042125;
+		border: none;
+		padding: 1rem 1.5rem;
+		font-family: 'DM Sans', sans-serif;
+		font-size: 1.1em;
+		border-radius: 10px;
+		cursor: pointer;
+		transition: all 0.2s ease-in-out;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.8rem;
+		width: 100%;
+	}
 
-    .main-button:active {
-        background-color: #cde5c6;
-    }
+	.link-button:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	}
 
-    .gap {
-        height: 90px;
-    }
+	.link-button:active {
+		transform: translateY(0);
+		background-color: #cde5c6;
+	}
 
-    @media (max-width: 768px) {
-        .main-button {
-            min-width: 320px;
-        }
+	@media (min-width: 768px) {
+		.categories-wrapper {
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		}
 
-        h1 {
-            font-size: 2em;
-        }
+		.links-container {
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		}
+	}
 
-        h3 {
-            font-size: 1.2em;
-        }
-
-        p {
-            font-size: 1em;
-        }
-
-        .global-wrapper {
-            padding: 10px;
-        }
-
-        img {
-            width: 80px;
-            height: 80px;
-        }
-
-        main {
-            padding-top: 120px;
-            padding-bottom: 120px;
-        }
-
-        .category {
-            padding: 10px;
-        }
-
-        .main-button {
-            padding: 10px 20px;
-            font-size: 0.8em;
-            margin: 4px;
-            border-radius: 5px;
-        }
-
-        .main-button:hover {
-            scale: 0.98;
-        }
-
-        .main-button:active {
-            background-color: #cde5c6;
-            scale: 0.9;
-        }
-    }
+	@media (min-width: 1024px) {
+		.categories-wrapper {
+			grid-template-columns: 1fr 1fr;
+		}
+		.category:last-child {
+			grid-column: 1 / -1;
+		}
+	}
 </style>

@@ -2,7 +2,7 @@
     import Icon from "@iconify/svelte";
     import { fade } from "svelte/transition";
     // make it so that I export a name and I have a const dictionary where each name is linked to an icon. The names are Coder, Designer and Musician.
-    export let name: string;
+    let { name }: { name: string } = $props();
     // assign a type of string to string to the below dictionary
     function openLink(url: string) {
         window.open(url, "_blank");
@@ -11,7 +11,7 @@
 
 {#if name == "Designer"}
     <button
-        on:click={() => scrollTo(0, 800)}
+        onclick={() => scrollTo(0, 800)}
         transition:fade={{ delay: 1000, duration: 1000 }}
     >
         <p>{name}</p>
@@ -22,7 +22,7 @@
     </button>
 {:else if name == "Coder"}
     <button
-        on:click={() => openLink("https://github.com/itcodehery")}
+        onclick={() => openLink("https://github.com/itcodehery")}
         transition:fade={{ delay: 1500, duration: 1000 }}
     >
         <p>{name}</p>
@@ -33,7 +33,7 @@
     </button>
 {:else}
     <button
-        on:click={() =>
+        onclick={() =>
             openLink(
                 "https://www.youtube.com/channel/UCKsrfag-JNkGQ2YJmElAkQQ",
             )}
@@ -55,7 +55,7 @@
     button {
         min-height: 10px;
         min-width: 80px;
-        font-family: "Circular Standard", sans-serif;
+        font-family: "DM Sans", sans-serif;
         background-color: var(--cyan-dark);
         color: var(--lime-light);
         padding: 2px 25px;
