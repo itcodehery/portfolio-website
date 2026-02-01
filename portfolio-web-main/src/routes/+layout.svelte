@@ -17,5 +17,7 @@
     :global(body) {
         margin: 0;
         padding: 0;
+        background-color: rgba(4, 33, 37, 1);
+        color: #daf4d2;
     }
 </style>

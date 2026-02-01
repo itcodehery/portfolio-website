@@ -1,5 +1,5 @@
 <script lang="ts">
-    let images = [
+    let designProjects = [
         {
             url: "/carousel/blogger.png",
             alt: "blogger",
@@ -44,6 +44,50 @@
         },
     ];
 
+    // --- ADD YOUR CODING PROJECTS HERE ---
+    let codeProjects = [
+        {
+            url: "/code-projects/portfolio_heliolisk.png",
+            alt: "Heliolisk",
+            name: "Heliolisk",
+            details: "A Vim-like Modal Text Editor for your Terminal with a Modern TUI.",
+            link: "https://github.com/itcodehery/Heliolisk"
+        },
+        {
+            url: "/code-projects/portfolio_minty.png",
+            alt: "TeachersPet",
+            name: "Minty (Teacher's Pet)",
+            details: "A Flutter app for building custom question papers using drag-and-drop components.",
+            link: "https://github.com/itcodehery/TeachersPet"
+        },
+        {
+            url: "/code-projects/portfolio_dir2.png",
+            alt: "dir2",
+            name: "dir2 (File System)",
+            details: "A Rust-based terminal for Windows that reimagines file interaction through SQL-like commands.",
+            link: "https://github.com/itcodehery/Project_Directory_2"
+        },
+        {
+            url: "/code-projects/portfolio_caw.png",
+            alt: "Caw",
+            name: "Caw",
+            details: "A project aimed at bringing Rust's powerful memory safe Borrow Checker to the C programming language.",
+            link: "https://github.com/itcodehery/Borcom-Tool-Project"
+        },
+        {
+            url: "/code-projects/portfolio_proctor.png",
+            alt: "Proctor",
+            name: "Proctor",
+            details: "An Anti-Cheat coding environment for proctoring University level exams.",
+            link: "https://github.com/itcodehery/Proctor-Alpha"
+        },
+    ];
+    // -------------------------------------
+
+    function openLink(url) {
+        if (url) window.open(url, "_blank");
+    }
+
     function handleClick() {
         window.open(
             "https://www.figma.com/file/6lUhI6edjVVi2N4mEIq9wu/All-Concept-Finals?type=design&node-id=0%3A1&mode=design&t=JjXUthBvDO1YWEYY-1",
@@ -54,22 +98,42 @@
 
 <main>
     <div class="center">
-        <h1>My Design Portfolio</h1>
-        <button on:click={() => handleClick()}>View in Figma</button>
+        <h1>My Code Portfolio</h1>
         <div class="gridview">
-            {#each images as image}
-                <div class="listItem">
-                    <img src={image.url} alt={image.alt} width="300px" />
-                    <div class="image-details">
-                        <h3>{image.name}</h3>
-                        <p>
-                            {image.details}
-                        </p>
+            {#each codeProjects as project, i}
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                <div class="listItem item-{i + 1}" on:click={() => openLink(project.link)} role="button" tabindex="0">
+                    <img src={project.url} alt={project.alt} />
+                    <div class="overlay">
+                        <div class="image-details">
+                            <h3>{project.name}</h3>
+                            <p>{project.details}</p>
+                        </div>
                     </div>
                 </div>
             {/each}
         </div>
-        <div style="margin:0; padding: 0; height: 40px;" />
+
+        <div class="section-divider"></div>
+
+        <h1>My Design Portfolio</h1>
+        <button on:click={() => handleClick()}>View in Figma</button>
+        <div class="gridview">
+            {#each designProjects as image, i}
+                <div class="listItem item-{i + 1}">
+                    <img src={image.url} alt={image.alt} />
+                    <div class="overlay">
+                        <div class="image-details">
+                            <h3>{image.name}</h3>
+                            <p>{image.details}</p>
+                        </div>
+                    </div>
+                </div>
+            {/each}
+        </div>
+        
+        <div style="margin:0; padding: 0; height: 80px;"></div>
     </div>
 </main>
 
@@ -81,10 +145,16 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-top: 50px;
+        padding-top: 150px;
+    }
+
+    .section-divider {
+        height: 100px;
+        width: 100%;
     }
 
     main {
-        background-color: rgba(4, 33, 37, 1);
+        width: 100%;
+        min-height: 100vh;
     }
 </style>
