@@ -180,6 +180,10 @@
             height: 60px;
             margin-top: 0;
             border-radius: 0;
+            left: 0;
+            transform: none;
+            box-sizing: border-box;
+            padding: 0 16px;
         }
 
         .button_text {

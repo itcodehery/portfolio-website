@@ -99,6 +99,7 @@
 <main>
     <div class="center">
         <h1>My Code Portfolio</h1>
+        <button on:click={() => window.open("https://github.com/itcodehery", "_blank")}>View All</button>
         <div class="gridview">
             {#each codeProjects as project, i}
                 <!-- svelte-ignore a11y_click_events_have_key_events -->

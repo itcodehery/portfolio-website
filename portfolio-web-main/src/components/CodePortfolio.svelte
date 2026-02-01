@@ -4,34 +4,34 @@
 
     const projects = [
         {
-            name: "dir2 (File System Interface)",
-            description: "A Rust-based terminal for Windows that reimagines file interaction through SQL-like commands and a single-file state system.",
-            url: "https://github.com/itcodehery/Project_Directory_2"
+            name: "Heliolisk",
+            description: "A Vim-like Modal Text Editor for your Terminal with a Modern TUI.",
+            url: "https://github.com/itcodehery/Heliolisk",
+            image: "/code-projects/portfolio_heliolisk.png"
         },
         {
             name: "Minty (Teacher's Pet)",
-            description: "A Flutter app for building custom question papers using drag-and-drop components, with features like PDF export and advanced formatting.",
-            url: "https://github.com/itcodehery/TeachersPet"
+            description: "A Flutter app for building custom question papers using drag-and-drop components.",
+            url: "https://github.com/itcodehery/TeachersPet",
+            image: "/code-projects/portfolio_minty.png"
         },
         {
-            name: "Catport (Live File Viewer)",
-            description: "A terminal-based file viewer with syntax highlighting and real-time live sharing via WebSockets for collaborative viewing.",
-            url: "https://github.com/itcodehery/Project_Catport"
+            name: "dir2 (File System Interface)",
+            description: "A Rust-based terminal for Windows that reimagines file interaction through SQL-like commands.",
+            url: "https://github.com/itcodehery/Project_Directory_2",
+            image: "/code-projects/portfolio_dir2.png"
         },
         {
-            name: "Canopy (NASA Space Apps)",
-            description: "A real-time greenhouse gas emissions monitoring platform leveraging NASA satellite data to provide state-wise GHG emission forecasts.",
-            url: "https://github.com/itcodehery/NASA-Space-Apps"
+            name: "Caw",
+            description: "A project aimed at bringing Rust's powerful memory safe Borrow Checker to the C programming language.",
+            url: "https://github.com/itcodehery/Borcom-Tool-Project",
+            image: "/code-projects/portfolio_caw.png"
         },
         {
-            name: "Rust Games Backend",
-            description: "A test server built with Rocket.rs in Rust, designed to serve a dataset of games from a CSV file.",
-            url: "https://github.com/itcodehery/games_rust_backend"
-        },
-        {
-            name: "Canteen Eats",
-            description: "A cross-platform mobile app built with Flutter and Supabase that streamlines college food ordering and canteen management.",
-            url: "https://github.com/itcodehery/canteen-eats"
+            name: "Proctor",
+            description: "An Anti-Cheat coding environment for proctoring University level exams.",
+            url: "https://github.com/itcodehery/Proctor-Alpha",
+            image: "/code-projects/portfolio_proctor.png"
         }
     ];
 </script>
@@ -130,7 +130,9 @@
 
     @media (max-width: 768px) {
         section {
-            height: 500px;
+            height: auto;
+            min-height: 600px;
+            padding: 40px 0;
         }
 
         .text-container {

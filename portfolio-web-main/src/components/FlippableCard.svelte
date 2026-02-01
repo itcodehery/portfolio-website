@@ -1,5 +1,6 @@
 <script>
     import { flip } from 'svelte/animate';
+    import Icon from "@iconify/svelte";
 
     let flipped = false;
 
@@ -8,34 +9,38 @@
     }
 </script>
 
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="flip-card" on:click={toggleFlip}>
     <div class="flip-card-inner" class:flipped={flipped}>
         <div class="flip-card-front">
-            <!-- Content from MeCard.svelte -->
-            <div class="card-wrapper">
-                <div class="profile-image"></div>
-                <div class="text-wrap">
+            <!-- Front Content -->
+            <div class="card-content">
+                <div class="image-wrapper">
+                    <div class="profile-image"></div>
+                </div>
+                <div class="info-wrapper">
                     <h3>Hari Prasad</h3>
-                    <p>Developer, Designer, Musician</p>
-                    <br>
-                    <p>Did I ever tell you the definition of insanity?</p>
-                    <p>>>> Flip for more.</p>
+                    <p class="role">Developer & Designer</p>
+                </div>
+                <div class="hint">
+                    <p>Click to flip</p>
+                    <Icon icon="material-symbols:arrow-forward-rounded" width="16" />
                 </div>
             </div>
         </div>
         <div class="flip-card-back">
-            <!-- Back content -->
-            <div class="card-wrapper back-content">
+            <!-- Back Content -->
+            <div class="card-content back-content">
                 <h3>About Me</h3>
-                <p>I'm a passionate full-stack developer with a love for creating intuitive and beautiful user experiences. When I'm not coding, you can find me playing music or exploring new design concepts.</p>
-                <p>My skills include:</p>
-                <ul>
-                    <li>Mobile App Development</li>
-                    <li>UI/UX Design</li>
-                    <li>Database Management</li>
-                    <li>Web Development (Full Stack)</li>
-                    <li>Systems Programming</li>
-                </ul>
+                <p class="bio">Passionate developer crafting intuitive experiences. Love coding, music, and design.</p>
+                
+                <div class="skills-container">
+                    <span class="skill-tag">Mobile Dev</span>
+                    <span class="skill-tag">UI/UX</span>
+                    <span class="skill-tag">Full Stack</span>
+                    <span class="skill-tag">Systems</span>
+                </div>
             </div>
         </div>
     </div>
@@ -44,11 +49,12 @@
 <style>
     .flip-card {
         background-color: transparent;
-        width: 300px; /* Adjust as needed */
-        height: 400px; /* Adjust as needed */
-        perspective: 1000px; /* 3D effect */
+        width: 320px;
+        height: 440px;
+        perspective: 1000px;
         cursor: pointer;
-        transform: rotateZ(-2deg);
+        transform: rotateZ(-2deg) translateZ(0); /* translateZ enables hardware accel */
+        font-family: "DM Sans", sans-serif;
     }
 
     .flip-card-inner {
@@ -56,7 +62,7 @@
         width: 100%;
         height: 100%;
         text-align: center;
-        transition: transform 0.8s;
+        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         transform-style: preserve-3d;
     }
 
@@ -68,150 +74,123 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        -webkit-backface-visibility: hidden; /* Safari */
+        -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        border-radius: 24px;
+        border: 1px solid rgba(218, 244, 210, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
     }
 
     .flip-card-front {
-        background-color: white;
-        color: black;
+        background: radial-gradient(circle at top right, rgba(7, 59, 66, 0.95), rgba(4, 33, 37, 1));
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        color: var(--lime-light);
     }
 
     .flip-card-back {
-        background-color: white;
-        color: black;
+        background: radial-gradient(circle at bottom left, rgba(7, 59, 66, 0.95), rgba(4, 33, 37, 1));
+        color: var(--lime-light);
         transform: rotateY(180deg);
         display: flex;
         flex-direction: column;
+    }
+
+    .card-content {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
         align-items: center;
+        padding: 30px;
+        box-sizing: border-box;
+    }
+
+    /* Front Styles */
+    .image-wrapper {
+        margin-top: 20px;
+        padding: 8px;
+        border-radius: 50%;
+        border: 1px solid rgba(218, 244, 210, 0.2);
+        margin-bottom: 24px;
+    }
+
+    .profile-image {
+        background-image: url("/me.jpg");
+        background-position: center;
+        background-size: cover;
+        height: 160px;
+        width: 160px;
+        border-radius: 50%;
+        filter: brightness(0.9);
+    }
+
+    .info-wrapper {
+        text-align: center;
+        flex-grow: 1;
+    }
+
+    h3 {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.5px;
+        background: linear-gradient(to right, #DAF4D2, #88c07e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .role {
+        font-size: 16px;
+        color: rgba(218, 244, 210, 0.7);
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    .hint {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(218, 244, 210, 0.5);
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    /* Back Styles */
+    .back-content {
         justify-content: center;
-        padding: 20px;
+    }
+
+    .back-content h3 {
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+
+    .bio {
+        font-size: 15px;
+        line-height: 1.6;
+        color: rgba(218, 244, 210, 0.9);
+        margin-bottom: 30px;
         text-align: center;
     }
 
-        .card-wrapper {
-            background-color: white;
-            height: 100%;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            border: none;
-            border-radius: 10px;
-            align-items: flex-start;
-            justify-content: flex-start;
-            padding-top: 10px; /* Add some top padding */
-        }
+    .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
 
-    
-
-        .flip-card-front .card-wrapper {
-            align-items: flex-start;
-            justify-content: flex-start;
-        }
-
-    
-
-        .flip-card-back .card-wrapper {
-            align-items: center;
-            justify-content: center;
-        }
-
-    
-
-        .profile-image {
-            background-image: url("/me.jpg");
-            background-position: center;
-            background-size: cover;
-            height: 260px;
-            width: 260px;
-            margin: 10px;
-            border: none;
-            border-radius: 10px;
-            align-self: center; /* Center the image within the flex-start aligned card-wrapper */
-        }
-
-    
-
-        h3 {
-            font-family: "DM Sans", sans-serif;
-            font-size: large;
-            color: black;
-            font-weight: 500;
-            letter-spacing: -1px;
-            text-align: left;
-            margin: 0px;
-        }
-
-    
-
-        p {
-            font-family: "DM Sans", sans-serif;
-           font-size: small;
-            color: rgba(0, 0, 0, 0.5);
-            text-align: left;
-            letter-spacing: -0.2px;
-            margin: 0px;
-            padding: 0px;
-        }
-
-    
-
-        .text-wrap {
-            gap: 4px;
-            margin-left: 6px;
-            margin-bottom: 6px;
-            width: 100%;
-            padding-left: 12px;
-            box-sizing: border-box;
-            text-align: left; /* Ensure text is left-aligned within text-wrap */
-
-        }
-
-    
-
-        .back-content h3 {
-
-            margin-bottom: 10px;
-
-            text-align: center; /* Ensure back content h3 is centered */
-
-        }
-
-    
-
-        .back-content p {
-
-            margin-bottom: 10px;
-
-            text-align: center; /* Ensure back content p is centered */
-
-        }
-
-    
-
-        .back-content ul {
-
-            list-style: none;
-
-            padding: 0;
-
-            text-align: left;
-
-        }
-
-    
-
-        .back-content li {
-
-            margin-bottom: 5px;
-
-            color: rgba(0, 0, 0, 0.7);
-
-        }
+    .skill-tag {
+        background: rgba(218, 244, 210, 0.1);
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #daf4d2;
+        border: 1px solid rgba(218, 244, 210, 0.05);
+    }
 </style>
