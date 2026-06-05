@@ -4,6 +4,36 @@
 
     const projects = [
         {
+            name: "Blip Engine",
+            description: "An ML-Based Physics Engine that automatically recognizes uploaded objects and assigns physics properties to simulate them in a 3D World.",
+            url: "https://github.com/praneethm05/blip-engine",
+            image: "/code-projects/portfolio_blip.jpeg"
+        },
+        {
+            name: "Forward Meridian",
+            description: "A sci-fi FPS built in Godot featuring Marathon-inspired art and futuristic South Indian worldbuilding.",
+            url: "https://github.com/itcodehery/Forward-Meridian",
+            image: "/code-projects/portfolio_forward_meridian.png"
+        },
+        {
+            name: "Morsels",
+            description: "A logistics solution for food redistribution built with Flutter and Supabase at CodeSprint 2026.",
+            url: "https://github.com/itcodehery/morsels",
+            image: "/code-projects/portfolio_morsels.jpg"
+        },
+        {
+            name: "Sidebet Monad",
+            description: "A Web3 and Telegram bot integration designed for placing stakes on trash talk.",
+            url: "https://github.com/itcodehery/sidebet-monad",
+            image: "/code-projects/portfolio_sidebet.jpg"
+        },
+        {
+            name: "SiGUI",
+            description: "A Rust TUI for managing Wi-Fi connections on Windows, published on Crates.io.",
+            url: "https://github.com/itcodehery/Project_Wifi",
+            image: "/code-projects/portfolio_sigui.jpg"
+        },
+        {
             name: "Heliolisk",
             description: "A Vim-like Modal Text Editor for your Terminal with a Modern TUI.",
             url: "https://github.com/itcodehery/Heliolisk",
@@ -19,7 +49,7 @@
             name: "dir2 (File System Interface)",
             description: "A Rust-based terminal for Windows that reimagines file interaction through SQL-like commands.",
             url: "https://github.com/itcodehery/Project_Directory_2",
-            image: "/code-projects/portfolio_dir2.png"
+            image: "/code-projects/portfolio_dir2.jpg"
         },
         {
             name: "Caw",
@@ -29,9 +59,15 @@
         },
         {
             name: "Proctor",
-            description: "An Anti-Cheat coding environment for proctoring University level exams.",
+            description: "A secure anti-cheating environment for conducting and proctoring university level Coding exams.",
             url: "https://github.com/itcodehery/Proctor-Alpha",
             image: "/code-projects/portfolio_proctor.png"
+        },
+        {
+            name: "Catport",
+            description: "A modern terminal-based file viewer with real-time live sharing and syntax highlighting.",
+            url: "https://github.com/itcodehery/Project_Catport",
+            image: "/code-projects/portfolio_catport.png"
         }
     ];
 </script>
@@ -39,7 +75,12 @@
 <section id="code-portfolio">
     <div class="global-wrap">
         <div class="text-container">
-            <span>My Code Portfolio</span>
+            <div class="marquee-wrapper">
+                <div class="marquee-track">
+                    <span>My Code Portfolio&nbsp;✦&nbsp;My Code Portfolio&nbsp;✦&nbsp;My Code Portfolio&nbsp;✦&nbsp;</span>
+                    <span aria-hidden="true">My Code Portfolio&nbsp;✦&nbsp;My Code Portfolio&nbsp;✦&nbsp;My Code Portfolio&nbsp;✦&nbsp;</span>
+                </div>
+            </div>
             <button onclick={() => window.open("https://github.com/itcodehery", "_blank")}>View All</button>
         </div>
         <div class="global-wrapper">
@@ -79,6 +120,38 @@
         text-align: center;
     }
 
+    /* Marquee wrapper and animation — reversed direction */
+    .marquee-wrapper {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .marquee-track {
+        display: inline-flex;
+        animation: marquee 20s linear infinite reverse;
+        white-space: nowrap;
+    }
+
+    .marquee-track span {
+        font-size: 48px;
+        margin-top: 5px;
+        margin-right: 20px;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
     button {
         min-height: 44px;
         min-width: 80px;
@@ -96,6 +169,7 @@
         flex-direction: row;
         transition: ease-in 300ms;
         cursor: pointer;
+        flex-shrink: 0;
     }
 
     button:hover {
@@ -108,12 +182,6 @@
         transform: scale(0.9);
         border: 1px solid var(--lime-light);
         background-color: #042429;
-    }
-
-    span {
-        font-size: 48px;
-        margin-top: 5px;
-        margin-right: 20px;
     }
 
     .global-wrap {
@@ -142,9 +210,19 @@
             white-space: normal;
         }
 
-        span {
+        /* On mobile, no marquee — show static text */
+        .marquee-track {
+            animation: none;
+        }
+
+        .marquee-track span {
             font-size: 36px;
             margin-bottom: 20px;
+        }
+
+        /* Hide duplicated span on mobile */
+        .marquee-track span:nth-child(2) {
+            display: none;
         }
     }
 </style>

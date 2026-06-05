@@ -47,6 +47,26 @@
 </div>
 
 <style>
+    /* Levitating / floating animation */
+    @keyframes levitate {
+        0%, 100% {
+            transform: rotateZ(-2deg) translateY(0px) translateZ(0);
+        }
+        50% {
+            transform: rotateZ(-2deg) translateY(-10px) translateZ(0);
+        }
+    }
+
+    /* Pulsing glow shadow animation */
+    @keyframes glowPulse {
+        0%, 100% {
+            box-shadow: 0 20px 40px rgba(218, 244, 210, 0.1);
+        }
+        50% {
+            box-shadow: 0 25px 50px rgba(218, 244, 210, 0.2);
+        }
+    }
+
     .flip-card {
         background-color: transparent;
         width: 320px;
@@ -55,6 +75,7 @@
         cursor: pointer;
         transform: rotateZ(-2deg) translateZ(0); /* translateZ enables hardware accel */
         font-family: "DM Sans", sans-serif;
+        animation: levitate 3s ease-in-out infinite;
     }
 
     .flip-card-inner {
@@ -78,8 +99,8 @@
         backface-visibility: hidden;
         border-radius: 24px;
         border: 1px solid rgba(218, 244, 210, 0.1);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         overflow: hidden;
+        animation: glowPulse 3s ease-in-out infinite;
     }
 
     .flip-card-front {

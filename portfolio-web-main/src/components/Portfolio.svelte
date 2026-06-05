@@ -16,7 +16,12 @@
     <div class="global-wrap">
         <!-- a marquee title -->
         <div class="text-container">
-            <span>My Design Portfolio</span>
+            <div class="marquee-wrapper">
+                <div class="marquee-track">
+                    <span>My Design Portfolio&nbsp;✦&nbsp;My Design Portfolio&nbsp;✦&nbsp;My Design Portfolio&nbsp;✦&nbsp;</span>
+                    <span aria-hidden="true">My Design Portfolio&nbsp;✦&nbsp;My Design Portfolio&nbsp;✦&nbsp;My Design Portfolio&nbsp;✦&nbsp;</span>
+                </div>
+            </div>
             <button on:click={() => goto("/portfolio")}
                 >{isMobile ? "View Portfolio" : "View All"}</button
             >
@@ -59,8 +64,39 @@
         padding: 20px;
         letter-spacing: -1px;
         overflow: hidden;
-        white-space: no-wrap;
+        white-space: nowrap;
         text-align: center;
+    }
+
+    /* Marquee wrapper and animation */
+    .marquee-wrapper {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .marquee-track {
+        display: inline-flex;
+        animation: marquee 20s linear infinite;
+        white-space: nowrap;
+    }
+
+    .marquee-track span {
+        font-size: 48px;
+        margin-top: 5px;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
     }
 
     button {
@@ -81,6 +117,7 @@
         transition: ease-in 300ms;
         transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
         cursor: pointer;
+        flex-shrink: 0;
     }
 
     button:hover {
@@ -93,11 +130,6 @@
         scale: 0.9;
         border: 1px solid var(--lime-light);
         background-color: #042429;
-    }
-
-    span {
-        font-size: 48px;
-        margin-top: 5px;
     }
 
     /* .global-wrapper {
@@ -134,7 +166,12 @@
             text-align: center;
         }
 
-        span {
+        /* On mobile, no marquee — show static text */
+        .marquee-track {
+            animation: none;
+        }
+
+        .marquee-track span {
             font-size: 36px;
             align-self: center;
             align-items: center;
@@ -142,6 +179,11 @@
             justify-items: center;
             justify-self: center;
             margin-bottom: 20px;
+        }
+
+        /* Hide duplicated span on mobile */
+        .marquee-track span:nth-child(2) {
+            display: none;
         }
 
         .global-wrapper {

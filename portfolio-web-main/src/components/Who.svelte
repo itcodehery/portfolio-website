@@ -39,10 +39,10 @@
         {/if}
         <div class="rightwrapper">
             <div class="text-container">
-                <h4>I am a</h4>
-                <h1>Full Stack App</h1>
-                <h1>Developer and</h1>
-                <h1>Designer</h1>
+                <h4 class:visible={isVisible} style="--reveal-delay: 0ms;">I am a</h4>
+                <h1 class="shimmer-text" class:visible={isVisible} style="--reveal-delay: 200ms;">Full Stack App</h1>
+                <h1 class="shimmer-text" class:visible={isVisible} style="--reveal-delay: 400ms;">Developer and</h1>
+                <h1 class="shimmer-text" class:visible={isVisible} style="--reveal-delay: 600ms;">Designer</h1>
             </div>
         </div>
     </div>
@@ -95,12 +95,53 @@
         line-height: 56px;
     }
 
+    /* Staggered line-by-line reveal */
+    .text-container h1,
+    .text-container h4 {
+        opacity: 0;
+        transform: translateX(60px);
+        transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    .text-container h1.visible,
+    .text-container h4.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
     h1 {
         font-size: 72px;
         font-weight: 500;
         letter-spacing: -2px;
         margin: 0px;
         padding-bottom: 10px;
+    }
+
+    /* Gradient shimmer animation on h1 */
+    .shimmer-text {
+        background: linear-gradient(
+            90deg,
+            rgba(4, 33, 37, 1) 0%,
+            rgba(7, 59, 66, 1) 30%,
+            rgba(4, 33, 37, 0.6) 50%,
+            rgba(7, 59, 66, 1) 70%,
+            rgba(4, 33, 37, 1) 100%
+        );
+        background-size: 200% 100%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 4s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: 100% 0;
+        }
+        100% {
+            background-position: -100% 0;
+        }
     }
 
     h4 {

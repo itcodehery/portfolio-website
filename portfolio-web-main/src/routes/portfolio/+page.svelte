@@ -47,6 +47,41 @@
     // --- ADD YOUR CODING PROJECTS HERE ---
     let codeProjects = [
         {
+            url: "/code-projects/portfolio_blip.jpeg",
+            alt: "Blip Engine",
+            name: "Blip Engine",
+            details: "An ML-Based Physics Engine that automatically recognizes uploaded objects and simulates them in a 3D World.",
+            link: "https://github.com/praneethm05/blip-engine"
+        },
+        {
+            url: "/code-projects/portfolio_forward_meridian.png",
+            alt: "Forward Meridian",
+            name: "Forward Meridian",
+            details: "A sci-fi FPS built in Godot featuring Marathon-inspired art and futuristic South Indian worldbuilding.",
+            link: "https://github.com/itcodehery/Forward-Meridian-Game"
+        },
+        {
+            url: "/code-projects/portfolio_morsels.jpg",
+            alt: "Morsels",
+            name: "Morsels",
+            details: "A logistics solution for food redistribution built with Flutter and Supabase at CodeSprint 2026.",
+            link: "https://github.com/itcodehery/TeamPulse-CodeSprint26"
+        },
+        {
+            url: "/code-projects/portfolio_sidebet.jpg",
+            alt: "Sidebet Monad",
+            name: "Sidebet Monad",
+            details: "A Web3 and Telegram bot integration designed for placing stakes on trash talk.",
+            link: "https://github.com/itcodehery/sidebet-monad"
+        },
+        {
+            url: "/code-projects/portfolio_sigui.jpg",
+            alt: "SiGUI",
+            name: "SiGUI",
+            details: "A Rust TUI for managing Wi-Fi connections on Windows, published on Crates.io.",
+            link: "https://github.com/itcodehery/Project_Wifi"
+        },
+        {
             url: "/code-projects/portfolio_heliolisk.png",
             alt: "Heliolisk",
             name: "Heliolisk",
@@ -61,7 +96,7 @@
             link: "https://github.com/itcodehery/TeachersPet"
         },
         {
-            url: "/code-projects/portfolio_dir2.png",
+            url: "/code-projects/portfolio_dir2.jpg",
             alt: "dir2",
             name: "dir2 (File System)",
             details: "A Rust-based terminal for Windows that reimagines file interaction through SQL-like commands.",
@@ -78,13 +113,20 @@
             url: "/code-projects/portfolio_proctor.png",
             alt: "Proctor",
             name: "Proctor",
-            details: "An Anti-Cheat coding environment for proctoring University level exams.",
+            details: "A secure anti-cheating environment for conducting and proctoring university level Coding exams.",
             link: "https://github.com/itcodehery/Proctor-Alpha"
         },
+        {
+            url: "/code-projects/portfolio_catport.png",
+            alt: "Catport",
+            name: "Catport",
+            details: "A modern terminal-based file viewer with real-time live sharing and syntax highlighting.",
+            link: "https://github.com/itcodehery/Project_Catport"
+        }
     ];
     // -------------------------------------
 
-    function openLink(url) {
+    function openLink(url: string) {
         if (url) window.open(url, "_blank");
     }
 

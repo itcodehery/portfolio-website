@@ -89,6 +89,7 @@
             style:opacity={index === currentIndex ? 1 : 0.3}
             style:z-index={images.length - Math.abs(index - currentIndex)}
             onclick={() => goToIndex(index)}
+            onkeydown={(e) => e.key === 'Enter' && goToIndex(index)}
             role="button"
             tabindex="0"
             aria-label={`View project ${image.name}`}
@@ -116,7 +117,7 @@
         class:active={index === currentIndex}
         onclick={() => goToIndex(index)}
         aria-label={`Go to project ${index + 1}`}
-      />
+      ></button>
     {/each}
   </div>
 </div>
@@ -287,9 +288,6 @@
     .carousel-item {
       width: 80%;
       max-width: none;
-    }
-    h3 {
-      font-size: 1.4rem;
     }
     p {
       font-size: 0.9rem;

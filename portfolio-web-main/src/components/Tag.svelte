@@ -12,7 +12,7 @@
 {#if name == "Designer"}
     <button
         onclick={() => scrollTo(0, 800)}
-        transition:fade={{ delay: 1000, duration: 1000 }}
+        transition:fade={{ delay: 1200, duration: 1000 }}
     >
         <p>{name}</p>
         <Icon
@@ -23,7 +23,7 @@
 {:else if name == "Coder"}
     <button
         onclick={() => openLink("https://github.com/itcodehery")}
-        transition:fade={{ delay: 1500, duration: 1000 }}
+        transition:fade={{ delay: 1800, duration: 1000 }}
     >
         <p>{name}</p>
         <Icon
@@ -37,7 +37,7 @@
             openLink(
                 "https://www.youtube.com/channel/UCKsrfag-JNkGQ2YJmElAkQQ",
             )}
-        transition:fade={{ delay: 2000, duration: 1000 }}
+        transition:fade={{ delay: 2400, duration: 1000 }}
     >
         <p>{name}</p>
         <Icon
@@ -59,7 +59,7 @@
         background-color: var(--cyan-dark);
         color: var(--lime-light);
         padding: 2px 25px;
-        border: none;
+        border: 1px solid transparent;
         gap: 14px;
         align-items: center;
         align-self: center;
@@ -67,13 +67,19 @@
         border-radius: 40px;
         display: flex;
         flex-direction: row;
-        transition: ease-in 300ms;
-        transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: all 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
         cursor: pointer;
+        position: relative;
     }
 
     button:hover {
         scale: 0.9;
         color: var(--lime-light);
+        box-shadow: 0 0 15px rgba(218, 244, 210, 0.25);
+        border: 1px solid rgba(218, 244, 210, 0.3);
+        background-image: linear-gradient(var(--cyan-dark), var(--cyan-dark)),
+            linear-gradient(90deg, rgba(218, 244, 210, 0.1), rgba(218, 244, 210, 0.4), rgba(218, 244, 210, 0.1));
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
     }
 </style>

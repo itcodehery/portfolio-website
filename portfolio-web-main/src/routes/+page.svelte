@@ -7,7 +7,8 @@
 </script>
 
     <Intro />
+    <div id="soundlab-placeholder" style="width: 100%; height: 750px;"></div>
     <Who />
-    <Portfolio />
     <CodePortfolio />
+    <Portfolio />
     <Finale />
