@@ -14,6 +14,7 @@
     import LinksPage from './links/+page.svelte';
     import PortfolioPage from './portfolio/+page.svelte';
     import JourneyPage from './journey/+page.svelte';
+    import { isPerformanceMode } from '../lib/settings';
 
     let windowScrollY = 0;
     let targetScroll = 0;
@@ -72,8 +73,10 @@
     onMount(() => {
         let frameId: number;
         const renderScroll = () => {
-            scrollY += (targetScroll - scrollY) * 0.05; // Inertia factor
-            scrollProgress = scrollY / (document.body.scrollHeight - innerHeight || 1);
+            if (!$isPerformanceMode) {
+                scrollY += (targetScroll - scrollY) * 0.05; // Inertia factor
+                scrollProgress = scrollY / (document.body.scrollHeight - innerHeight || 1);
+            }
             frameId = requestAnimationFrame(renderScroll);
         };
         renderScroll();
@@ -145,8 +148,29 @@
 
 <svelte:window bind:scrollY={windowScrollY} bind:innerHeight={innerHeight} />
 
+{#if !$isPerformanceMode}
 <ThreeScene {scrollProgress} />
+{/if}
 
+<div class="top-controls">
+    <button class="minimal-toggle" onclick={() => $isPerformanceMode = !$isPerformanceMode} aria-label="Toggle Performance Mode">
+        <span class="toggle-label" class:active={!$isPerformanceMode}>3D</span>
+        <div class="toggle-track">
+            <div class="toggle-knob" class:right={$isPerformanceMode}></div>
+        </div>
+        <span class="toggle-label" class:active={$isPerformanceMode}>Lite</span>
+    </button>
+    <button 
+        class="back-to-top" 
+        class:visible={windowScrollY > 1000}
+        onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Back to Start"
+    >
+        <Icon icon="material-symbols:arrow-upward" width="24" />
+    </button>
+</div>
+
+{#if !$isPerformanceMode}
 <div class="fixed-section-title">
     {#if activeSection !== ''}
         {#key activeSection}
@@ -160,16 +184,49 @@
         {/key}
     {/if}
 </div>
+{/if}
 
-<button 
-    class="back-to-top" 
-    class:visible={scrollY > 1000}
-    onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-    aria-label="Back to Start"
->
-    <Icon icon="material-symbols:arrow-upward" width="24" />
-</button>
-
+{#if $isPerformanceMode}
+<div class="perf-container" class:faded={activeModal !== null}>
+    <div class="perf-section intro-section">
+        <nav class="perf-nav">
+            <div class="nav-links" style="flex-direction: row; justify-content: center;">
+                {#each [
+                    { id: 'links', icon: 'mdi:link-variant', label: 'Links' },
+                    { id: 'portfolio', icon: 'mdi:code-braces-box', label: 'Portfolio' },
+                    { id: 'journey', icon: 'mdi:compass-outline', label: 'Journey' }
+                ] as link}
+                    <button class="nav-btn" onclick={() => activeModal = link.id} style="opacity: 1;">
+                        <div class="icon-wrap"><Icon icon={link.icon} width="24" /></div>
+                        <span class="nav-text" style="opacity: 1; filter: none; transform: none; position: relative; left: 0;">{link.label}</span>
+                    </button>
+                {/each}
+            </div>
+        </nav>
+        <Intro />
+    </div>
+    
+    <div class="perf-section who-section"><Who /></div>
+    
+    <div class="perf-portfolio-wrap">
+        <h2 class="perf-title">Code Portfolio</h2>
+        <div class="perf-grid">
+            {#each codeProjects as project}
+                <ScatteredProject {...project} />
+            {/each}
+        </div>
+        
+        <h2 class="perf-title" style="margin-top: 100px;">Design Portfolio</h2>
+        <div class="perf-grid">
+            {#each designProjects as project}
+                <ScatteredProject {...project} />
+            {/each}
+        </div>
+    </div>
+    
+    <div class="perf-section finale-section"><Finale /></div>
+</div>
+{:else}
 <div class="scroll-container" class:faded={activeModal !== null} style="height: {maxScroll + innerHeight}px;">
     <!-- Snap points for magnetism -->
     <div class="snap-point" style="top: 0px;"></div>
@@ -268,6 +325,7 @@
         </div>
     </div>
 </div>
+{/if}
 
 {#if activeModal !== null}
     <div class="modal-overlay" transition:fade={{ duration: 600 }}>
@@ -295,6 +353,63 @@
     }
     :global(body) {
         overflow-x: hidden;
+    }
+    .top-controls {
+        position: fixed;
+        top: 40px;
+        right: 40px;
+        display: flex;
+        gap: 20px;
+        z-index: 1000;
+        align-items: center;
+    }
+    .minimal-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .toggle-label {
+        color: #daf4d2;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        opacity: 0.3;
+        transition: opacity 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .toggle-label.active {
+        opacity: 1;
+    }
+    .toggle-track {
+        width: 36px;
+        height: 18px;
+        border-radius: 18px;
+        border: 1px solid rgba(218, 244, 210, 0.4);
+        position: relative;
+        transition: border-color 0.3s;
+    }
+    .toggle-knob {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 12px;
+        height: 12px;
+        background: #daf4d2;
+        border-radius: 50%;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .toggle-knob.right {
+        transform: translateX(18px);
+    }
+    .minimal-toggle:hover .toggle-track {
+        border-color: rgba(218, 244, 210, 0.8);
     }
     .snap-point {
         position: absolute;
@@ -561,9 +676,6 @@
         white-space: nowrap;
     }
     .back-to-top {
-        position: fixed;
-        top: 40px;
-        right: 40px;
         background: rgba(218, 244, 210, 0.05);
         border: 1px solid rgba(218, 244, 210, 0.2);
         border-radius: 50%;
@@ -577,7 +689,6 @@
         opacity: 0;
         pointer-events: none;
         transition: all 0.3s ease;
-        z-index: 100;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -590,5 +701,92 @@
         background: rgba(218, 244, 210, 0.15);
         transform: translateY(-2px);
         box-shadow: 0 10px 20px rgba(218, 244, 210, 0.1);
+    }
+    
+    /* Performance Mode Styles */
+    .perf-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        background-color: #042125;
+    }
+    .perf-portfolio-wrap {
+        padding: 80px 20px;
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+    }
+    .intro-section {
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background-image: url("/home-bg.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .who-section {
+        width: 100%;
+        background-image: url("/who-bg.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .perf-nav {
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        z-index: 10;
+    }
+    .perf-nav .nav-btn {
+        background: rgba(7, 59, 66, 0.5);
+        border: 1px solid rgba(218, 244, 210, 0.1);
+        border-radius: 50px;
+        padding: 10px 20px;
+        gap: 10px;
+    }
+    .perf-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+    .finale-section { margin-top: 40px; }
+    .perf-title {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 56px;
+        color: #daf4d2;
+        margin: 0 0 40px 0;
+        text-align: center;
+        letter-spacing: -2px;
+    }
+    .perf-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 60px 40px;
+        width: 100%;
+    }
+    
+    /* Make inner component sections transparent so wrappers show through */
+    :global(.perf-container section) {
+        background-color: transparent !important;
+        background-image: none !important;
+    }
+    
+    /* Hide tether lines in perf mode */
+    :global(.perf-container .tether-line) {
+        display: none !important;
+    }
+    :global(.perf-container .project-container) {
+        animation: none !important;
     }
 </style>

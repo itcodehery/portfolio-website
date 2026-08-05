@@ -1,6 +1,7 @@
 <script lang="ts">
     import FlippableCard from "./FlippableCard.svelte";
     import { fly } from "svelte/transition";
+    import { isPerformanceMode } from "../lib/settings";
 
     let isVisible = $state(false);
     let element: HTMLElement | null = $state(null);
@@ -30,7 +31,7 @@
     });
 </script>
 
-<section>
+<section class:dark-theme={$isPerformanceMode}>
     <div class="global-wrapper" bind:this={element}>
         {#if isVisible}
             <div class="leftwrapper" transition:fly={{ duration: 2000 }}>
@@ -61,6 +62,11 @@
         justify-self: center;
         align-self: center;
         align-content: center;
+        transition: color 0.4s ease;
+    }
+    
+    section.dark-theme {
+        color: rgba(4, 33, 37, 1);
     }
 
     .rightwrapper {
@@ -129,6 +135,22 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         animation: shimmer 4s ease-in-out infinite;
+        transition: all 0.4s ease;
+    }
+
+    .dark-theme .shimmer-text {
+        background: linear-gradient(
+            90deg,
+            rgba(4, 33, 37, 1) 0%,
+            rgba(7, 59, 66, 1) 30%,
+            rgba(4, 33, 37, 0.6) 50%,
+            rgba(7, 59, 66, 1) 70%,
+            rgba(4, 33, 37, 1) 100%
+        );
+        background-size: 200% 100%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     @keyframes shimmer {

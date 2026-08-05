@@ -117,6 +117,15 @@
         let animationFrameId: number;
         const clock = new THREE.Clock();
 
+        let mouseX = 0;
+        let mouseY = 0;
+
+        const handleMouseMove = (event: MouseEvent) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+
         const animate = () => {
             const elapsedTime = clock.getElapsedTime();
             
@@ -124,12 +133,15 @@
             const targetZ = -(scrollProgress * 400);
             camera.position.z += (targetZ - camera.position.z) * 0.1; 
             
-            // Curve camera X based on Z
-            const targetX = Math.sin(camera.position.z / 50) * 20;
-            camera.position.x += (targetX - camera.position.x) * 0.1;
+            // Curve camera X based on Z and add subtle mouse sway
+            const baseTargetX = Math.sin(camera.position.z / 50) * 20;
+            const targetX = baseTargetX + (mouseX * 4);
+            camera.position.x += (targetX - camera.position.x) * 0.05;
 
-            // Add some gentle bobbing
-            camera.position.y = Math.sin(elapsedTime * 0.5) * 0.5;
+            // Add gentle bobbing and subtle mouse Y sway
+            const baseTargetY = Math.sin(elapsedTime * 0.5) * 0.5;
+            const targetY = baseTargetY + (mouseY * 2.5);
+            camera.position.y += (targetY - camera.position.y) * 0.05;
 
             // Animate terrain like an ocean
             const positions = terrainGeometry.attributes.position.array;
@@ -154,6 +166,7 @@
 
         return () => {
             window.removeEventListener('resize', handleResize);
+            window.removeEventListener('mousemove', handleMouseMove);
             cancelAnimationFrame(animationFrameId);
             renderer.dispose();
             particlesGeometry.dispose();

@@ -20,6 +20,13 @@
   let isPipMode = $state(false);
   let inlineTop = $state(0);
   let wrapperEl: HTMLDivElement | undefined = $state(undefined);
+  let isExpanded = $state(false);
+  let showKeyboardPrompt = $state(false);
+
+  function toggleExpand(e: MouseEvent) {
+    e.stopPropagation();
+    isExpanded = !isExpanded;
+  }
 
   // ─── PiP Mode Logic ───
   $effect(() => {
@@ -54,6 +61,17 @@
       window.removeEventListener('resize', checkMode);
       clearInterval(interval);
     };
+  });
+
+  $effect(() => {
+    if (isAppIntro && isPipMode) {
+      setTimeout(() => {
+        showKeyboardPrompt = true;
+        setTimeout(() => {
+          showKeyboardPrompt = false;
+        }, 8000);
+      }, 1500);
+    }
   });
 
   // ─── Pad Press Handler ───
@@ -93,6 +111,7 @@
   function handleKeyDown(event: KeyboardEvent) {
     const key = event.key.toLowerCase();
     if (key in KEY_TO_PAD) {
+      showKeyboardPrompt = false;
       const padId = KEY_TO_PAD[key];
       playSound(padId);
       activePads[padId] = true;
@@ -188,20 +207,37 @@
   });
 </script>
 
+{#if isExpanded}
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="expanded-backdrop" onclick={toggleExpand} transition:fade={{ duration: 400 }}></div>
+{/if}
+
 <div 
   bind:this={wrapperEl}
   class="soundlab-wrapper" 
   class:inline={!isPipMode} 
   class:pip={isPipMode}
+  class:expanded={isExpanded}
   class:app-intro={isAppIntro}
-  style={!isPipMode ? `top: ${inlineTop}px;` : ''}
+  style={!isPipMode && !isExpanded ? `top: ${inlineTop}px;` : ''}
 >
+  {#if showKeyboardPrompt}
+    <div class="keyboard-prompt" transition:fly={{ y: 10, duration: 400 }}>
+      Press keys (Q-W-E...) to play!
+    </div>
+  {/if}
+
+  <button class="expand-btn" onclick={toggleExpand} aria-label={isExpanded ? "Collapse" : "Expand"}>
+    <Icon icon={isExpanded ? "mdi:close" : "mdi:open-in-new"} width="20" />
+  </button>
+
 <section bind:this={sectionEl} id="sound-lab">
   <!-- Background Visualizer Canvas -->
   <canvas bind:this={canvasEl} class="visualizer-canvas"></canvas>
 
   <div class="section-content">
-    {#if isVisible}
+    {#if isVisible || isExpanded}
       <div class="header" in:fly={{ y: 30, duration: 800 }}>
         <h2>Sound Lab</h2>
         <p class="subtitle">tap, click, or press keys to play</p>
@@ -280,6 +316,7 @@
     min-height: 750px;
     padding: 60px 20px 40px;
     overflow: hidden;
+    border-radius: inherit;
   }
 
   /* ─── Visualizer Canvas ─── */
@@ -408,23 +445,23 @@
 
   /* ─── Category Colors ─── */
   .cat-drums {
-    background: rgba(218, 244, 210, 0.08);
+    background: rgba(218, 244, 210, 0.04);
   }
   .cat-drums:hover, .cat-drums.active {
-    background: rgba(218, 244, 210, 0.2);
+    background: rgba(218, 244, 210, 0.15);
     box-shadow: 0 0 20px rgba(218, 244, 210, 0.15);
   }
 
   .cat-perc {
-    background: rgba(218, 244, 210, 0.06);
+    background: rgba(136, 192, 126, 0.08);
   }
   .cat-perc:hover, .cat-perc.active {
-    background: rgba(218, 244, 210, 0.18);
-    box-shadow: 0 0 20px rgba(218, 244, 210, 0.12);
+    background: rgba(136, 192, 126, 0.2);
+    box-shadow: 0 0 20px rgba(136, 192, 126, 0.15);
   }
 
   .cat-bass-sub {
-    background: rgba(7, 59, 66, 0.6);
+    background: rgba(7, 150, 140, 0.12);
   }
   .cat-bass-sub:hover, .cat-bass-sub.active {
     background: rgba(7, 90, 100, 0.7);
@@ -432,44 +469,44 @@
   }
 
   .cat-bass-growl {
-    background: rgba(7, 59, 66, 0.8);
+    background: rgba(7, 150, 140, 0.12);
   }
   .cat-bass-growl:hover, .cat-bass-growl.active {
-    background: rgba(7, 100, 110, 0.7);
-    box-shadow: 0 0 20px rgba(7, 130, 145, 0.3);
+    background: rgba(7, 150, 140, 0.25);
+    box-shadow: 0 0 20px rgba(7, 150, 140, 0.2);
   }
 
   .cat-synth-lead {
-    background: rgba(136, 192, 126, 0.1);
+    background: rgba(7, 150, 140, 0.12);
   }
   .cat-synth-lead:hover, .cat-synth-lead.active {
-    background: rgba(136, 192, 126, 0.25);
-    box-shadow: 0 0 20px rgba(136, 192, 126, 0.2);
+    background: rgba(7, 150, 140, 0.25);
+    box-shadow: 0 0 20px rgba(7, 150, 140, 0.2);
   }
 
   .cat-synth-pad {
-    background: rgba(136, 192, 126, 0.07);
+    background: rgba(7, 150, 140, 0.12);
   }
   .cat-synth-pad:hover, .cat-synth-pad.active {
-    background: rgba(136, 192, 126, 0.2);
-    box-shadow: 0 0 20px rgba(136, 192, 126, 0.15);
+    background: rgba(7, 150, 140, 0.25);
+    box-shadow: 0 0 20px rgba(7, 150, 140, 0.2);
   }
 
   .cat-synth-bright {
-    background: rgba(218, 244, 210, 0.1);
-    border-color: rgba(218, 244, 210, 0.1);
+    background: rgba(7, 150, 140, 0.12);
+    border-color: rgba(7, 150, 140, 0.12);
   }
   .cat-synth-bright:hover, .cat-synth-bright.active {
-    background: rgba(218, 244, 210, 0.25);
-    box-shadow: 0 0 25px rgba(218, 244, 210, 0.2);
+    background: rgba(7, 150, 140, 0.25);
+    box-shadow: 0 0 25px rgba(7, 150, 140, 0.2);
   }
 
   .cat-fx {
-    background: linear-gradient(135deg, rgba(7, 59, 66, 0.5), rgba(136, 192, 126, 0.1));
+    background: rgba(7, 100, 110, 0.2);
   }
   .cat-fx:hover, .cat-fx.active {
-    background: linear-gradient(135deg, rgba(7, 80, 90, 0.6), rgba(136, 192, 126, 0.25));
-    box-shadow: 0 0 25px rgba(218, 244, 210, 0.18);
+    background: rgba(7, 100, 110, 0.35);
+    box-shadow: 0 0 25px rgba(7, 100, 110, 0.25);
   }
 
   /* ─── Pad Labels ─── */
@@ -679,7 +716,7 @@
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(218, 244, 210, 0.2);
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    overflow: hidden;
+    overflow: visible;
     animation: pipEnter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     transition: right 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s;
   }
@@ -759,5 +796,169 @@
       right: 15px;
       width: 260px;
     }
+  }
+
+  /* ─── Expanded Mode Styles ─── */
+  .expanded-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99990;
+  }
+
+  @keyframes modalPop {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -40%) scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  .soundlab-wrapper.expanded {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: fit-content !important;
+    height: fit-content !important;
+    max-width: 90vw !important;
+    max-height: 90vh !important;
+    z-index: 100000 !important;
+    background: rgba(4, 33, 37, 0.98) !important;
+    backdrop-filter: blur(24px) !important;
+    border-radius: 30px !important;
+    margin: 0 !important;
+    transform: translate(-50%, -50%) !important;
+    animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+    transition: none !important;
+    border: 1px solid rgba(218, 244, 210, 0.2) !important;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .soundlab-wrapper.expanded section {
+    min-height: auto !important;
+    height: 100% !important;
+    padding: 60px !important;
+  }
+
+  .soundlab-wrapper.expanded .header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    margin-bottom: 24px !important;
+  }
+
+  .soundlab-wrapper.expanded .subtitle {
+    margin: 4px 0 0 0 !important;
+  }
+
+  .soundlab-wrapper.expanded .row-labels, 
+  .soundlab-wrapper.expanded .music-links {
+    display: flex !important;
+  }
+
+  .soundlab-wrapper.expanded .pad-key {
+    display: block !important;
+  }
+
+  .soundlab-wrapper.expanded .pad-grid {
+    gap: 6px !important;
+  }
+
+  .soundlab-wrapper.expanded .pad {
+    border-radius: 12px !important;
+    padding: 4px !important;
+  }
+
+  .soundlab-wrapper.expanded .pad-label {
+    font-size: 9px !important;
+  }
+
+  .soundlab-wrapper.expanded .visualizer-canvas {
+    opacity: 0.6 !important;
+  }
+
+  .expand-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(5, 43, 48, 1);
+    border: 1px solid rgba(218, 244, 210, 0.4);
+    color: #daf4d2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  }
+
+  .expand-btn:hover {
+    background: rgba(7, 59, 66, 1);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .pip .expand-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .soundlab-wrapper.expanded .expand-btn {
+    top: 24px;
+    left: 24px;
+    transform: none;
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+  }
+  .soundlab-wrapper.expanded .expand-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .keyboard-prompt {
+    position: absolute;
+    top: -46px;
+    right: 0;
+    background: #daf4d2;
+    color: #042125;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    pointer-events: none;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+    animation: floatPrompt 2.5s ease-in-out infinite;
+    z-index: 10;
+  }
+
+  .keyboard-prompt::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    right: 20px;
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: #daf4d2 transparent transparent transparent;
+  }
+
+  @keyframes floatPrompt {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
   }
 </style>
