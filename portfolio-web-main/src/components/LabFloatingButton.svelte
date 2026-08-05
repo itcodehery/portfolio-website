@@ -37,6 +37,12 @@
         box-shadow: 0 8px 25px rgba(218, 244, 210, 0.15);
     }
 
+    :global(body.modal-open) .lab-floating-button {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.8) translateY(20px);
+    }
+
     @media (max-width: 850px) {
         .lab-floating-button {
             bottom: 20px;

@@ -91,10 +91,6 @@
 
 <style>
     section {
-        /* Using a slightly different background to distinguish the sections */
-        background-image: url("/who-bg.png");
-        background-size: cover;
-        background-color: rgba(4, 33, 37, 1);
         font-family: "DM Sans", sans-serif;
         color: #daf4d2;
         display: flex;

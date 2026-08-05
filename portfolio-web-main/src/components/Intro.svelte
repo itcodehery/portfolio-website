@@ -15,19 +15,10 @@
             <Tag name="Musician" />
         </div>
     </div>
-    <!-- Animated scroll-down chevron -->
-    <div class="scroll-chevron" aria-hidden="true">
-        <div class="chevron-arrow"></div>
-    </div>
 </section>
 
 <style>
     section {
-        background-color: rgba(4, 33, 37, 1);
-        background-repeat: no-repeat;
-        background-image: url("/home-bg.png");
-        background-position: center;
-        background-size: contain;
         font-family: "DM Sans", sans-serif;
         color: #daf4d2;
         display: flex;
@@ -102,34 +93,6 @@
         gap: 10px;
     }
 
-    /* Animated scroll-down chevron */
-    .scroll-chevron {
-        position: absolute;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: bob 2s ease-in-out infinite;
-    }
-
-    .chevron-arrow {
-        width: 24px;
-        height: 24px;
-        border-right: 2px solid rgba(218, 244, 210, 0.6);
-        border-bottom: 2px solid rgba(218, 244, 210, 0.6);
-        transform: rotate(45deg);
-    }
-
-    @keyframes bob {
-        0%, 100% {
-            transform: translateX(-50%) translateY(0px);
-            opacity: 0.6;
-        }
-        50% {
-            transform: translateX(-50%) translateY(12px);
-            opacity: 1;
-        }
-    }
-
     @media (max-width: 768px) {
         h1 {
             font-size: 48px;
@@ -145,15 +108,6 @@
 
         .globalwrapper {
             background-size: contain;
-        }
-
-        .scroll-chevron {
-            bottom: 24px;
-        }
-
-        .chevron-arrow {
-            width: 18px;
-            height: 18px;
         }
     }
 </style>

@@ -8,6 +8,7 @@
   import Icon from '@iconify/svelte';
 
   // ─── State ───
+  let { isAppIntro = false } = $props();
   let activePads: Record<number, boolean> = $state({});
   let bubbles: Array<{ id: number; x: number; y: number; text: string }> = $state([]);
   let bubbleId = 0;
@@ -192,6 +193,7 @@
   class="soundlab-wrapper" 
   class:inline={!isPipMode} 
   class:pip={isPipMode}
+  class:app-intro={isAppIntro}
   style={!isPipMode ? `top: ${inlineTop}px;` : ''}
 >
 <section bind:this={sectionEl} id="sound-lab">
@@ -647,6 +649,7 @@
   /* ─── PiP Mode Styles ─── */
   .soundlab-wrapper {
     transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    view-transition-name: soundlab;
   }
 
   .soundlab-wrapper.inline {
@@ -678,6 +681,35 @@
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     overflow: hidden;
     animation: pipEnter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transition: right 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s;
+  }
+
+  .soundlab-wrapper.pip.app-intro {
+    animation: 
+      centerToPipTransform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+      centerToPipOpacity 1.5s ease-out forwards;
+  }
+
+  @keyframes centerToPipTransform {
+    0% {
+      transform: translate(calc(-50vw + 190px), calc(-50vh + 130px)) scale(0.6);
+    }
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
+  @keyframes centerToPipOpacity {
+    0%, 5% {
+      opacity: 0;
+    }
+    15%, 100% {
+      opacity: 1;
+    }
+  }
+
+  :global(body.modal-open) .soundlab-wrapper.pip {
+    right: calc(100vw - 360px);
   }
 
   @keyframes pipEnter {

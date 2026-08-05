@@ -24,13 +24,13 @@
             <span class="status-badge">Active</span>
         </div>
 
-        <div class="experiment-card coming-soon">
+        <div class="experiment-card">
             <div class="card-icon">
                 <Icon icon="material-symbols:deployed-code" width="32" />
             </div>
             <h3>WebGL Physics Engine</h3>
             <p>Experimenting with Three.js and custom shaders to create a soft-body physics simulation right in the browser.</p>
-            <span class="status-badge pending">In Progress</span>
+            <span class="status-badge">Active</span>
         </div>
 
         <div class="experiment-card coming-soon">

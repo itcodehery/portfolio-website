@@ -123,10 +123,9 @@
 		padding: 5rem 2rem;
 		background-color: rgba(4, 33, 37, 1);
 		background-image: url('/home-bg.png');
-		background-position: center;
+		background-position: top center;
 		background-repeat: no-repeat;
 		background-size: cover;
-		background-attachment: fixed;
 		min-height: 100vh;
 	}
 

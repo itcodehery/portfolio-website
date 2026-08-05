@@ -50,12 +50,8 @@
 
 <style>
     section {
-        background-color: #daf4d2;
-        background-image: url("/who-bg.png");
-        background-size: cover;
-        background-repeat: no-repeat;
         font-family: "DM Sans", sans-serif;
-        color: rgba(4, 33, 37, 1);
+        color: #daf4d2;
         display: flex;
         flex-direction: row;
         height: 870px;
@@ -122,11 +118,11 @@
     .shimmer-text {
         background: linear-gradient(
             90deg,
-            rgba(4, 33, 37, 1) 0%,
-            rgba(7, 59, 66, 1) 30%,
-            rgba(4, 33, 37, 0.6) 50%,
-            rgba(7, 59, 66, 1) 70%,
-            rgba(4, 33, 37, 1) 100%
+            rgba(218, 244, 210, 1) 0%,
+            rgba(255, 255, 255, 1) 30%,
+            rgba(218, 244, 210, 0.6) 50%,
+            rgba(255, 255, 255, 1) 70%,
+            rgba(218, 244, 210, 1) 100%
         );
         background-size: 200% 100%;
         background-clip: text;
