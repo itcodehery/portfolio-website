@@ -3,8 +3,8 @@
 
     const contacts = [
         { icon: "mdi:github", label: "GitHub", url: "https://github.com/itcodehery" },
-        { icon: "mdi:linkedin", label: "LinkedIn", url: "https://linkedin.com/in/hariprasad" },
-        { icon: "mdi:email", label: "Email", url: "mailto:hello@hariprasad.com" }
+        { icon: "mdi:linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/hariprasad-bk/" },
+        { icon: "mdi:email", label: "Email", url: "mailto:hariprasadbk@proton.me" }
     ];
 </script>
 
