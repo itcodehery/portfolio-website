@@ -3,6 +3,7 @@
     import Finale from "../components/Finale.svelte";
     import Intro from "../components/Intro.svelte";
     import Who from "../components/Who.svelte";
+    import TechStack from "../components/TechStack.svelte";
     import ThreeScene from "../components/ThreeScene.svelte";
     import ScatteredProject from "../components/ScatteredProject.svelte";
     import { codeProjects, designProjects } from "../lib/projects";
@@ -15,27 +16,52 @@
     import PortfolioPage from './portfolio/+page.svelte';
     import JourneyPage from './journey/+page.svelte';
     import { isPerformanceMode } from '../lib/settings';
+    import { spring } from "svelte/motion";
 
     let windowScrollY = 0;
     let targetScroll = 0;
     let scrollY = 0;
-    let maxScroll = 30000;
     let scrollProgress = 0;
     let innerHeight = 1000; // default for SSR
 
     const timelineSections = [
-        { label: 'Start', z: 0 },
-        { label: 'About', z: 1500 },
-        { label: 'Code', z: 3000 },
-        { label: 'Design', z: 21000 },
-        { label: 'Contact', z: 30000 }
+        { label: 'Start', z: 0, count: 0 },
+        { label: 'About', z: 1500, count: 0 },
+        { label: 'Stack', z: 3000, count: 0 },
+        { label: 'Code', z: 4500, count: codeProjects.length },
+        { label: 'Design', z: 6000 + codeProjects.length * 1500, count: designProjects.length },
+        { label: 'Contact', z: 7500 + (codeProjects.length + designProjects.length) * 1500, count: 0 }
     ];
+    
+    $: maxScroll = timelineSections[5].z;
+
+    const expandCode = spring(0, { stiffness: 0.04, damping: 0.3 });
+    const expandDesign = spring(0, { stiffness: 0.04, damping: 0.3 });
+
+    $: {
+        let activeIdx = 0;
+        for (let i = timelineSections.length - 1; i >= 0; i--) {
+            if (scrollY >= timelineSections[i].z - 1000) {
+                activeIdx = i;
+                break;
+            }
+        }
+        expandCode.set(activeIdx === 3 ? 1 : 0);
+        expandDesign.set(activeIdx === 4 ? 1 : 0);
+    }
+
+    $: tops = timelineSections.map((sec, i) => {
+        let top = i * 40;
+        if (i > 3) top += $expandCode * timelineSections[3].count * 12;
+        if (i > 4) top += $expandDesign * timelineSections[4].count * 20;
+        return top;
+    });
 
     let activeModal: string | null = null;
 
     $: targetScroll = windowScrollY;
 
-    $: indicatorTop = getIndicatorTop(scrollY);
+    $: indicatorTop = getIndicatorTop(scrollY, tops, timelineSections);
     $: closeness = getCloseness(scrollY);
 
     $: if (browser) {
@@ -46,16 +72,16 @@
         }
     }
 
-    function getIndicatorTop(scroll: number) {
-        if (scroll <= timelineSections[0].z) return 0;
-        if (scroll >= timelineSections[timelineSections.length - 1].z) return (timelineSections.length - 1) * 40;
+    function getIndicatorTop(scroll: number, calculatedTops: number[], sections: typeof timelineSections) {
+        if (scroll <= sections[0].z) return calculatedTops[0];
+        if (scroll >= sections[sections.length - 1].z) return calculatedTops[calculatedTops.length - 1];
         
-        for (let i = 0; i < timelineSections.length - 1; i++) {
-            const z1 = timelineSections[i].z;
-            const z2 = timelineSections[i+1].z;
+        for (let i = 0; i < sections.length - 1; i++) {
+            const z1 = sections[i].z;
+            const z2 = sections[i+1].z;
             if (scroll >= z1 && scroll < z2) {
                 const progress = (scroll - z1) / (z2 - z1);
-                return (i * 40) + (progress * 40);
+                return calculatedTops[i] + progress * (calculatedTops[i+1] - calculatedTops[i]);
             }
         }
         return 0;
@@ -66,6 +92,20 @@
         for (const sec of timelineSections) {
             const diff = Math.abs(scroll - sec.z);
             if (diff < minDiff) minDiff = diff;
+            
+            if (sec.label === 'Code') {
+                for (let i = 0; i < codeProjects.length; i++) {
+                    const subZ = sec.z + (i + 1) * 1500;
+                    const subDiff = Math.abs(scroll - subZ);
+                    if (subDiff < minDiff) minDiff = subDiff;
+                }
+            } else if (sec.label === 'Design') {
+                for (let i = 0; i < designProjects.length; i++) {
+                    const subZ = sec.z + (i + 1) * 1500;
+                    const subDiff = Math.abs(scroll - subZ);
+                    if (subDiff < minDiff) minDiff = subDiff;
+                }
+            }
         }
         return Math.max(0, 1 - (minDiff / 400));
     }
@@ -140,8 +180,8 @@
     $: activeSection = getActiveSection(scrollY);
 
     function getActiveSection(scroll: number) {
-        if (scroll >= 3000 && scroll < 21000) return 'Code Portfolio';
-        if (scroll >= 21000 && scroll < 29000) return 'Design Portfolio';
+        if (scroll >= 4500 && scroll < 22500) return 'Code Portfolio';
+        if (scroll >= 22500 && scroll < 30500) return 'Design Portfolio';
         return '';
     }
 </script>
@@ -189,24 +229,24 @@
 {#if $isPerformanceMode}
 <div class="perf-container" class:faded={activeModal !== null}>
     <div class="perf-section intro-section">
-        <nav class="perf-nav">
-            <div class="nav-links" style="flex-direction: row; justify-content: center;">
-                {#each [
-                    { id: 'links', icon: 'mdi:link-variant', label: 'Links' },
-                    { id: 'portfolio', icon: 'mdi:code-braces-box', label: 'Portfolio' },
-                    { id: 'journey', icon: 'mdi:compass-outline', label: 'Journey' }
-                ] as link}
-                    <button class="nav-btn" onclick={() => activeModal = link.id} style="opacity: 1;">
-                        <div class="icon-wrap"><Icon icon={link.icon} width="24" /></div>
-                        <span class="nav-text" style="opacity: 1; filter: none; transform: none; position: relative; left: 0;">{link.label}</span>
-                    </button>
-                {/each}
-            </div>
-        </nav>
         <Intro />
     </div>
     
+    <nav class="floating-app-bar" class:faded={activeModal !== null}>
+        {#each [
+            { id: 'links', icon: 'mdi:link-variant', label: 'Links' },
+            { id: 'portfolio', icon: 'mdi:code-braces-box', label: 'Portfolio' },
+            { id: 'journey', icon: 'mdi:compass-outline', label: 'Journey' }
+        ] as link}
+            <button class="app-bar-btn" onclick={() => activeModal = link.id} aria-label={link.label}>
+                <div class="app-bar-icon"><Icon icon={link.icon} width="20" /></div>
+                <span>{link.label}</span>
+            </button>
+        {/each}
+    </nav>
+    
     <div class="perf-section who-section"><Who /></div>
+    <div class="perf-section stack-section"><TechStack /></div>
     
     <div class="perf-portfolio-wrap">
         <h2 class="perf-title">Code Portfolio</h2>
@@ -232,20 +272,48 @@
     <div class="snap-point" style="top: 0px;"></div>
     <div class="snap-point" style="top: 1500px;"></div>
     <div class="snap-point" style="top: 3000px;"></div>
+    <div class="snap-point" style="top: 4500px;"></div>
     {#each codeProjects as _, i}
-        <div class="snap-point" style="top: {4500 + (i * 1500)}px;"></div>
+        <div class="snap-point" style="top: {6000 + (i * 1500)}px;"></div>
     {/each}
-    <div class="snap-point" style="top: {4500 + (codeProjects.length * 1500)}px;"></div>
+    <div class="snap-point" style="top: {6000 + (codeProjects.length * 1500)}px;"></div>
     {#each designProjects as _, i}
-        <div class="snap-point" style="top: {6000 + (codeProjects.length * 1500) + (i * 1500)}px;"></div>
+        <div class="snap-point" style="top: {7500 + (codeProjects.length * 1500) + (i * 1500)}px;"></div>
     {/each}
     <div class="snap-point" style="top: {maxScroll}px;"></div>
 
     <!-- Timeline Tracker -->
-    <div class="timeline" class:faded={activeModal !== null}>
+    <div class="timeline" class:faded={activeModal !== null} style="height: {tops[tops.length - 1]}px;">
+        {#if $expandCode > 0.01}
+            {#each Array(timelineSections[3].count) as _, j}
+                {@const z = timelineSections[3].z + (j + 1) * 1500}
+                {@const progress = (j + 1) / (timelineSections[3].count + 1)}
+                <button 
+                    class="timeline-submark" 
+                    style="top: {tops[3] + progress * (tops[4] - tops[3])}px; opacity: {Math.max(0, $expandCode * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
+                    onclick={() => window.scrollTo({ top: z, behavior: 'smooth' })}
+                    aria-label="Code Project {j + 1}"
+                ></button>
+            {/each}
+        {/if}
+
+        {#if $expandDesign > 0.01}
+            {#each Array(timelineSections[4].count) as _, j}
+                {@const z = timelineSections[4].z + (j + 1) * 1500}
+                {@const progress = (j + 1) / (timelineSections[4].count + 1)}
+                <button 
+                    class="timeline-submark" 
+                    style="top: {tops[4] + progress * (tops[5] - tops[4])}px; opacity: {Math.max(0, $expandDesign * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
+                    onclick={() => window.scrollTo({ top: z, behavior: 'smooth' })}
+                    aria-label="Design Project {j + 1}"
+                ></button>
+            {/each}
+        {/if}
+
         <div class="timeline-indicator" style="top: {indicatorTop}px; width: {12 + closeness * 24}px; opacity: {0.3 + closeness * 0.7};"></div>
+        
         {#each timelineSections as section, i}
-            <button class="timeline-item" style="top: {i * 40}px" onclick={() => window.scrollTo({ top: section.z, behavior: 'smooth' })}>
+            <button class="timeline-item" style="top: {tops[i]}px" onclick={() => window.scrollTo({ top: section.z, behavior: 'smooth' })}>
                 <span class="timeline-label" class:active={Math.abs(scrollY - section.z) < 400}>{section.label}</span>
             </button>
         {/each}
@@ -283,14 +351,20 @@
                 </div>
             </div>
 
-            <div class="section-wrapper title-wrapper" style="transform: translateZ(-3000px) translateX({getCurveX(-3000)}px); pointer-events: none;">
+            <div class="section-wrapper" style="transform: translateZ(-3000px) translateX({getCurveX(-3000)}px); pointer-events: {getOpacity(-3000, scrollY) > 0.1 ? 'auto' : 'none'};">
                 <div class="content-wrapper" style="opacity: {getOpacity(-3000, scrollY)}; filter: blur({getBlur(-3000, scrollY)}px);">
+                    <TechStack />
+                </div>
+            </div>
+
+            <div class="section-wrapper title-wrapper" style="transform: translateZ(-4500px) translateX({getCurveX(-4500)}px); pointer-events: none;">
+                <div class="content-wrapper" style="opacity: {getOpacity(-4500, scrollY)}; filter: blur({getBlur(-4500, scrollY)}px);">
                     <h2 class="section-title">Code Portfolio</h2>
                 </div>
             </div>
 
             {#each codeProjects as project, i}
-                {@const zPos = -4500 - (i * 1500)}
+                {@const zPos = -6000 - (i * 1500)}
                 <div class="section-wrapper" 
                      style="transform: translateZ({zPos}px) translateX({getCurveX(zPos) + (i % 2 === 0 ? -1 : 1) * 200}px) translateY({-150 + (i % 3 === 0 ? -1 : 1) * 50}px); 
                             pointer-events: {getOpacity(zPos, scrollY) > 0.1 ? 'auto' : 'none'};">
@@ -300,14 +374,14 @@
                 </div>
             {/each}
 
-            <div class="section-wrapper title-wrapper" style="transform: translateZ({-4500 - (codeProjects.length * 1500)}px) translateX({getCurveX(-4500 - (codeProjects.length * 1500))}px); pointer-events: none;">
-                <div class="content-wrapper" style="opacity: {getOpacity(-4500 - (codeProjects.length * 1500), scrollY)}; filter: blur({getBlur(-4500 - (codeProjects.length * 1500), scrollY)}px);">
+            <div class="section-wrapper title-wrapper" style="transform: translateZ({-6000 - (codeProjects.length * 1500)}px) translateX({getCurveX(-6000 - (codeProjects.length * 1500))}px); pointer-events: none;">
+                <div class="content-wrapper" style="opacity: {getOpacity(-6000 - (codeProjects.length * 1500), scrollY)}; filter: blur({getBlur(-6000 - (codeProjects.length * 1500), scrollY)}px);">
                     <h2 class="section-title">Design Portfolio</h2>
                 </div>
             </div>
 
             {#each designProjects as project, i}
-                {@const zPos = -6000 - (codeProjects.length * 1500) - (i * 1500)}
+                {@const zPos = -7500 - (codeProjects.length * 1500) - (i * 1500)}
                 <div class="section-wrapper" 
                      style="transform: translateZ({zPos}px) translateX({getCurveX(zPos) + (i % 2 === 0 ? 1 : -1) * 200}px) translateY({-150 + (i % 3 === 0 ? 1 : -1) * 50}px); 
                             pointer-events: {getOpacity(zPos, scrollY) > 0.1 ? 'auto' : 'none'};">
@@ -317,8 +391,8 @@
                 </div>
             {/each}
 
-            <div class="section-wrapper" style="transform: translateZ(-30000px) translateX({getCurveX(-30000)}px); pointer-events: {getOpacity(-30000, scrollY) > 0.1 ? 'auto' : 'none'};">
-                <div class="content-wrapper" style="opacity: {getOpacity(-30000, scrollY)}; filter: blur({getBlur(-30000, scrollY)}px);">
+            <div class="section-wrapper" style="transform: translateZ({-timelineSections[5].z}px) translateX({getCurveX(-timelineSections[5].z)}px); pointer-events: {getOpacity(-timelineSections[5].z, scrollY) > 0.1 ? 'auto' : 'none'};">
+                <div class="content-wrapper" style="opacity: {getOpacity(-timelineSections[5].z, scrollY)}; filter: blur({getBlur(-timelineSections[5].z, scrollY)}px);">
                     <Finale />
                 </div>
             </div>
@@ -485,9 +559,27 @@
         top: 50%;
         transform: translateY(-50%);
         width: 120px;
-        height: 160px; /* 4 gaps * 40px */
         z-index: 100;
         pointer-events: none;
+        will-change: height;
+    }
+    .timeline-submark {
+        position: absolute;
+        right: 0;
+        width: 6px;
+        height: 2px;
+        margin-top: -1px;
+        background: #daf4d2;
+        border-radius: 1px;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
+        z-index: 99;
+    }
+    .timeline-submark:hover {
+        width: 14px;
+        background: #fff;
     }
     .timeline-indicator {
         position: absolute;
@@ -498,6 +590,7 @@
         border-radius: 2px;
         box-shadow: 0 0 10px rgba(218, 244, 210, 0.8);
         will-change: top, width, opacity;
+        z-index: 100;
     }
     .timeline-item {
         position: absolute;
@@ -739,20 +832,71 @@
         background-position: center;
         background-repeat: no-repeat;
     }
-    .perf-nav {
-        position: absolute;
-        top: 80px;
+    .stack-section {
+        width: 100%;
+        padding: 60px 0;
+    }
+    
+    .floating-app-bar {
+        position: fixed;
+        bottom: 40px;
         left: 50%;
         transform: translateX(-50%);
-        width: 100%;
-        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px;
+        background: rgba(4, 33, 37, 0.65);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(218, 244, 210, 0.15);
+        border-radius: 100px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(218, 244, 210, 0.05);
+        z-index: 900; /* below top-controls but above content */
+        transition: opacity 0.4s ease;
     }
-    .perf-nav .nav-btn {
-        background: rgba(7, 59, 66, 0.5);
-        border: 1px solid rgba(218, 244, 210, 0.1);
-        border-radius: 50px;
-        padding: 10px 20px;
+    
+    .app-bar-btn {
+        display: flex;
+        align-items: center;
         gap: 10px;
+        padding: 12px 24px;
+        background: transparent;
+        border: none;
+        color: #daf4d2;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        opacity: 0.7;
+    }
+    
+    .app-bar-btn:hover {
+        background: rgba(218, 244, 210, 0.12);
+        opacity: 1;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .app-bar-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    @media (max-width: 600px) {
+        .floating-app-bar {
+            bottom: 20px;
+            width: 90%;
+            justify-content: space-between;
+        }
+        .app-bar-btn {
+            padding: 10px 16px;
+            gap: 6px;
+            font-size: 13px;
+        }
     }
     .perf-section {
         display: flex;

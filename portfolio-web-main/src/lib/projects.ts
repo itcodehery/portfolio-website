@@ -24,12 +24,6 @@ export const codeProjects = [
         image: "/code-projects/portfolio_sidebet.jpg"
     },
     {
-        name: "SiGUI",
-        description: "A Rust TUI for managing Wi-Fi connections on Windows, published on Crates.io.",
-        url: "https://github.com/itcodehery/Project_Wifi",
-        image: "/code-projects/portfolio_sigui.jpg"
-    },
-    {
         name: "Heliolisk",
         description: "A Vim-like Modal Text Editor for your Terminal with a Modern TUI.",
         url: "https://github.com/itcodehery/Heliolisk",
@@ -46,18 +40,6 @@ export const codeProjects = [
         description: "A Rust-based terminal for Windows that reimagines file interaction through SQL-like commands.",
         url: "https://github.com/itcodehery/Project_Directory_2",
         image: "/code-projects/portfolio_dir2.jpg"
-    },
-    {
-        name: "Caw",
-        description: "A project aimed at bringing Rust's powerful memory safe Borrow Checker to the C programming language.",
-        url: "https://github.com/itcodehery/Borcom-Tool-Project",
-        image: "/code-projects/portfolio_caw.png"
-    },
-    {
-        name: "Proctor",
-        description: "A secure anti-cheating environment for conducting and proctoring university level Coding exams.",
-        url: "https://github.com/itcodehery/Proctor-Alpha",
-        image: "/code-projects/portfolio_proctor.png"
     },
     {
         name: "Catport",
