@@ -3,6 +3,7 @@
     export let description: string;
     export let image: string;
     export let url: string = "";
+    export let isLightMode = false;
     
     // Some random floating animation offset
     const floatDelay = Math.random() * -5;

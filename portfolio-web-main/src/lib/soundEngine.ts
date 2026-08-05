@@ -103,7 +103,7 @@ function ensureContext(): AudioContext {
     analyser.fftSize = 256;
     analyser.smoothingTimeConstant = 0.8;
     masterGain = ctx.createGain();
-    masterGain.gain.value = 0.5;
+    masterGain.gain.value = 2.5; // Significantly increased volume
     masterGain.connect(analyser);
     analyser.connect(ctx.destination);
   }

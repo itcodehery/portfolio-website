@@ -161,14 +161,15 @@
         -webkit-backdrop-filter: blur(12px);
         box-shadow: inset 0 0 20px rgba(218, 244, 210, 0.02), 0 10px 30px rgba(0, 0, 0, 0.2);
         opacity: 0;
-        transform: translateY(60px);
+        transform: translateY(60px) translateZ(0);
+        will-change: transform, opacity;
         transition: opacity 0.7s ease-out, transform 0.7s ease-out, box-shadow 0.4s ease;
         transition-delay: var(--reveal-delay, 0ms);
     }
 
     .category-card.visible {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) translateZ(0);
     }
 
     .category-card h3 {

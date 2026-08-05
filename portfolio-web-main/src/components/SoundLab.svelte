@@ -306,7 +306,7 @@
 <style>
   section {
     position: relative;
-    background-color: rgba(4, 33, 37, 1);
+    background-color: transparent;
     font-family: "DM Sans", sans-serif;
     color: #daf4d2;
     display: flex;
@@ -445,68 +445,83 @@
 
   /* ─── Category Colors ─── */
   .cat-drums {
-    background: rgba(218, 244, 210, 0.04);
+    background: var(--soundlab-pad-bg, rgba(218, 244, 210, 0.04));
+    border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.1));
   }
   .cat-drums:hover, .cat-drums.active {
-    background: rgba(218, 244, 210, 0.15);
+    background: var(--soundlab-pad-bg, rgba(218, 244, 210, 0.15));
+    border-color: rgba(218, 244, 210, 0.3);
     box-shadow: 0 0 20px rgba(218, 244, 210, 0.15);
   }
 
   .cat-perc {
-    background: rgba(136, 192, 126, 0.08);
+    background: var(--soundlab-pad-bg, rgba(136, 192, 126, 0.08));
+    border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.1));
   }
   .cat-perc:hover, .cat-perc.active {
-    background: rgba(136, 192, 126, 0.2);
+    background: var(--soundlab-pad-bg, rgba(136, 192, 126, 0.2));
+    border-color: rgba(218, 244, 210, 0.3);
     box-shadow: 0 0 20px rgba(136, 192, 126, 0.15);
   }
 
   .cat-bass-sub {
-    background: rgba(7, 150, 140, 0.12);
+    background: var(--soundlab-pad-bg, rgba(7, 150, 140, 0.12));
+    border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.1));
   }
   .cat-bass-sub:hover, .cat-bass-sub.active {
-    background: rgba(7, 90, 100, 0.7);
+    background: var(--soundlab-pad-bg, rgba(7, 90, 100, 0.7));
+    border-color: rgba(218, 244, 210, 0.3);
     box-shadow: 0 0 20px rgba(7, 120, 130, 0.3);
   }
 
   .cat-bass-growl {
-    background: rgba(7, 150, 140, 0.12);
+    background: var(--soundlab-pad-bg, rgba(7, 150, 140, 0.12));
+    border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.1));
   }
   .cat-bass-growl:hover, .cat-bass-growl.active {
-    background: rgba(7, 150, 140, 0.25);
-    box-shadow: 0 0 20px rgba(7, 150, 140, 0.2);
+    background: var(--soundlab-pad-bg, rgba(7, 150, 140, 0.25));
+    border-color: rgba(218, 244, 210, 0.3);
+    box-shadow: 0 0 20px rgba(7, 120, 130, 0.2);
   }
 
   .cat-synth-lead {
-    background: rgba(7, 150, 140, 0.12);
+    background: var(--soundlab-pad-bg, rgba(7, 150, 140, 0.12));
+    border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.1));
   }
   .cat-synth-lead:hover, .cat-synth-lead.active {
-    background: rgba(7, 150, 140, 0.25);
-    box-shadow: 0 0 20px rgba(7, 150, 140, 0.2);
+    background: var(--soundlab-pad-bg, rgba(7, 150, 140, 0.25));
+    border-color: rgba(218, 244, 210, 0.3);
+    box-shadow: 0 0 20px rgba(7, 120, 130, 0.2);
   }
 
   .cat-synth-pad {
-    background: rgba(7, 150, 140, 0.12);
+    background: var(--soundlab-pad-bg, rgba(7, 150, 140, 0.12));
+    border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.1));
   }
   .cat-synth-pad:hover, .cat-synth-pad.active {
-    background: rgba(7, 150, 140, 0.25);
-    box-shadow: 0 0 20px rgba(7, 150, 140, 0.2);
+    background: var(--soundlab-pad-bg, rgba(7, 150, 140, 0.25));
+    border-color: rgba(218, 244, 210, 0.3);
+    box-shadow: 0 0 20px rgba(7, 120, 130, 0.2);
   }
 
   .cat-synth-bright {
-    background: rgba(7, 150, 140, 0.12);
-    border-color: rgba(7, 150, 140, 0.12);
+    background: var(--soundlab-pad-bg, rgba(7, 150, 140, 0.12));
+    border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.1));
   }
   .cat-synth-bright:hover, .cat-synth-bright.active {
-    background: rgba(7, 150, 140, 0.25);
+    background: var(--soundlab-pad-bg, rgba(7, 150, 140, 0.25));
+    border-color: rgba(218, 244, 210, 0.3);
     box-shadow: 0 0 25px rgba(7, 150, 140, 0.2);
   }
 
   .cat-fx {
-    background: rgba(7, 100, 110, 0.2);
+    background: var(--soundlab-pad-bg, rgba(7, 100, 110, 0.2));
+    border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.1));
   }
   .cat-fx:hover, .cat-fx.active {
-    background: rgba(7, 100, 110, 0.35);
-    box-shadow: 0 0 25px rgba(7, 100, 110, 0.25);
+    background: var(--soundlab-pad-bg, rgba(7, 100, 110, 0.35));
+    border-color: rgba(218, 244, 210, 0.3);
+    box-shadow: 0 0 20px rgba(7, 100, 110, 0.2);
   }
 
   /* ─── Pad Labels ─── */
@@ -687,6 +702,7 @@
   .soundlab-wrapper {
     transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     view-transition-name: soundlab;
+    background: var(--soundlab-bg, rgba(4, 33, 37, 1));
   }
 
   .soundlab-wrapper.inline {
@@ -706,19 +722,19 @@
   .soundlab-wrapper.pip {
     z-index: 9999;
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 20px;
+    right: 20px;
     width: 320px;
     height: auto;
-    border-radius: 20px;
-    background: rgba(5, 43, 48, 0.95);
+    border-radius: 12px;
+    background: var(--soundlab-bg, rgba(5, 43, 48, 0.95));
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(218, 244, 210, 0.2);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     overflow: visible;
     animation: pipEnter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    transition: right 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s;
+    transition: right 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s, background 1.5s ease;
   }
 
   .soundlab-wrapper.pip.app-intro {
@@ -826,22 +842,22 @@
     position: fixed !important;
     top: 50% !important;
     left: 50% !important;
-    right: auto !important;
-    bottom: auto !important;
-    width: fit-content !important;
-    height: fit-content !important;
-    max-width: 90vw !important;
-    max-height: 90vh !important;
-    z-index: 100000 !important;
-    background: rgba(4, 33, 37, 0.98) !important;
-    backdrop-filter: blur(24px) !important;
-    border-radius: 30px !important;
-    margin: 0 !important;
     transform: translate(-50%, -50%) !important;
+    width: 90vw !important;
+    max-width: 800px !important;
+    height: 80vh !important;
+    max-height: 600px !important;
+    z-index: 99999 !important;
+    background: var(--soundlab-bg, rgba(4, 33, 37, 0.98)) !important;
+    backdrop-filter: blur(24px) !important;
+    border-radius: 20px !important;
+    margin: 0 !important;
     animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
-    transition: none !important;
-    border: 1px solid rgba(218, 244, 210, 0.2) !important;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(218, 244, 210, 0.3) !important;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 1.5s ease !important;
   }
 
   .soundlab-wrapper.expanded section {
@@ -896,7 +912,7 @@
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    background: rgba(5, 43, 48, 1);
+    background: var(--soundlab-bg, rgba(5, 43, 48, 1));
     border: 1px solid rgba(218, 244, 210, 0.4);
     color: #daf4d2;
     display: flex;

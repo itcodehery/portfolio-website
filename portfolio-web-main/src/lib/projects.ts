@@ -8,13 +8,13 @@ export const codeProjects = [
     {
         name: "Forward Meridian",
         description: "A sci-fi FPS built in Godot featuring Marathon-inspired art and futuristic South Indian worldbuilding.",
-        url: "https://github.com/itcodehery/Forward-Meridian",
+        url: "https://github.com/itcodehery/Forward-Meridian-Game",
         image: "/code-projects/portfolio_forward_meridian.png"
     },
     {
         name: "Morsels",
         description: "A logistics solution for food redistribution built with Flutter and Supabase at CodeSprint 2026.",
-        url: "https://github.com/itcodehery/morsels",
+        url: "https://github.com/itcodehery/TeamPulse-CodeSprint26",
         image: "/code-projects/portfolio_morsels.jpg"
     },
     {

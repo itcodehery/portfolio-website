@@ -33,7 +33,37 @@
         { label: 'Contact', z: 7500 + (codeProjects.length + designProjects.length) * 1500, count: 0 }
     ];
     
+    let activeModal: 'links' | 'portfolio' | 'journey' | null = null;
+    
     $: maxScroll = timelineSections[5].z;
+
+    $: activeMode = (!$isPerformanceMode && timelineSections && timelineSections[3] && timelineSections[4] && timelineSections[5]) ? 
+        (scrollY >= timelineSections[4].z - 1000 && scrollY < timelineSections[5].z - 1000 ? 'design' :
+        (scrollY >= timelineSections[3].z - 1000 && scrollY < timelineSections[4].z - 1000 ? 'code' : 'default')) : 'default';
+    
+    $: if (typeof document !== 'undefined') {
+        document.body.style.transition = 'background-color 1.5s ease-in-out';
+        document.body.classList.remove('theme-code', 'theme-design');
+        
+        if (activeMode === 'code') {
+            document.body.classList.add('theme-code');
+            document.body.style.backgroundColor = '#130b1e'; // deep midnight purple
+            document.documentElement.style.setProperty('--soundlab-bg', 'rgba(19, 11, 30, 0.95)');
+            document.documentElement.style.setProperty('--soundlab-pad-bg', 'rgba(180, 160, 240, 0.05)');
+            document.documentElement.style.setProperty('--soundlab-pad-border', 'rgba(180, 160, 240, 0.15)');
+        } else if (activeMode === 'design') {
+            document.body.classList.add('theme-design');
+            document.body.style.backgroundColor = '#061329'; // interesting deep ocean blue
+            document.documentElement.style.setProperty('--soundlab-bg', 'rgba(6, 19, 41, 0.95)');
+            document.documentElement.style.setProperty('--soundlab-pad-bg', 'rgba(150, 200, 255, 0.05)');
+            document.documentElement.style.setProperty('--soundlab-pad-border', 'rgba(150, 200, 255, 0.15)');
+        } else {
+            document.body.style.backgroundColor = '#042125'; // dark green
+            document.documentElement.style.removeProperty('--soundlab-bg');
+            document.documentElement.style.removeProperty('--soundlab-pad-bg');
+            document.documentElement.style.removeProperty('--soundlab-pad-border');
+        }
+    }
 
     const expandCode = spring(0, { stiffness: 0.04, damping: 0.3 });
     const expandDesign = spring(0, { stiffness: 0.04, damping: 0.3 });
@@ -56,8 +86,6 @@
         if (i > 4) top += $expandDesign * timelineSections[4].count * 20;
         return top;
     });
-
-    let activeModal: string | null = null;
 
     $: targetScroll = windowScrollY;
 
@@ -143,12 +171,10 @@
         return 0;
     }
 
-    // Function to calculate curved path X coordinate based on Z
     function getCurveX(z: number) {
         return Math.sin(z / 2000) * 800;
     }
 
-    // Custom wipe transitions with cross-browser support
     function wipeIn(node: Element, { duration = 800, delay = 0 }) {
         return {
             duration, delay, easing: cubicInOut,
@@ -180,16 +206,48 @@
     $: activeSection = getActiveSection(scrollY);
 
     function getActiveSection(scroll: number) {
-        if (scroll >= 4500 && scroll < 22500) return 'Code Portfolio';
-        if (scroll >= 22500 && scroll < 30500) return 'Design Portfolio';
+        if (!timelineSections || timelineSections.length < 6) return '';
+        const codeStart = timelineSections[3].z;
+        const designStart = timelineSections[4].z;
+        const contactStart = timelineSections[5].z;
+        
+        if (scroll >= codeStart - 100 && scroll < designStart - 100) return 'Code Portfolio';
+        if (scroll >= designStart - 100 && scroll < contactStart - 100) return 'Design Portfolio';
         return '';
+    }
+
+    function slowScrollTo(targetZ: number) {
+        if (typeof window === 'undefined') return;
+        const startY = window.scrollY;
+        const distance = targetZ - startY;
+        const duration = 1200; // 1.2 seconds for faster cinematic scroll
+        let startTime: number | null = null;
+        
+        function animation(currentTime: number) {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const progress = Math.min(timeElapsed / duration, 1);
+            
+            // easeInOutCubic function
+            const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+            
+            window.scrollTo(0, startY + (distance * ease));
+            
+            if (timeElapsed < duration) {
+                requestAnimationFrame(animation);
+            }
+        }
+        
+        requestAnimationFrame(animation);
     }
 </script>
 
 <svelte:window bind:scrollY={windowScrollY} bind:innerHeight={innerHeight} />
 
+<div class="main-wrapper">
+
 {#if !$isPerformanceMode}
-<ThreeScene {scrollProgress} />
+<ThreeScene {scrollProgress} {activeMode} />
 {/if}
 
 <div class="top-controls">
@@ -199,14 +257,6 @@
             <div class="toggle-knob" class:right={$isPerformanceMode}></div>
         </div>
         <span class="toggle-label" class:active={$isPerformanceMode}>Lite</span>
-    </button>
-    <button 
-        class="back-to-top" 
-        class:visible={windowScrollY > 1000}
-        onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        aria-label="Back to Start"
-    >
-        <Icon icon="material-symbols:arrow-upward" width="24" />
     </button>
 </div>
 
@@ -291,7 +341,7 @@
                 <button 
                     class="timeline-submark" 
                     style="top: {tops[3] + progress * (tops[4] - tops[3])}px; opacity: {Math.max(0, $expandCode * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
-                    onclick={() => window.scrollTo({ top: z, behavior: 'smooth' })}
+                    onclick={() => slowScrollTo(z)}
                     aria-label="Code Project {j + 1}"
                 ></button>
             {/each}
@@ -304,7 +354,7 @@
                 <button 
                     class="timeline-submark" 
                     style="top: {tops[4] + progress * (tops[5] - tops[4])}px; opacity: {Math.max(0, $expandDesign * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
-                    onclick={() => window.scrollTo({ top: z, behavior: 'smooth' })}
+                    onclick={() => slowScrollTo(z)}
                     aria-label="Design Project {j + 1}"
                 ></button>
             {/each}
@@ -313,7 +363,7 @@
         <div class="timeline-indicator" style="top: {indicatorTop}px; width: {12 + closeness * 24}px; opacity: {0.3 + closeness * 0.7};"></div>
         
         {#each timelineSections as section, i}
-            <button class="timeline-item" style="top: {tops[i]}px" onclick={() => window.scrollTo({ top: section.z, behavior: 'smooth' })}>
+            <button class="timeline-item" style="top: {tops[i]}px" onclick={() => slowScrollTo(section.z)}>
                 <span class="timeline-label" class:active={Math.abs(scrollY - section.z) < 400}>{section.label}</span>
             </button>
         {/each}
@@ -420,6 +470,8 @@
     </div>
 {/if}
 
+</div>
+
 <style>
     :global(html) {
         scroll-snap-type: y mandatory;
@@ -436,6 +488,7 @@
         gap: 20px;
         z-index: 1000;
         align-items: center;
+        transition: color 0.3s ease;
     }
     .minimal-toggle {
         display: flex;
@@ -719,7 +772,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -730,7 +783,7 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        height: 100%;
+        min-height: 100vh;
         will-change: opacity, filter;
     }
     .title-wrapper {
@@ -839,7 +892,8 @@
     
     .floating-app-bar {
         position: fixed;
-        bottom: 40px;
+        top: 40px;
+        bottom: auto;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
@@ -888,7 +942,8 @@
     
     @media (max-width: 600px) {
         .floating-app-bar {
-            bottom: 20px;
+            top: 20px;
+            bottom: auto;
             width: 90%;
             justify-content: space-between;
         }
@@ -932,5 +987,52 @@
     }
     :global(.perf-container .project-container) {
         animation: none !important;
+    }
+
+    .fixed-title-container h1 {
+        font-size: 100px;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -3px;
+        color: #daf4d2;
+        text-shadow: 0 0 20px rgba(218, 244, 210, 0.4);
+        transition: color 1.5s ease, text-shadow 1.5s ease;
+    }
+    
+    /* --- THEME TRANSITIONS (For 3D Mode Sections) --- */
+    
+    :global(body.theme-code .project-card),
+    :global(body.theme-code .soundlab-wrapper.pip),
+    :global(body.theme-code .soundlab-wrapper.expanded),
+    :global(body.theme-code .expand-btn),
+    :global(body.theme-code .lab-floating-button) {
+        background: rgba(19, 11, 30, 0.85) !important;
+        transition: background 1.5s ease, transform 0.3s ease !important;
+    }
+    
+    :global(body.theme-design .project-card),
+    :global(body.theme-design .soundlab-wrapper.pip),
+    :global(body.theme-design .soundlab-wrapper.expanded),
+    :global(body.theme-design .expand-btn),
+    :global(body.theme-design .lab-floating-button) {
+        background: rgba(6, 19, 41, 0.85) !important;
+        transition: background 1.5s ease, transform 0.3s ease !important;
+    }
+    
+    :global(body.theme-code .pad) {
+        background: rgba(180, 160, 240, 0.05) !important;
+        border-color: rgba(180, 160, 240, 0.15) !important;
+    }
+    
+    :global(body.theme-design .pad) {
+        background: rgba(150, 200, 255, 0.05) !important;
+        border-color: rgba(150, 200, 255, 0.15) !important;
+    }
+    
+    :global(body .project-card),
+    :global(body .soundlab-wrapper),
+    :global(body .expand-btn),
+    :global(body .lab-floating-button) {
+        transition: background 1.5s ease, transform 0.3s ease;
     }
 </style>

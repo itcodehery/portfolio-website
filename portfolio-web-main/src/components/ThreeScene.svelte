@@ -5,6 +5,7 @@
     let canvasEl: HTMLCanvasElement;
     
     export let scrollProgress = 0; // 0 to 1
+    export let activeMode = 'default';
 
     onMount(() => {
         const scene = new THREE.Scene();
@@ -137,6 +138,14 @@
             const baseTargetX = Math.sin(camera.position.z / 50) * 20;
             const targetX = baseTargetX + (mouseX * 4);
             camera.position.x += (targetX - camera.position.x) * 0.05;
+
+            // Animate fog color based on activeMode
+            // Midnight Purple: 0x130b1e, Ocean Blue: 0x061329, Dark green: 0x042125
+            const targetFogColor = new THREE.Color(
+                activeMode === 'code' ? 0x130b1e : 
+                activeMode === 'design' ? 0x061329 : 0x042125
+            );
+            scene.fog.color.lerp(targetFogColor, 0.05);
 
             // Add gentle bobbing and subtle mouse Y sway
             const baseTargetY = Math.sin(elapsedTime * 0.5) * 0.5;
