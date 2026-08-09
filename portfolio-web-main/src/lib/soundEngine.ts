@@ -27,16 +27,16 @@ export const PAD_GRID: PadConfig[][] = [
     { id: 6,  label: 'Tom Hi',  category: 'drums', key: '7' },
     { id: 7,  label: 'Tom Lo',  category: 'drums', key: '8' },
   ],
-  // Row 2: Percussion
+  // Row 2: Pad
   [
-    { id: 8,  label: 'Crash',   category: 'perc', key: 'q' },
-    { id: 9,  label: 'Ride',    category: 'perc', key: 'w' },
-    { id: 10, label: 'Shaker',  category: 'perc', key: 'e' },
-    { id: 11, label: 'Cowbell', category: 'perc', key: 'r' },
-    { id: 12, label: 'Tamb',   category: 'perc', key: 't' },
-    { id: 13, label: 'Conga',   category: 'perc', key: 'y' },
-    { id: 14, label: 'Bongo',   category: 'perc', key: 'u' },
-    { id: 15, label: 'Block',   category: 'perc', key: 'i' },
+    { id: 8,  label: 'C5', category: 'synth-pad', key: 'q' },
+    { id: 9,  label: 'D5', category: 'synth-pad', key: 'w' },
+    { id: 10, label: 'E5', category: 'synth-pad', key: 'e' },
+    { id: 11, label: 'F5', category: 'synth-pad', key: 'r' },
+    { id: 12, label: 'G5', category: 'synth-pad', key: 't' },
+    { id: 13, label: 'A5', category: 'synth-pad', key: 'y' },
+    { id: 14, label: 'B5', category: 'synth-pad', key: 'u' },
+    { id: 15, label: 'C6', category: 'synth-pad', key: 'i' },
   ],
 
   // Row 5: Synth Lead (Square)
@@ -65,7 +65,7 @@ export const PAD_GRID: PadConfig[][] = [
 
 // Row category labels
 export const ROW_LABELS = [
-  'Drums', 'Perc', 'Lead', 'FX'
+  'Drums', 'Pad', 'Lead', 'FX'
 ];
 
 // Category color map (CSS class suffixes)
@@ -237,6 +237,23 @@ function playDropFx() {
 }
 
 // ─── Main play function ───
+
+export function playMetronomeClick() {
+  const c = ensureContext();
+  const osc = c.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(1000, c.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(100, c.currentTime + 0.05);
+
+  const env = c.createGain();
+  env.gain.setValueAtTime(0.4, c.currentTime);
+  env.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.05);
+
+  osc.connect(env);
+  env.connect(masterGain!);
+  osc.start(c.currentTime);
+  osc.stop(c.currentTime + 0.06);
+}
 
 export function playSound(padId: number): void {
   ensureContext();

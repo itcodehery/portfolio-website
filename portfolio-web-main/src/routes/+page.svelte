@@ -139,6 +139,9 @@
     }
 
     onMount(() => {
+        if (window.innerWidth <= 768) {
+            $isPerformanceMode = true;
+        }
         let frameId: number;
         const renderScroll = () => {
             if (!$isPerformanceMode) {
@@ -218,27 +221,10 @@
 
     function slowScrollTo(targetZ: number) {
         if (typeof window === 'undefined') return;
-        const startY = window.scrollY;
-        const distance = targetZ - startY;
-        const duration = 1200; // 1.2 seconds for faster cinematic scroll
-        let startTime: number | null = null;
-        
-        function animation(currentTime: number) {
-            if (startTime === null) startTime = currentTime;
-            const timeElapsed = currentTime - startTime;
-            const progress = Math.min(timeElapsed / duration, 1);
-            
-            // easeInOutCubic function
-            const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-            
-            window.scrollTo(0, startY + (distance * ease));
-            
-            if (timeElapsed < duration) {
-                requestAnimationFrame(animation);
-            }
-        }
-        
-        requestAnimationFrame(animation);
+        window.scrollTo({
+            top: targetZ,
+            behavior: 'smooth'
+        });
     }
 </script>
 
@@ -309,7 +295,7 @@
         <h2 class="perf-title" style="margin-top: 100px;">Design Portfolio</h2>
         <div class="perf-grid">
             {#each designProjects as project}
-                <ScatteredProject {...project} />
+                <ScatteredProject {...project} isDesign={true} />
             {/each}
         </div>
     </div>
@@ -436,7 +422,7 @@
                      style="transform: translateZ({zPos}px) translateX({getCurveX(zPos) + (i % 2 === 0 ? 1 : -1) * 200}px) translateY({-150 + (i % 3 === 0 ? 1 : -1) * 50}px); 
                             pointer-events: {getOpacity(zPos, scrollY) > 0.1 ? 'auto' : 'none'};">
                     <div class="content-wrapper" style="opacity: {getOpacity(zPos, scrollY)}; filter: blur({getBlur(zPos, scrollY)}px);">
-                        <ScatteredProject {...project} />
+                        <ScatteredProject {...project} isDesign={true} />
                     </div>
                 </div>
             {/each}
@@ -1034,5 +1020,11 @@
     :global(body .expand-btn),
     :global(body .lab-floating-button) {
         transition: background 1.5s ease, transform 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+        .top-controls {
+            display: none !important;
+        }
     }
 </style>

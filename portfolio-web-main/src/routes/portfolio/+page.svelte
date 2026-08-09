@@ -47,7 +47,7 @@
     // --- ADD YOUR CODING PROJECTS HERE ---
     let codeProjects = [
         {
-            url: "/code-projects/portfolio_blip.jpeg",
+            url: "/code-projects/portfolio_blipengine.png",
             alt: "Blip Engine",
             name: "Blip Engine",
             details: "An ML-Based Physics Engine that automatically recognizes uploaded objects and simulates them in a 3D World.",
@@ -61,25 +61,18 @@
             link: "https://github.com/itcodehery/Forward-Meridian-Game"
         },
         {
-            url: "/code-projects/portfolio_morsels.jpg",
+            url: "/code-projects/portfolio_morsels.png",
             alt: "Morsels",
             name: "Morsels",
             details: "A logistics solution for food redistribution built with Flutter and Supabase at CodeSprint 2026.",
             link: "https://github.com/itcodehery/TeamPulse-CodeSprint26"
         },
         {
-            url: "/code-projects/portfolio_sidebet.jpg",
+            url: "/code-projects/portfolio_sidebets.png",
             alt: "Sidebet Monad",
             name: "Sidebet Monad",
             details: "A Web3 and Telegram bot integration designed for placing stakes on trash talk.",
             link: "https://github.com/itcodehery/sidebet-monad"
-        },
-        {
-            url: "/code-projects/portfolio_sigui.jpg",
-            alt: "SiGUI",
-            name: "SiGUI",
-            details: "A Rust TUI for managing Wi-Fi connections on Windows, published on Crates.io.",
-            link: "https://github.com/itcodehery/Project_Wifi"
         },
         {
             url: "/code-projects/portfolio_heliolisk.png",
@@ -91,7 +84,7 @@
         {
             url: "/code-projects/portfolio_minty.png",
             alt: "TeachersPet",
-            name: "Minty (Teacher's Pet)",
+            name: "Minty App",
             details: "A Flutter app for building custom question papers using drag-and-drop components.",
             link: "https://github.com/itcodehery/TeachersPet"
         },
@@ -101,20 +94,6 @@
             name: "dir2 (File System)",
             details: "A Rust-based terminal for Windows that reimagines file interaction through SQL-like commands.",
             link: "https://github.com/itcodehery/Project_Directory_2"
-        },
-        {
-            url: "/code-projects/portfolio_caw.png",
-            alt: "Caw",
-            name: "Caw",
-            details: "A project aimed at bringing Rust's powerful memory safe Borrow Checker to the C programming language.",
-            link: "https://github.com/itcodehery/Borcom-Tool-Project"
-        },
-        {
-            url: "/code-projects/portfolio_proctor.png",
-            alt: "Proctor",
-            name: "Proctor",
-            details: "A secure anti-cheating environment for conducting and proctoring university level Coding exams.",
-            link: "https://github.com/itcodehery/Proctor-Alpha"
         },
         {
             url: "/code-projects/portfolio_catport.png",

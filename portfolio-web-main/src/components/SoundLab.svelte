@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { fly, fade } from 'svelte/transition';
-  import { PAD_GRID, ROW_LABELS, CATEGORY_COLORS, KEY_TO_PAD, playSound, getAnalyser } from '$lib/soundEngine';
+  import { PAD_GRID, ROW_LABELS, CATEGORY_COLORS, KEY_TO_PAD, playSound, getAnalyser, playMetronomeClick } from '$lib/soundEngine';
   import type { PadConfig } from '$lib/soundEngine';
   import { getRandomFact } from '$lib/facts';
   import { page } from '$app/stores';
@@ -22,6 +22,112 @@
   let wrapperEl: HTMLDivElement | undefined = $state(undefined);
   let isExpanded = $state(false);
   let showKeyboardPrompt = $state(false);
+
+  // ─── Looper State ───
+  let tempo = $state(120);
+  let isRecording = $state(false);
+  let isPlaying = $state(false);
+  let activeTrack = $state(0);
+  
+  type RecordedEvent = { padId: number; time: number };
+  let tracks: RecordedEvent[][] = $state([[], [], []]);
+  
+  let recordStartTime = 0;
+  let playStartTime = 0;
+  let metronomeInterval: number | null = null;
+  let playbackTimeouts: number[] = [];
+  let recordTimeout: number | null = null;
+
+  function startMetronome() {
+    if (metronomeInterval) clearInterval(metronomeInterval);
+    const msPerBeat = 60000 / tempo;
+    playMetronomeClick();
+    metronomeInterval = setInterval(() => {
+      playMetronomeClick();
+    }, msPerBeat) as any;
+  }
+
+  function stopMetronome() {
+    if (metronomeInterval) {
+      clearInterval(metronomeInterval);
+      metronomeInterval = null;
+    }
+  }
+
+  function toggleRecord(trackIndex: number) {
+    if (isRecording && activeTrack === trackIndex) {
+      isRecording = false;
+      stopMetronome();
+      if (recordTimeout) clearTimeout(recordTimeout);
+    } else {
+      stopPlayback();
+      if (recordTimeout) clearTimeout(recordTimeout);
+      isRecording = true;
+      activeTrack = trackIndex;
+      tracks[trackIndex] = [];
+      recordStartTime = performance.now();
+      startMetronome();
+      recordTimeout = setTimeout(() => {
+        if (isRecording) {
+          isRecording = false;
+          stopMetronome();
+        }
+      }, 20000) as any;
+    }
+  }
+
+  function stopPlayback() {
+    isPlaying = false;
+    playbackTimeouts.forEach(clearTimeout);
+    playbackTimeouts = [];
+  }
+
+  function togglePlay() {
+    if (isPlaying) {
+      stopPlayback();
+    } else {
+      if (isRecording) {
+        isRecording = false;
+        stopMetronome();
+        if (recordTimeout) clearTimeout(recordTimeout);
+      }
+      isPlaying = true;
+      playStartTime = performance.now();
+      
+      let hasEvents = false;
+      tracks.forEach(track => {
+        if (track.length > 0) hasEvents = true;
+        track.forEach(event => {
+          const t = setTimeout(() => {
+            if (isPlaying) {
+                playSound(event.padId);
+                activePads[event.padId] = true;
+                setTimeout(() => activePads[event.padId] = false, 200);
+            }
+          }, event.time);
+          playbackTimeouts.push(t as any);
+        });
+      });
+      
+      const maxTime = Math.max(0, ...tracks.flatMap(t => t.map(e => e.time)));
+      if (hasEvents && maxTime > 0) {
+        const t = setTimeout(() => {
+          isPlaying = false;
+        }, maxTime + 500);
+        playbackTimeouts.push(t as any);
+      } else {
+        isPlaying = false;
+      }
+    }
+  }
+  
+  function handleTempoChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    tempo = parseInt(input.value);
+    if (isRecording) {
+      startMetronome();
+    }
+  }
 
   function toggleExpand(e: MouseEvent) {
     e.stopPropagation();
@@ -85,6 +191,13 @@
       activePads[pad.id] = false;
     }, 200);
 
+    if (isRecording) {
+      tracks[activeTrack].push({
+        padId: pad.id,
+        time: performance.now() - recordStartTime
+      });
+    }
+
     // Spawn fact bubble randomly across the section (with a cooldown to prevent overlap)
     const now = Date.now();
     if (sectionEl && now - lastBubbleTime > 1200 && Math.random() < 0.6) {
@@ -118,6 +231,13 @@
       setTimeout(() => {
         activePads[padId] = false;
       }, 200);
+
+      if (isRecording) {
+        tracks[activeTrack].push({
+          padId: padId,
+          time: performance.now() - recordStartTime
+        });
+      }
 
       // Spawn fact bubble randomly across the section (with a cooldown)
       const now = Date.now();
@@ -288,6 +408,57 @@
         <span>YouTube</span>
       </button>
     </div>
+
+    <!-- Looper UI -->
+    {#if isExpanded}
+      <div class="looper-ui" in:fly={{ y: 20, duration: 600, delay: 200 }}>
+        <div class="looper-header">
+          <span>Looper Controls</span>
+          <div class="info-icon">
+            <Icon icon="mdi:information-outline" width="16" />
+            <div class="info-tooltip">
+              Set your tempo, record up to 3 layers (max 20s each), and play them back together!
+            </div>
+          </div>
+        </div>
+        <div class="looper-controls">
+          <div class="tempo-control">
+            <label for="tempo-slider">Tempo: {tempo} BPM</label>
+            <input 
+              id="tempo-slider" 
+              type="range" 
+              min="60" 
+              max="140" 
+              step="1" 
+              bind:value={tempo} 
+              oninput={handleTempoChange} 
+            />
+          </div>
+          
+          <div class="track-controls">
+            {#each [0, 1, 2] as i}
+              <button 
+                class="track-btn" 
+                class:recording={isRecording && activeTrack === i}
+                class:has-data={tracks[i].length > 0}
+                onclick={() => toggleRecord(i)}
+              >
+                <Icon icon="mdi:record-circle" width="16" /> Track {i + 1}
+              </button>
+            {/each}
+          </div>
+          
+          <button 
+            class="play-btn" 
+            class:playing={isPlaying}
+            onclick={togglePlay}
+          >
+            <Icon icon={isPlaying ? "mdi:stop" : "mdi:play"} width="24" /> 
+            {isPlaying ? 'Stop' : 'Play All'}
+          </button>
+        </div>
+      </div>
+    {/if}
   </div>
 
   <!-- Fact Bubbles (fixed position, rendered over everything) -->
@@ -595,6 +766,184 @@
     transform: translateY(-2px);
   }
 
+  /* ─── Looper UI ─── */
+  .looper-ui {
+    background: rgba(4, 33, 37, 0.6);
+    border: none;
+    border-radius: 20px;
+    padding: 30px;
+    margin-top: 10px;
+    margin-bottom: 0;
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 740px;
+    font-family: "DM Sans", sans-serif;
+  }
+
+  .looper-ui button, .looper-ui input {
+    font-family: inherit;
+  }
+
+  .looper-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(218, 244, 210, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .info-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+    background: rgba(218, 244, 210, 0.1);
+    border: 1px solid rgba(218, 244, 210, 0.3);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    margin-left: 4px;
+  }
+
+  .info-icon:hover {
+    opacity: 1;
+    background: rgba(218, 244, 210, 0.2);
+    transform: scale(1.05);
+  }
+
+  .info-tooltip {
+    position: absolute;
+    bottom: 150%;
+    left: 0;
+    transform: translateY(10px);
+    background: rgba(4, 33, 37, 0.95);
+    border: 1px solid rgba(218, 244, 210, 0.2);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #daf4d2;
+    width: 250px;
+    white-space: normal;
+    line-height: 1.4;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    text-transform: none;
+    letter-spacing: normal;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 100;
+  }
+
+  .info-icon:hover .info-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .looper-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .tempo-control {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 150px;
+  }
+  
+  .tempo-control label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: rgba(218, 244, 210, 0.8);
+  }
+  
+  .tempo-control input[type="range"] {
+    accent-color: #daf4d2;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .track-controls {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .track-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(218, 244, 210, 0.05);
+    border: 1px solid rgba(218, 244, 210, 0.2);
+    color: #daf4d2;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .track-btn:hover {
+    background: rgba(218, 244, 210, 0.1);
+  }
+  
+  .track-btn.recording {
+    background: rgba(255, 80, 80, 0.2);
+    border-color: rgba(255, 80, 80, 0.6);
+    color: #ff9999;
+    box-shadow: 0 0 15px rgba(255, 80, 80, 0.3);
+    animation: pulse 1s infinite alternate;
+  }
+  
+  .track-btn.has-data:not(.recording) {
+    border-color: rgba(136, 192, 126, 0.6);
+    background: rgba(136, 192, 126, 0.1);
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.03); }
+  }
+  
+  .play-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #daf4d2;
+    color: #042125;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(218, 244, 210, 0.2);
+  }
+  
+  .play-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(218, 244, 210, 0.3);
+  }
+  
+  .play-btn.playing {
+    background: #88c07e;
+  }
+
   /* ─── Fact Bubbles ─── */
   .fact-bubble {
     position: fixed;
@@ -830,28 +1179,26 @@
   @keyframes modalPop {
     0% {
       opacity: 0;
-      transform: translate(-50%, -40%) scale(0.9);
+      transform: scale(0.95);
     }
     100% {
       opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
+      transform: scale(1);
     }
   }
 
   .soundlab-wrapper.expanded {
     position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
+    inset: 0 !important;
+    margin: auto !important;
     width: 90vw !important;
     max-width: 800px !important;
-    height: 80vh !important;
-    max-height: 600px !important;
+    height: fit-content !important;
+    max-height: 90vh !important;
     z-index: 99999 !important;
     background: var(--soundlab-bg, rgba(4, 33, 37, 0.98)) !important;
     backdrop-filter: blur(24px) !important;
     border-radius: 20px !important;
-    margin: 0 !important;
     animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
     border: 1px solid rgba(218, 244, 210, 0.3) !important;
     box-shadow: 0 30px 60px rgba(0,0,0,0.8) !important;
@@ -862,8 +1209,8 @@
 
   .soundlab-wrapper.expanded section {
     min-height: auto !important;
-    height: 100% !important;
-    padding: 60px !important;
+    height: auto !important;
+    padding: 40px !important;
   }
 
   .soundlab-wrapper.expanded .header {
@@ -976,5 +1323,45 @@
   @keyframes floatPrompt {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
+  }
+
+  @media (max-width: 768px) {
+    .looper-ui {
+      display: none !important;
+    }
+
+    .soundlab-wrapper.expanded {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: none !important;
+      max-height: none !important;
+      border-radius: 0 !important;
+      border: none !important;
+      justify-content: center !important;
+    }
+
+    .soundlab-wrapper.expanded section {
+      padding: 20px 10px !important;
+    }
+    
+    .soundlab-wrapper.expanded .grid-container {
+      width: 100% !important;
+    }
+
+    .soundlab-wrapper.expanded .row-labels {
+      display: none !important;
+    }
+
+    .soundlab-wrapper.expanded .pad-grid {
+      gap: 4px !important;
+    }
+
+    .soundlab-wrapper.expanded .pad {
+      border-radius: 8px !important;
+    }
+    
+    .soundlab-wrapper.expanded .header {
+      margin-bottom: 16px !important;
+    }
   }
 </style>

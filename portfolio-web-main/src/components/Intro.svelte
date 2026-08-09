@@ -1,12 +1,62 @@
 <script>
     import Tag from "./Tag.svelte";
     import { fade } from "svelte/transition";
+    import { onMount } from "svelte";
+
+    const languages = [
+        "Hello!", 
+        "வணக்கம்!", 
+        "ನಮಸ್ಕಾರ!", 
+        "Bonjour!", 
+        "नमस्ते!"
+    ];
+    let currentText = "Hello!";
+    let langIndex = 0;
+    let charIndex = 6; // Starts fully typed
+    let isDeleting = false;
+
+    onMount(() => {
+        let timeout;
+
+        function type() {
+            const currentLang = languages[langIndex];
+            
+            if (isDeleting) {
+                currentText = currentLang.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                currentText = currentLang.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 120;
+
+            if (!isDeleting && currentText === currentLang) {
+                typeSpeed = langIndex === 0 ? 7000 : 2500; // English stays for 7s, others 2.5s
+                isDeleting = true;
+            } else if (isDeleting && currentText === "") {
+                isDeleting = false;
+                langIndex = (langIndex + 1) % languages.length;
+                typeSpeed = 500; // Pause before typing next word
+            }
+
+            timeout = setTimeout(type, typeSpeed);
+        }
+
+        // Start animation after a short delay
+        timeout = setTimeout(() => {
+            isDeleting = true;
+            type();
+        }, 7000);
+
+        return () => clearTimeout(timeout);
+    });
 </script>
 
 <section>
     <div class="globalwrapper" in:fade={{ duration: 2000 }}>
         <div class="text-container">
-            <h4>Hello!</h4>
+            <h4>{currentText}<span class="cursor">|</span></h4>
             <span class="typing-text"><h1>I'm Hari Prasad</h1></span>
         </div>
         <div class="tags-container">
@@ -57,15 +107,7 @@
         display: inline-block;
     }
 
-    /* Typewriter cursor blink effect */
-    h1::after {
-        content: "|";
-        display: inline-block;
-        margin-left: 4px;
-        animation: blink 1s step-end infinite;
-        color: #daf4d2;
-        font-weight: 300;
-    }
+
 
     @keyframes blink {
         0%, 100% {
@@ -74,6 +116,14 @@
         50% {
             opacity: 0;
         }
+    }
+
+    .cursor {
+        display: inline-block;
+        margin-left: 4px;
+        animation: blink 1s step-end infinite;
+        color: #daf4d2;
+        font-weight: 300;
     }
 
     h4 {

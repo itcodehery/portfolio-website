@@ -4,9 +4,13 @@
     export let image: string;
     export let url: string = "";
     export let isLightMode = false;
+    export let isDesign = false;
     
     // Some random floating animation offset
     const floatDelay = Math.random() * -5;
+
+    const defaultDesignUrl = "https://www.figma.com/file/6lUhI6edjVVi2N4mEIq9wu/All-Concept-Finals?type=design&node-id=0%3A1&mode=design&t=JjXUthBvDO1YWEYY-1";
+    $: finalUrl = url || (isDesign ? defaultDesignUrl : "");
 </script>
 
 <div class="project-container" style="animation-delay: {floatDelay}s;">
@@ -16,9 +20,19 @@
         </div>
         <div class="info">
             <h3>{name}</h3>
-            <p>{description}</p>
-            {#if url}
-                <a href={url} target="_blank" rel="noopener noreferrer">View Project ↗</a>
+            <div class="description-wrapper">
+                <div class="description-inner">
+                    <p>{description}</p>
+                </div>
+            </div>
+            {#if finalUrl}
+                <div class="button-wrapper">
+                    <div class="button-inner">
+                        <div class="button-reveal">
+                            <a href={finalUrl} target="_blank" rel="noopener noreferrer">{isDesign ? 'View Design ↗' : 'View Project ↗'}</a>
+                        </div>
+                    </div>
+                </div>
             {/if}
         </div>
     </div>
@@ -55,10 +69,10 @@
         -webkit-backdrop-filter: blur(20px);
         border: none;
         border-radius: 20px;
-        padding: 20px;
+        padding: 0 0 20px 0;
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 0;
         color: #daf4d2;
         font-family: 'DM Sans', sans-serif;
         box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1), 0 30px 60px rgba(0, 0, 0, 0.6);
@@ -86,9 +100,10 @@
     .image-wrap {
         width: 100%;
         height: 200px;
-        border-radius: 12px;
+        border-radius: 20px 20px 0 0;
         overflow: hidden;
         background: rgba(0, 0, 0, 0.2);
+        flex-shrink: 0;
     }
 
     .image-wrap img {
@@ -107,7 +122,7 @@
     .info {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        padding: 20px 20px 0 20px;
     }
 
     h3 {
@@ -117,24 +132,76 @@
         letter-spacing: -0.5px;
     }
 
+    .description-wrapper {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.4s ease, margin-top 0.4s ease;
+        margin-top: 0;
+    }
+
+    .project-card:hover .description-wrapper {
+        grid-template-rows: 1fr;
+        margin-top: 10px;
+    }
+
+    .description-inner {
+        overflow: hidden;
+    }
+
     p {
         margin: 0;
         font-size: 14px;
-        opacity: 0.75;
+        opacity: 0;
+        transform: translateY(10px);
         line-height: 1.5;
         font-weight: 400;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .project-card:hover p {
+        opacity: 0.75;
+        transform: translateY(0);
+        transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+    }
+
+    .button-wrapper {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.4s ease, margin-top 0.4s ease;
+        margin-top: 0;
+    }
+
+    .project-card:hover .button-wrapper {
+        grid-template-rows: 1fr;
+        margin-top: 16px;
+        transition-delay: 1.2s;
+    }
+
+    .button-inner {
+        overflow: hidden;
+    }
+
+    .button-reveal {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        padding-bottom: 10px;
+    }
+
+    .project-card:hover .button-reveal {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.4s ease 1.3s, transform 0.4s ease 1.3s;
     }
 
     a {
         color: var(--lime-light, #daf4d2);
         text-decoration: none;
         font-weight: 500;
-        margin-top: 8px;
         display: inline-flex;
         padding: 10px 20px;
         background: rgba(218, 244, 210, 0.05);
         border-radius: 50px;
-        align-self: flex-start;
         transition: all 0.3s ease;
         backdrop-filter: blur(5px);
     }
@@ -157,7 +224,7 @@
     @media (max-width: 768px) {
         .project-card {
             width: 300px;
-            padding: 16px;
+            padding: 0 0 16px 0;
             border-radius: 16px;
         }
         .image-wrap {
