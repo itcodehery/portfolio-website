@@ -4,6 +4,10 @@
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
     import { onNavigate } from "$app/navigation";
+    import { dev } from '$app/environment';
+    import { injectAnalytics } from '@vercel/analytics/sveltekit';
+
+    injectAnalytics({ mode: dev ? 'development' : 'production' });
 
     let isLoading = $state(true);
     let loadedPads = $state(0);

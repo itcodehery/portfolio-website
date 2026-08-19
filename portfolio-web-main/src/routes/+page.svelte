@@ -274,7 +274,7 @@
             { id: 'portfolio', icon: 'mdi:code-braces-box', label: 'Portfolio' },
             { id: 'journey', icon: 'mdi:compass-outline', label: 'Journey' }
         ] as link}
-            <button class="app-bar-btn" onclick={() => activeModal = link.id} aria-label={link.label}>
+            <button class="app-bar-btn" onclick={() => activeModal = link.id as "portfolio" | "links" | "journey"} aria-label={link.label}>
                 <div class="app-bar-icon"><Icon icon={link.icon} width="20" /></div>
                 <span>{link.label}</span>
             </button>
@@ -363,7 +363,7 @@
                 { id: 'portfolio', icon: 'mdi:code-braces-box', label: 'Portfolio' },
                 { id: 'journey', icon: 'mdi:compass-outline', label: 'Journey' }
             ] as link}
-                <button class="nav-btn" onclick={() => activeModal = link.id}>
+                <button class="nav-btn" onclick={() => activeModal = link.id as "portfolio" | "links" | "journey"}>
                     <div class="icon-wrap"><Icon icon={link.icon} width="24" /></div>
                     <span class="nav-text">{link.label}</span>
                 </button>

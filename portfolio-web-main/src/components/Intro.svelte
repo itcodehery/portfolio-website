@@ -16,6 +16,7 @@
     let isDeleting = false;
 
     onMount(() => {
+        /** @type {ReturnType<typeof setTimeout>} */
         let timeout;
 
         function type() {

@@ -3,7 +3,6 @@
     export let description: string;
     export let image: string;
     export let url: string = "";
-    export let isLightMode = false;
     export let isDesign = false;
     
     // Some random floating animation offset

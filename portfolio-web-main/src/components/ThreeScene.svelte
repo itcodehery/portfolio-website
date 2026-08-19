@@ -145,7 +145,9 @@
                 activeMode === 'code' ? 0x130b1e : 
                 activeMode === 'design' ? 0x061329 : 0x042125
             );
-            scene.fog.color.lerp(targetFogColor, 0.05);
+            if (scene.fog && 'color' in scene.fog) {
+                scene.fog.color.lerp(targetFogColor, 0.05);
+            }
 
             // Add gentle bobbing and subtle mouse Y sway
             const baseTargetY = Math.sin(elapsedTime * 0.5) * 0.5;
