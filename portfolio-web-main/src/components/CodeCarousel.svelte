@@ -67,7 +67,7 @@
   </div>
 
   <div class="details-container">
-    <Icon icon="material-symbols:info-outline" width="20px" />
+    <Icon icon="material-symbols:info-outline" width="16px" />
     <p>{projects[currentIndex].description}</p>
   </div>
 
@@ -89,9 +89,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 1.2rem;
     width: 100%;
-    padding: 2rem 0;
+    padding: 1.6rem 0;
   }
 
   .carousel-main-wrapper {
@@ -105,8 +105,8 @@
   .carousel {
     position: relative;
     width: 100%;
-    height: 300px;
-    perspective: 1000px;
+    height: 240px;
+    perspective: 800px;
     overflow: visible;
   }
 
@@ -126,12 +126,12 @@
     bottom: 0;
     margin: auto;
     width: 50%;
-    max-width: 400px;
+    max-width: 320px;
     height: auto;
-    min-height: 220px;
-    border-radius: 20px;
+    min-height: 176px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.3);
     transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
@@ -141,7 +141,7 @@
   /* Hover effect for the card */
   .carousel-item:hover {
     border-color: rgba(218, 244, 210, 0.3);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.4);
   }
 
   .carousel-item .carousel-bg {
@@ -179,14 +179,14 @@
   }
 
   .glass-overlay {
-      padding: 1.5rem;
-      backdrop-filter: blur(2px);
+      padding: 1.2rem;
+      backdrop-filter: blur(1.6px);
   }
 
   h3 {
-    font-size: 1.6rem;
+    font-size: 1.28rem;
     font-weight: 600;
-    margin: 0 0 0.8rem 0;
+    margin: 0 0 0.64rem 0;
     font-family: "DM Sans", sans-serif;
     letter-spacing: -0.5px;
     background: linear-gradient(to right, #DAF4D2, #88c07e);
@@ -195,7 +195,7 @@
   }
 
   p {
-    font-size: 0.95rem;
+    font-size: 0.76rem;
     font-weight: 400;
     line-height: 1.6;
     color: rgba(218, 244, 210, 0.8);
@@ -207,27 +207,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 9.6px;
     background: rgba(7, 59, 66, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(218, 244, 210, 0.1);
-    border-radius: 100px;
-    margin-top: 1rem;
-    height: 48px;
+    border-radius: 80px;
+    margin-top: 0.8rem;
+    height: 38.4px;
     width: auto;
     max-width: 90%;
-    padding: 0 24px;
+    padding: 0 19.2px;
     text-align: center;
     color: var(--lime-light);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 3.2px 16px rgba(0,0,0,0.2);
   }
 
   .details-container p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.95rem;
+    font-size: 0.76rem;
     letter-spacing: 0.3px;
     color: var(--lime-light);
   }
@@ -235,13 +235,13 @@
   .dots-container {
     display: flex;
     justify-content: center;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
   }
 
   .dot {
-    width: 8px;
-    height: 8px;
+    width: 6.4px;
+    height: 6.4px;
     border-radius: 50%;
     border: none;
     background-color: rgba(218, 244, 210, 0.2);
@@ -258,7 +258,7 @@
   .dot.active {
     background-color: var(--lime-light);
     transform: scale(1.4);
-    box-shadow: 0 0 10px rgba(218, 244, 210, 0.4);
+    box-shadow: 0 0 8px rgba(218, 244, 210, 0.4);
   }
 
   .nav-button {
@@ -266,11 +266,11 @@
     top: 50%;
     transform: translateY(-50%);
     background: rgba(7, 59, 66, 0.4);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(3.2px);
     border: 1px solid rgba(218, 244, 210, 0.1);
     border-radius: 50%;
-    width: 48px;
-    height: 48px;
+    width: 38.4px;
+    height: 38.4px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -293,19 +293,19 @@
     right: 10%;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 614.4px) {
     .carousel-container {
-      padding: 1rem 0;
+      padding: 0.8rem 0;
     }
     .carousel-item {
       width: 80%;
       max-width: none;
     }
     h3 {
-      font-size: 1.4rem;
+      font-size: 1.12rem;
     }
     p {
-      font-size: 0.9rem;
+      font-size: 0.72rem;
     }
     .nav-button.left {
       left: 2%;

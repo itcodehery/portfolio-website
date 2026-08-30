@@ -68,18 +68,18 @@
     .loading-grid {
         display: grid;
         grid-template-columns: repeat(8, 1fr);
-        gap: 8px;
-        width: 240px;
+        gap: 6.4px;
+        width: 192px;
     }
     .loading-dot {
         aspect-ratio: 1;
-        border-radius: 4px;
+        border-radius: 3.2px;
         background: rgba(218, 244, 210, 0.1);
         transition: background 0.1s, box-shadow 0.1s;
     }
     .loading-dot.filled {
         background: #daf4d2;
-        box-shadow: 0 0 10px rgba(218, 244, 210, 0.6);
+        box-shadow: 0 0 8px rgba(218, 244, 210, 0.6);
     }
 
     :global(body) {
@@ -88,14 +88,14 @@
         background-color: rgba(4, 33, 37, 1);
         color: #daf4d2;
         scroll-behavior: smooth;
-        padding-bottom: 30px;
+        padding-bottom: 24px;
         overflow-x: hidden;
         max-width: 100vw;
     }
 
     /* Custom themed scrollbar */
     :global(::-webkit-scrollbar) {
-        width: 6px;
+        width: 4.8px;
     }
 
     :global(::-webkit-scrollbar-track) {
@@ -104,7 +104,7 @@
 
     :global(::-webkit-scrollbar-thumb) {
         background: rgba(218, 244, 210, 0.3);
-        border-radius: 3px;
+        border-radius: 2.4px;
     }
 
     :global(::-webkit-scrollbar-thumb:hover) {

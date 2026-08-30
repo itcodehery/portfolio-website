@@ -24,9 +24,9 @@
         if (!$currentlyPlaying) return;
         const index = musicProjects.findIndex(p => p.name === $currentlyPlaying.name);
         if (index !== -1) {
-            const pinStart = 7500 + (codeProjects.length * 1500);
+            const pinStart = 6000 + (codeProjects.length * 1200);
             const numMusic = musicProjects.length;
-            const pinEnd = pinStart + Math.max(0, numMusic - 1) * 1500;
+            const pinEnd = pinStart + Math.max(0, numMusic - 1) * 1200;
             
             const progress = index / Math.max(1, numMusic - 1);
             const targetScrollY = pinStart + progress * (pinEnd - pinStart);
@@ -555,7 +555,7 @@
         transform: scale(0.8) translateY(20px);
     }
 
-    @media (max-width: 850px) {
+        @media (max-width: 850px) {
         .lab-container {
             bottom: 20px;
             left: 20px;

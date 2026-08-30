@@ -1364,4 +1364,10 @@
       margin-bottom: 16px !important;
     }
   }
+
+  @media (max-width: 614.4px) {
+    .soundlab-wrapper.app-intro {
+      display: none !important;
+    }
+  }
 </style>

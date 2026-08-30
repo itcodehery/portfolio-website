@@ -46,22 +46,22 @@
 
 <style>
     .page-container {
-        padding: 120px 20px 100px;
+        padding: 96px 16px 80px;
         min-height: 100vh;
-        max-width: 1000px;
+        max-width: 800px;
         margin: 0 auto;
         font-family: "DM Sans", sans-serif;
     }
 
     .page-header {
         text-align: center;
-        margin-bottom: 80px;
+        margin-bottom: 64px;
     }
 
     h1 {
-        font-size: 48px;
+        font-size: 38.4px;
         font-weight: 600;
-        margin: 16px 0;
+        margin: 12.8px 0;
         letter-spacing: -1px;
         background: linear-gradient(to right, #daf4d2, #88c07e);
         -webkit-background-clip: text;
@@ -69,31 +69,31 @@
     }
 
     .page-header p {
-        font-size: 18px;
+        font-size: 14.4px;
         opacity: 0.7;
         margin: 0;
     }
 
     .content {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 24px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 19.2px;
     }
 
     .experiment-card {
         background: rgba(7, 59, 66, 0.4);
         border: 1px solid rgba(218, 244, 210, 0.1);
-        padding: 30px;
-        border-radius: 24px;
-        backdrop-filter: blur(12px);
+        padding: 24px;
+        border-radius: 19.2px;
+        backdrop-filter: blur(9.6px);
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
     }
 
     .experiment-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         border-color: rgba(218, 244, 210, 0.3);
     }
 
@@ -101,34 +101,34 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 64px;
-        height: 64px;
+        width: 51.2px;
+        height: 51.2px;
         background: rgba(218, 244, 210, 0.1);
-        border-radius: 16px;
+        border-radius: 12.8px;
         color: #daf4d2;
-        margin-bottom: 24px;
+        margin-bottom: 19.2px;
     }
 
     h3 {
-        font-size: 22px;
-        margin: 0 0 12px 0;
+        font-size: 17.6px;
+        margin: 0 0 9.6px 0;
         font-weight: 500;
     }
 
     p {
-        font-size: 15px;
+        font-size: 12px;
         line-height: 1.6;
         opacity: 0.8;
-        margin: 0 0 24px 0;
+        margin: 0 0 19.2px 0;
     }
 
     .status-badge {
         display: inline-block;
-        padding: 6px 12px;
+        padding: 4.8px 9.6px;
         background: rgba(136, 192, 126, 0.2);
         color: #88c07e;
-        border-radius: 100px;
-        font-size: 12px;
+        border-radius: 80px;
+        font-size: 9.6px;
         font-weight: 600;
         letter-spacing: 0.5px;
         text-transform: uppercase;

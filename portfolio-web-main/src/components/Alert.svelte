@@ -11,7 +11,7 @@
 
 <style>
     .alert {
-        padding: 10px;
+        padding: 8px;
         align-self: center;
         align-items: center;
         align-content: center;
@@ -23,15 +23,15 @@
         flex-direction: row;
         background-color: rgba(7, 59, 66, 1);
         border: 1px solid #dddddd2e;
-        border-radius: 4px;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
+        border-radius: 3.2px;
+        margin-top: 1.6rem;
+        margin-bottom: 0.8rem;
         width: 40%;
         transition: ease-in-out 300ms;
     }
 
     .alert p {
-        margin-left: 10px;
+        margin-left: 8px;
     }
 
     /* Add more styles for other types (e.g., success, warning, error) */

@@ -7,23 +7,19 @@
     let element: HTMLElement | null = $state(null);
 
     $effect(() => {
+        if (!$isPerformanceMode) {
+            isVisible = true;
+            return;
+        }
+        
         if (!element) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        isVisible = true;
-                        if (element) {
-                            observer.unobserve(element);
-                        }
-                    }
-                });
-            },
-            {
-                threshold: 0.5,
+        
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                isVisible = true;
+                observer.disconnect();
             }
-        );
+        }, { threshold: 0.1 });
 
         observer.observe(element);
 
@@ -33,17 +29,17 @@
 
 <section class:dark-theme={$isPerformanceMode}>
     <div class="global-wrapper" bind:this={element}>
-        {#if isVisible}
+        {#if isVisible || !$isPerformanceMode}
             <div class="leftwrapper" transition:fly={{ duration: 2000 }}>
                 <FlippableCard />
             </div>
         {/if}
         <div class="rightwrapper">
             <div class="text-container">
-                <h4 class:visible={isVisible} style="--reveal-delay: 0ms;">I am a</h4>
-                <h1 class="shimmer-text" class:visible={isVisible} style="--reveal-delay: 200ms;">Full Stack App</h1>
-                <h1 class="shimmer-text" class:visible={isVisible} style="--reveal-delay: 400ms;">Developer and</h1>
-                <h1 class="shimmer-text" class:visible={isVisible} style="--reveal-delay: 600ms;">Designer</h1>
+                <h4 class:visible={isVisible || !$isPerformanceMode} style="--reveal-delay: 0ms;">I am a</h4>
+                <h1 class="shimmer-text" class:visible={isVisible || !$isPerformanceMode} style="--reveal-delay: 200ms;">Full Stack App</h1>
+                <h1 class="shimmer-text" class:visible={isVisible || !$isPerformanceMode} style="--reveal-delay: 400ms;">Developer and</h1>
+                <h1 class="shimmer-text" class:visible={isVisible || !$isPerformanceMode} style="--reveal-delay: 600ms;">Designer</h1>
             </div>
         </div>
     </div>
@@ -55,7 +51,7 @@
         color: #daf4d2;
         display: flex;
         flex-direction: row;
-        height: 870px;
+        height: 696px;
         align-items: center;
         justify-content: center;
         justify-items: center;
@@ -70,7 +66,7 @@
     }
 
     .rightwrapper {
-        margin-top: 100px;
+        margin-top: 80px;
         align-items: center;
         align-content: center;
         align-self: center;
@@ -86,22 +82,22 @@
         text-align: left;
         justify-content: center;
         justify-items: center;
-        padding: 20px 120px;
-        margin-right: 200px;
+        padding: 16px 96px;
+        margin-right: 160px;
     }
 
     .text-container {
         align-items: center;
         text-align: left;
         align-self: center;
-        line-height: 56px;
+        line-height: 44.8px;
     }
 
     /* Staggered line-by-line reveal */
     .text-container h1,
     .text-container h4 {
         opacity: 0;
-        transform: translateX(60px);
+        transform: translateX(48px);
         transition: opacity 0.7s ease-out, transform 0.7s ease-out;
         transition-delay: var(--reveal-delay, 0ms);
     }
@@ -113,11 +109,11 @@
     }
 
     h1 {
-        font-size: 72px;
+        font-size: 57.6px;
         font-weight: 500;
-        letter-spacing: -2px;
+        letter-spacing: -1.6px;
         margin: 0px;
-        padding-bottom: 10px;
+        padding-bottom: 8px;
     }
 
     /* Gradient shimmer animation on h1 */
@@ -164,8 +160,8 @@
 
     h4 {
         margin: 0px;
-        font-size: 24px;
-        padding-bottom: 10px;
+        font-size: 19.2px;
+        padding-bottom: 8px;
         font-weight: 400;
     }
 
@@ -174,7 +170,7 @@
         flex-direction: row;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         section {
             background-size: auto;
         }
@@ -185,21 +181,21 @@
 
         .leftwrapper {
             margin-right: 0px;
-            padding: 20px 20px;
+            padding: 16px 16px;
         }
 
         h1 {
-            font-size: 48px;
-            letter-spacing: -3px;
+            font-size: 38.4px;
+            letter-spacing: -2.4px;
         }
 
         h4 {
-            font-size: 24px;
+            font-size: 19.2px;
             letter-spacing: -1px;
         }
 
         .text-container {
-            line-height: 34px;
+            line-height: 27.2px;
         }
     }
 </style>

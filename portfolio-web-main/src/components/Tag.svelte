@@ -11,7 +11,7 @@
 
 {#if name == "Designer"}
     <button
-        onclick={() => scrollTo(0, 800)}
+        onclick={() => scrollTo(0, 640)}
         transition:fade={{ delay: 1200, duration: 1000 }}
     >
         <p>{name}</p>
@@ -53,18 +53,18 @@
         --lime-light: #daf4d2;
     }
     button {
-        min-height: 10px;
-        min-width: 80px;
+        min-height: 8px;
+        min-width: 64px;
         font-family: "DM Sans", sans-serif;
         background-color: var(--cyan-dark);
         color: var(--lime-light);
-        padding: 2px 25px;
+        padding: 1.6px 20px;
         border: 1px solid transparent;
-        gap: 14px;
+        gap: 11.2px;
         align-items: center;
         align-self: center;
         text-align: center;
-        border-radius: 40px;
+        border-radius: 32px;
         display: flex;
         flex-direction: row;
         transition: all 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -75,7 +75,7 @@
     button:hover {
         scale: 0.9;
         color: var(--lime-light);
-        box-shadow: 0 0 15px rgba(218, 244, 210, 0.25);
+        box-shadow: 0 0 12px rgba(218, 244, 210, 0.25);
         border: 1px solid rgba(218, 244, 210, 0.3);
         background-image: linear-gradient(var(--cyan-dark), var(--cyan-dark)),
             linear-gradient(90deg, rgba(218, 244, 210, 0.1), rgba(218, 244, 210, 0.4), rgba(218, 244, 210, 0.1));

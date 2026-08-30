@@ -155,7 +155,7 @@
             {/each}
         </div>
         
-        <div style="margin:0; padding: 0; height: 80px;"></div>
+        <div style="margin:0; padding: 0; height: 64px;"></div>
     </div>
 </main>
 
@@ -167,11 +167,11 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding-top: 150px;
+        padding-top: 120px;
     }
 
     .section-divider {
-        height: 100px;
+        height: 80px;
         width: 100%;
     }
 

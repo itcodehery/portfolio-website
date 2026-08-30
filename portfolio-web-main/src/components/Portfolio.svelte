@@ -38,7 +38,7 @@
         color: #daf4d2;
         display: flex;
         flex-direction: column;
-        height: 700px;
+        height: 560px;
         align-items: center;
         justify-content: center;
         justify-items: center;
@@ -55,10 +55,10 @@
         justify-content: center;
         justify-items: center;
         justify-self: center;
-        margin: 10px;
-        height: 40px;
+        margin: 8px;
+        height: 32px;
         width: 100%;
-        padding: 20px;
+        padding: 16px;
         letter-spacing: -1px;
         overflow: hidden;
         white-space: nowrap;
@@ -81,8 +81,8 @@
     }
 
     .marquee-track span {
-        font-size: 48px;
-        margin-top: 5px;
+        font-size: 38.4px;
+        margin-top: 4px;
         display: inline-block;
         flex-shrink: 0;
     }
@@ -97,18 +97,18 @@
     }
 
     button {
-        min-height: 44px;
-        min-width: 80px;
+        min-height: 35.2px;
+        min-width: 64px;
         font-family: "Circular Standard", sans-serif;
         background-color: var(--cyan-dark);
         color: var(--lime-light);
-        padding: 2px 25px;
+        padding: 1.6px 20px;
         border: none;
-        gap: 14px;
+        gap: 11.2px;
         align-items: center;
         align-self: center;
         text-align: center;
-        border-radius: 40px;
+        border-radius: 32px;
         display: flex;
         flex-direction: row;
         transition: ease-in 300ms;
@@ -145,14 +145,14 @@
         align-content: center;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         section {
-            height: 500px;
+            height: 400px;
             flex-direction: column;
         }
 
         .text-container {
-            height: 160px;
+            height: 128px;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -169,13 +169,13 @@
         }
 
         .marquee-track span {
-            font-size: 36px;
+            font-size: 28.8px;
             align-self: center;
             align-items: center;
             justify-content: center;
             justify-items: center;
             justify-self: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         /* Hide duplicated span on mobile */

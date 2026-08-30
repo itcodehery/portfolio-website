@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { isPerformanceMode } from "../lib/settings";
     export let name: string;
     export let description: string;
     export let image: string;
@@ -12,8 +13,8 @@
     $: finalUrl = url || (isDesign ? defaultDesignUrl : "");
 </script>
 
-<div class="project-container" style="animation-delay: {floatDelay}s;">
-    <div class="project-card">
+<div class="project-container" class:lite={$isPerformanceMode} style="animation-delay: {floatDelay}s;">
+    <div class="project-card" class:lite={$isPerformanceMode}>
         <div class="image-wrap">
             <img src={image} alt={name} />
         </div>
@@ -52,35 +53,35 @@
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
-        width: 1.5px;
-        height: 800px; /* extends down to the landscape */
+        width: 1.2px;
+        height: 640px; /* extends down to the landscape */
         background: linear-gradient(to bottom, rgba(218, 244, 210, 0.5), transparent);
-        margin-top: 15px;
-        border-radius: 2px;
-        box-shadow: 0 0 15px rgba(218, 244, 210, 0.3);
+        margin-top: 12px;
+        border-radius: 1.6px;
+        box-shadow: 0 0 12px rgba(218, 244, 210, 0.3);
         pointer-events: none;
     }
 
     .project-card {
-        width: 360px;
+        width: 288px;
         background: rgba(4, 33, 37, 0.75);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border: none;
-        border-radius: 20px;
-        padding: 0 0 20px 0;
+        border-radius: 16px;
+        padding: 0 0 16px 0;
         display: flex;
         flex-direction: column;
         gap: 0;
         color: #daf4d2;
         font-family: 'DM Sans', sans-serif;
-        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1), 0 30px 60px rgba(0, 0, 0, 0.6);
+        box-shadow: inset 0 1px 1.6px rgba(255, 255, 255, 0.1), 0 24px 48px rgba(0, 0, 0, 0.6);
         transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
     }
     
     .project-card:hover {
-        transform: scale(1.03) translateY(-5px);
-        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15), 0 40px 80px rgba(0, 0, 0, 0.6);
+        transform: scale(1.03) translateY(-4px);
+        box-shadow: inset 0 1px 1.6px rgba(255, 255, 255, 0.15), 0 32px 64px rgba(0, 0, 0, 0.6);
     }
 
     /* Firefox fallback because backdrop-filter combined with 3D contexts fails to render */
@@ -93,13 +94,13 @@
 
     @keyframes float {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-12px); }
+        50% { transform: translateY(-9.6px); }
     }
 
     .image-wrap {
         width: 100%;
-        height: 200px;
-        border-radius: 20px 20px 0 0;
+        height: 160px;
+        border-radius: 16px 16px 0 0;
         overflow: hidden;
         background: rgba(0, 0, 0, 0.2);
         flex-shrink: 0;
@@ -121,12 +122,12 @@
     .info {
         display: flex;
         flex-direction: column;
-        padding: 20px 20px 0 20px;
+        padding: 16px 16px 0 16px;
     }
 
     h3 {
         margin: 0;
-        font-size: 22px;
+        font-size: 17.6px;
         font-weight: 600;
         letter-spacing: -0.5px;
     }
@@ -140,7 +141,7 @@
 
     .project-card:hover .description-wrapper {
         grid-template-rows: 1fr;
-        margin-top: 10px;
+        margin-top: 8px;
     }
 
     .description-inner {
@@ -149,9 +150,9 @@
 
     p {
         margin: 0;
-        font-size: 14px;
+        font-size: 11.2px;
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
         line-height: 1.5;
         font-weight: 400;
         transition: opacity 0.3s ease, transform 0.3s ease;
@@ -172,7 +173,7 @@
 
     .project-card:hover .button-wrapper {
         grid-template-rows: 1fr;
-        margin-top: 16px;
+        margin-top: 12.8px;
         transition-delay: 1.2s;
     }
 
@@ -182,9 +183,9 @@
 
     .button-reveal {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
         transition: opacity 0.3s ease, transform 0.3s ease;
-        padding-bottom: 10px;
+        padding-bottom: 8px;
     }
 
     .project-card:hover .button-reveal {
@@ -198,18 +199,18 @@
         text-decoration: none;
         font-weight: 500;
         display: inline-flex;
-        padding: 10px 20px;
+        padding: 8px 16px;
         background: rgba(218, 244, 210, 0.05);
-        border-radius: 50px;
+        border-radius: 40px;
         transition: all 0.3s ease;
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(4px);
     }
 
     a:hover {
         background: var(--lime-light, #daf4d2);
         color: #042125;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(218, 244, 210, 0.2);
+        transform: translateY(-1.6px);
+        box-shadow: 0 8px 16px rgba(218, 244, 210, 0.2);
     }
 
     /* Firefox fallback because backdrop-filter combined with 3D contexts fails to render */
@@ -220,17 +221,38 @@
         }
     }
     
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         .project-card {
-            width: 300px;
-            padding: 0 0 16px 0;
-            border-radius: 16px;
+            width: 240px;
+            padding: 0 0 12.8px 0;
+            border-radius: 12.8px;
         }
         .image-wrap {
-            height: 160px;
+            height: 128px;
         }
         .tether-line {
-            height: 500px;
+            height: 400px;
         }
+    }
+
+    /* LITE mode styles */
+    .project-card.lite .description-wrapper {
+        grid-template-rows: 1fr;
+        margin-top: 8px;
+    }
+    .project-card.lite p {
+        opacity: 0.75;
+        transform: translateY(0);
+    }
+    .project-card.lite .button-wrapper {
+        grid-template-rows: 1fr;
+        margin-top: 12.8px;
+    }
+    .project-card.lite .button-reveal {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .project-container.lite .tether-line {
+        display: none;
     }
 </style>

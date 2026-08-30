@@ -53,25 +53,25 @@
             transform: rotateZ(-2deg) translateY(0px) translateZ(0);
         }
         50% {
-            transform: rotateZ(-2deg) translateY(-10px) translateZ(0);
+            transform: rotateZ(-2deg) translateY(-8px) translateZ(0);
         }
     }
 
     /* Pulsing glow shadow animation */
     @keyframes glowPulse {
         0%, 100% {
-            box-shadow: 0 20px 40px rgba(218, 244, 210, 0.1);
+            box-shadow: 0 16px 32px rgba(218, 244, 210, 0.1);
         }
         50% {
-            box-shadow: 0 25px 50px rgba(218, 244, 210, 0.2);
+            box-shadow: 0 20px 40px rgba(218, 244, 210, 0.2);
         }
     }
 
     .flip-card {
         background-color: transparent;
-        width: 320px;
-        height: 440px;
-        perspective: 1000px;
+        width: 256px;
+        height: 352px;
+        perspective: 800px;
         cursor: pointer;
         transform: rotateZ(-2deg) translateZ(0); /* translateZ enables hardware accel */
         font-family: "DM Sans", sans-serif;
@@ -97,7 +97,7 @@
         height: 100%;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
-        border-radius: 24px;
+        border-radius: 19.2px;
         border: 1px solid rgba(218, 244, 210, 0.1);
         overflow: hidden;
         animation: glowPulse 3s ease-in-out infinite;
@@ -124,25 +124,25 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 30px;
+        padding: 24px;
         box-sizing: border-box;
     }
 
     /* Front Styles */
     .image-wrapper {
-        margin-top: 20px;
-        padding: 8px;
+        margin-top: 16px;
+        padding: 6.4px;
         border-radius: 50%;
         border: 1px solid rgba(218, 244, 210, 0.2);
-        margin-bottom: 24px;
+        margin-bottom: 19.2px;
     }
 
     .profile-image {
         background-image: url("/me.jpg");
         background-position: center;
         background-size: cover;
-        height: 160px;
-        width: 160px;
+        height: 128px;
+        width: 128px;
         border-radius: 50%;
         filter: brightness(0.9);
     }
@@ -153,9 +153,9 @@
     }
 
     h3 {
-        font-size: 28px;
+        font-size: 22.4px;
         font-weight: 600;
-        margin: 0 0 8px 0;
+        margin: 0 0 6.4px 0;
         letter-spacing: -0.5px;
         background: linear-gradient(to right, #DAF4D2, #88c07e);
         -webkit-background-clip: text;
@@ -163,7 +163,7 @@
     }
 
     .role {
-        font-size: 16px;
+        font-size: 12.8px;
         color: rgba(218, 244, 210, 0.7);
         font-weight: 400;
         letter-spacing: 0.5px;
@@ -174,10 +174,10 @@
     .hint {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6.4px;
         color: rgba(218, 244, 210, 0.5);
-        font-size: 13px;
-        margin-bottom: 10px;
+        font-size: 10.4px;
+        margin-bottom: 8px;
     }
 
     /* Back Styles */
@@ -186,30 +186,30 @@
     }
 
     .back-content h3 {
-        margin-bottom: 20px;
-        font-size: 24px;
+        margin-bottom: 16px;
+        font-size: 19.2px;
     }
 
     .bio {
-        font-size: 15px;
+        font-size: 12px;
         line-height: 1.6;
         color: rgba(218, 244, 210, 0.9);
-        margin-bottom: 30px;
+        margin-bottom: 24px;
         text-align: center;
     }
 
     .skills-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
         justify-content: center;
     }
 
     .skill-tag {
         background: rgba(218, 244, 210, 0.1);
-        padding: 8px 16px;
-        border-radius: 100px;
-        font-size: 13px;
+        padding: 6.4px 12.8px;
+        border-radius: 80px;
+        font-size: 10.4px;
         font-weight: 500;
         color: #daf4d2;
         border: 1px solid rgba(218, 244, 210, 0.05);

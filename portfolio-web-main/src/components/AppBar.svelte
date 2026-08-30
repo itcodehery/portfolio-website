@@ -120,12 +120,12 @@
         top: 0;
         left: 50%;
         transform: translateX(-50%);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        padding: 0 20px;
-        height: 70px;
+        backdrop-filter: blur(9.6px);
+        -webkit-backdrop-filter: blur(9.6px);
+        padding: 0 16px;
+        height: 56px;
         width: 95%;
-        max-width: 1200px;
+        max-width: 960px;
         color: #daf4d2;
         font-family: "DM Sans", sans-serif;
         font-weight: 400;
@@ -134,8 +134,8 @@
         justify-content: center;
         align-items: center;
         border-bottom: 1px solid rgba(218, 244, 210, 0.1);
-        margin-top: 10px;
-        border-radius: 100px;
+        margin-top: 8px;
+        border-radius: 80px;
         animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
@@ -165,7 +165,7 @@
 
     h2 {
         margin: 0;
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 600;
         letter-spacing: -0.5px;
     }
@@ -176,17 +176,17 @@
         display: flex;
         position: relative;
         justify-content: center;
-        gap: 0.5rem;
-        padding: 4px;
-        border-radius: 100px;
+        gap: 0.4rem;
+        padding: 3.2px;
+        border-radius: 80px;
     }
 
     .sliding-pill {
         position: absolute;
-        top: 4px;
-        bottom: 4px;
+        top: 3.2px;
+        bottom: 3.2px;
         background: rgba(218, 244, 210, 0.1);
-        border-radius: 100px;
+        border-radius: 80px;
         transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         pointer-events: none;
         z-index: 0;
@@ -197,17 +197,17 @@
         z-index: 1;
         background-color: transparent;
         color: rgba(218, 244, 210, 0.7);
-        padding: 8px 20px;
-        font-size: 14px;
+        padding: 6.4px 16px;
+        font-size: 11.2px;
         border: none;
-        border-radius: 100px;
+        border-radius: 80px;
         font-family: "DM Sans", sans-serif;
         font-weight: 500;
         cursor: pointer;
         transition: color 0.3s ease;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6.4px;
     }
 
     .nav-btn:hover { color: #daf4d2; }
@@ -227,28 +227,28 @@
     .primary-button {
         background-color: rgba(7, 59, 66, 1);
         color: #daf4d2;
-        padding: 10px 20px;
-        font-size: 14px;
+        padding: 8px 16px;
+        font-size: 11.2px;
         border: 1px solid transparent;
-        border-radius: 100px;
+        border-radius: 80px;
         font-family: "DM Sans", sans-serif;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6.4px;
     }
 
     .primary-button:hover {
         background-color: var(--lime-light, #daf4d2);
         color: var(--cyan-dark, #042125);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(218, 244, 210, 0.2);
+        transform: translateY(-1.6px);
+        box-shadow: 0 3.2px 12px rgba(218, 244, 210, 0.2);
     }
 
     /* ─── Mobile Overrides ─── */
-    @media (max-width: 850px) {
+    @media (max-width: 680px) {
         @keyframes slideDownMobile {
             from { transform: translateY(-100%); }
             to { transform: translateY(0); }
@@ -256,52 +256,52 @@
 
         .app-bar {
             width: 100%;
-            height: 60px;
+            height: 48px;
             margin-top: 0;
             border-radius: 0;
             left: 0;
             transform: none;
             box-sizing: border-box;
-            padding: 0 16px;
+            padding: 0 12.8px;
             animation: slideDownMobile 0.5s ease-out forwards;
         }
 
         /* Convert to Bottom Navigation Dock */
         .app-bar__nav {
             position: fixed;
-            bottom: 110px; /* Above FooterContact */
+            bottom: 88px; /* Above FooterContact */
             left: 50%;
             transform: translateX(-50%);
             background: rgba(4, 33, 37, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(218, 244, 210, 0.15);
-            border-radius: 100px;
-            padding: 8px;
+            border-radius: 80px;
+            padding: 6.4px;
             display: flex;
-            gap: 4px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            gap: 3.2px;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.4);
             width: auto;
             z-index: 1000;
             animation: slideUpDock 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes slideUpDock {
-            from { transform: translate(-50%, 100px); opacity: 0; }
+            from { transform: translate(-50%, 80px); opacity: 0; }
             to { transform: translate(-50%, 0); opacity: 1; }
         }
 
         .desktop-nav { display: none !important; }
         .mobile-dock { 
             display: flex; 
-            bottom: 30px; /* Adjusted since FooterContact is removed */
+            bottom: 24px; /* Adjusted since FooterContact is removed */
         }
         
         .button_text { display: none; }
         .icon_id { display: flex; }
 
         .nav-btn {
-            padding: 12px;
+            padding: 9.6px;
             border-radius: 50%;
             background: transparent;
             transition: all 0.3s ease;
@@ -314,15 +314,15 @@
         }
 
         .primary-button {
-            padding: 8px 16px;
-            font-size: 13px;
+            padding: 6.4px 12.8px;
+            font-size: 10.4px;
         }
         
-        h2 { font-size: 18px; }
+        h2 { font-size: 14.4px; }
     }
     
-    @media (max-width: 400px) {
-        .app-bar__nav { bottom: 100px; gap: 0px; }
-        .nav-btn { padding: 10px; }
+    @media (max-width: 320px) {
+        .app-bar__nav { bottom: 80px; gap: 0px; }
+        .nav-btn { padding: 8px; }
     }
 </style>

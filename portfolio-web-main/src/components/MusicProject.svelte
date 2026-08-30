@@ -81,16 +81,16 @@
         align-items: center;
         width: 100%;
         height: 100%;
-        padding: 0 20px;
+        padding: 0 16px;
     }
 
     .editorial-card {
         width: 100%;
-        height: 280px;
+        height: 224px;
         border: 1px solid rgba(162, 119, 255, 0.15);
-        border-radius: 24px;
+        border-radius: 19.2px;
         background-color: rgba(14, 5, 26, 0.6);
-        padding: 32px 32px;
+        padding: 25.6px 25.6px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -118,7 +118,7 @@
 
     .editorial-card:hover {
         border-color: rgba(162, 119, 255, 0.4);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
     }
     
     .editorial-card:hover::before {
@@ -127,7 +127,7 @@
 
     .editorial-card.playing {
         border-color: rgba(162, 119, 255, 0.7);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(162, 119, 255, 0.05);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 0 16px rgba(162, 119, 255, 0.05);
     }
 
     .editorial-card.playing::after {
@@ -153,7 +153,7 @@
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        gap: 12px;
+        gap: 9.6px;
         opacity: 0.06;
         z-index: 1;
         pointer-events: none;
@@ -163,7 +163,7 @@
         width: 15%;
         background: #a277ff;
         animation: bounce 1.2s ease-in-out infinite alternate;
-        border-radius: 20px 20px 0 0;
+        border-radius: 16px 16px 0 0;
     }
 
     .bg-equalizer .bar:nth-child(1) { animation-delay: 0.1s; height: 30%; }
@@ -180,12 +180,12 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        gap: 20px;
+        gap: 16px;
         position: relative;
     }
 
     .title {
-        font-size: 42px;
+        font-size: 33.6px;
         font-weight: 500;
         letter-spacing: -0.5px;
         color: #ffffff;
@@ -209,7 +209,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 42px;
+        height: 33.6px;
     }
 
     .icon-play:hover {
@@ -228,16 +228,16 @@
 
     .playing-bars {
         display: flex;
-        gap: 6px;
-        height: 28px;
+        gap: 4.8px;
+        height: 22.4px;
         align-items: flex-end;
     }
 
     .playing-bars .bar {
-        width: 4px;
+        width: 3.2px;
         background: #a277ff;
         animation: pulse 0.8s ease-in-out infinite alternate;
-        border-radius: 2px;
+        border-radius: 1.6px;
     }
 
     .playing-bars .bar:nth-child(2) { animation-delay: 0.2s; }
@@ -252,12 +252,12 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        gap: 40px;
+        gap: 32px;
         position: relative;
     }
 
     .description {
-        font-size: 15px;
+        font-size: 12px;
         color: #bfa3ff;
         opacity: 0.75;
         line-height: 1.6;
@@ -269,13 +269,13 @@
     .yt-icon-pill {
         display: flex;
         align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        border-radius: 20px;
+        gap: 4.8px;
+        padding: 6.4px 12.8px;
+        border-radius: 16px;
         background: rgba(255, 0, 0, 0.1);
         color: #ff4d4d;
         border: 1px solid rgba(255, 0, 0, 0.2);
-        font-size: 14px;
+        font-size: 11.2px;
         font-weight: 600;
         text-decoration: none;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -285,20 +285,20 @@
     .yt-icon-pill:hover {
         background: rgba(255, 0, 0, 0.2);
         color: #ff6666;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(255, 0, 0, 0.15);
+        transform: translateY(-1.6px);
+        box-shadow: 0 6.4px 12.8px rgba(255, 0, 0, 0.15);
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         .editorial-card {
-            height: 260px;
-            padding: 24px 20px;
+            height: 208px;
+            padding: 19.2px 16px;
         }
         .title {
-            font-size: 32px;
+            font-size: 25.6px;
         }
         .description {
-            font-size: 14px;
+            font-size: 11.2px;
         }
     }
 </style>

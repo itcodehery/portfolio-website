@@ -116,22 +116,22 @@
 
 <style>
     .page-container {
-        padding: 120px 20px 100px;
+        padding: 96px 16px 80px;
         min-height: 100vh;
-        max-width: 1000px;
+        max-width: 800px;
         margin: 0 auto;
         font-family: "DM Sans", sans-serif;
     }
 
     .page-header {
         text-align: center;
-        margin-bottom: 80px;
+        margin-bottom: 64px;
     }
 
     h1 {
-        font-size: 48px;
+        font-size: 38.4px;
         font-weight: 600;
-        margin: 16px 0;
+        margin: 12.8px 0;
         letter-spacing: -1px;
         background: linear-gradient(to right, #daf4d2, #88c07e);
         -webkit-background-clip: text;
@@ -139,7 +139,7 @@
     }
 
     .page-header p {
-        font-size: 18px;
+        font-size: 14.4px;
         opacity: 0.7;
         margin: 0;
     }
@@ -147,7 +147,7 @@
     /* ─── Timeline Layout ─── */
     .timeline-container {
         position: relative;
-        padding: 40px 0;
+        padding: 32px 0;
     }
 
     .timeline-line {
@@ -155,7 +155,7 @@
         top: 0;
         bottom: 0;
         left: 50%;
-        width: 2px;
+        width: 1.6px;
         background: linear-gradient(to bottom, transparent, rgba(218, 244, 210, 0.2), transparent);
         transform: translateX(-50%);
     }
@@ -163,8 +163,8 @@
     .timeline-item {
         position: relative;
         width: 50%;
-        padding: 0 40px;
-        margin-bottom: 60px;
+        padding: 0 32px;
+        margin-bottom: 48px;
         box-sizing: border-box;
     }
 
@@ -182,35 +182,35 @@
     .timeline-item::after {
         content: '';
         position: absolute;
-        top: 24px;
-        width: 12px;
-        height: 12px;
+        top: 19.2px;
+        width: 9.6px;
+        height: 9.6px;
         background: #daf4d2;
         border-radius: 50%;
-        box-shadow: 0 0 10px rgba(218, 244, 210, 0.5);
+        box-shadow: 0 0 8px rgba(218, 244, 210, 0.5);
     }
 
     .timeline-item.left::after {
-        right: -6px;
+        right: -4.8px;
     }
 
     .timeline-item.right::after {
-        left: -6px;
+        left: -4.8px;
     }
 
     .timeline-content {
         position: relative;
         background: rgba(7, 59, 66, 0.4);
         border: 1px solid rgba(218, 244, 210, 0.1);
-        padding: 30px;
-        border-radius: 24px;
-        backdrop-filter: blur(12px);
+        padding: 24px;
+        border-radius: 19.2px;
+        backdrop-filter: blur(9.6px);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .timeline-content:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         border-color: rgba(218, 244, 210, 0.3);
     }
 
@@ -230,51 +230,51 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 48px;
-        height: 48px;
+        width: 38.4px;
+        height: 38.4px;
         background: rgba(218, 244, 210, 0.1);
         border-radius: 50%;
         color: #daf4d2;
-        margin-bottom: 16px;
+        margin-bottom: 12.8px;
     }
 
     .year {
         display: block;
-        font-size: 14px;
+        font-size: 11.2px;
         font-weight: 600;
         color: #88c07e;
-        margin-bottom: 8px;
+        margin-bottom: 6.4px;
         letter-spacing: 1px;
         text-transform: uppercase;
     }
 
     h3 {
-        font-size: 24px;
-        margin: 0 0 12px 0;
+        font-size: 19.2px;
+        margin: 0 0 9.6px 0;
         font-weight: 500;
     }
 
     p {
-        font-size: 15px;
+        font-size: 12px;
         line-height: 1.6;
         opacity: 0.8;
         margin: 0;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         .timeline-line {
-            left: 20px;
+            left: 16px;
         }
 
         .timeline-item {
             width: 100%;
             left: 0 !important;
-            padding: 0 0 0 60px;
+            padding: 0 0 0 48px;
             text-align: left !important;
         }
 
         .timeline-item::after {
-            left: 14px !important;
+            left: 11.2px !important;
         }
     }
 </style>

@@ -1,63 +1,12 @@
 <script>
     import Tag from "./Tag.svelte";
     import { fade } from "svelte/transition";
-    import { onMount } from "svelte";
-
-    const languages = [
-        "Hello!", 
-        "வணக்கம்!", 
-        "ನಮಸ್ಕಾರ!", 
-        "Bonjour!", 
-        "नमस्ते!"
-    ];
-    let currentText = "Hello!";
-    let langIndex = 0;
-    let charIndex = 6; // Starts fully typed
-    let isDeleting = false;
-
-    onMount(() => {
-        /** @type {ReturnType<typeof setTimeout>} */
-        let timeout;
-
-        function type() {
-            const currentLang = languages[langIndex];
-            
-            if (isDeleting) {
-                currentText = currentLang.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                currentText = currentLang.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            let typeSpeed = isDeleting ? 40 : 120;
-
-            if (!isDeleting && currentText === currentLang) {
-                typeSpeed = langIndex === 0 ? 7000 : 2500; // English stays for 7s, others 2.5s
-                isDeleting = true;
-            } else if (isDeleting && currentText === "") {
-                isDeleting = false;
-                langIndex = (langIndex + 1) % languages.length;
-                typeSpeed = 500; // Pause before typing next word
-            }
-
-            timeout = setTimeout(type, typeSpeed);
-        }
-
-        // Start animation after a short delay
-        timeout = setTimeout(() => {
-            isDeleting = true;
-            type();
-        }, 7000);
-
-        return () => clearTimeout(timeout);
-    });
 </script>
 
 <section>
     <div class="globalwrapper" in:fade={{ duration: 2000 }}>
         <div class="text-container">
-            <h4>{currentText}<span class="cursor">|</span></h4>
+            <h4>Hello!</h4>
             <span class="typing-text"><h1>I'm Hari Prasad</h1></span>
         </div>
         <div class="tags-container">
@@ -74,7 +23,7 @@
         color: #daf4d2;
         display: flex;
         flex-direction: column;
-        height: 870px;
+        height: 696px;
         align-items: center;
         justify-content: center;
         justify-items: center;
@@ -85,8 +34,8 @@
     }
 
     .globalwrapper {
-        margin-top: 60px;
-        padding: 10px;
+        margin-top: 48px;
+        padding: 8px;
         align-items: center;
         align-content: center;
         align-self: center;
@@ -101,36 +50,21 @@
     }
 
     h1 {
-        font-size: 72px;
+        font-size: 57.6px;
         font-weight: 400;
         margin: 0px;
-        padding-bottom: 10px;
+        padding-bottom: 8px;
         display: inline-block;
     }
 
 
 
-    @keyframes blink {
-        0%, 100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0;
-        }
-    }
 
-    .cursor {
-        display: inline-block;
-        margin-left: 4px;
-        animation: blink 1s step-end infinite;
-        color: #daf4d2;
-        font-weight: 300;
-    }
 
     h4 {
         margin: 0px;
-        font-size: 24px;
-        padding-bottom: 10px;
+        font-size: 19.2px;
+        padding-bottom: 8px;
         font-weight: 400;
     }
 
@@ -141,16 +75,16 @@
         justify-self: center;
         display: flex;
         flex-direction: row;
-        gap: 10px;
+        gap: 8px;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         h1 {
-            font-size: 48px;
+            font-size: 38.4px;
         }
 
         h4 {
-            font-size: 18px;
+            font-size: 14.4px;
         }
 
         .tags-container {

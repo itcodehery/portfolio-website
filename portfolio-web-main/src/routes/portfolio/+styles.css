@@ -2,7 +2,7 @@ h1 {
     margin: 0;
     padding: 0px 0px;
     font-weight: 400;
-    font-size: 48px;
+    font-size: 38.4px;
     letter-spacing: -1px;
 }
 
@@ -11,7 +11,7 @@ h1 {
     display: grid;
     grid-template-columns: 1fr;
     background-image: url('/portfolio-route-bg.png');
-    gap: 20px;
+    gap: 16px;
     margin: 0;
     padding: 0;
     justify-items: center;
@@ -23,17 +23,17 @@ h1 {
 .gridview {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: 250px;
-    gap: 20px;
-    padding: 20px;
-    max-width: 1200px;
+    grid-auto-rows: 200px;
+    gap: 16px;
+    padding: 16px;
+    max-width: 960px;
     width: 100%;
 }
 
 .listItem {
     position: relative;
     overflow: hidden;
-    border-radius: 24px;
+    border-radius: 19.2px;
     background-color: var(--cyan-dark);
     border: 1px solid rgba(218, 244, 210, 0.1);
     transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -52,7 +52,7 @@ h1 {
 }
 
 .listItem:hover img {
-    filter: blur(4px) brightness(0.4);
+    filter: blur(3.2px) brightness(0.4);
     transform: scale(1.1);
 }
 
@@ -64,7 +64,7 @@ h1 {
     justify-content: center;
     opacity: 0;
     transition: opacity 0.4s ease;
-    padding: 30px;
+    padding: 24px;
     background: radial-gradient(circle, rgba(4, 36, 41, 0.4) 0%, rgba(4, 33, 37, 0.8) 100%);
 }
 
@@ -75,7 +75,7 @@ h1 {
 .image-details {
     text-align: center;
     color: var(--lime-light);
-    transform: translateY(20px);
+    transform: translateY(16px);
     transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -84,13 +84,13 @@ h1 {
 }
 
 .image-details h3 {
-    font-size: 24px;
-    margin-bottom: 12px;
+    font-size: 19.2px;
+    margin-bottom: 9.6px;
     font-weight: 600;
 }
 
 .image-details p {
-    font-size: 14px;
+    font-size: 11.2px;
     line-height: 1.5;
     opacity: 0.9;
 }
@@ -126,7 +126,7 @@ h1 {
     grid-row: span 1;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 819.2px) {
     .gridview {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -142,39 +142,39 @@ h1 {
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 512px) {
     .gridview {
         grid-template-columns: 1fr;
-        grid-auto-rows: 300px;
+        grid-auto-rows: 240px;
     }
 
 
 }
 
 button {
-    min-height: 48px;
-    min-width: 140px;
+    min-height: 38.4px;
+    min-width: 112px;
     font-family: "DM Sans", sans-serif;
     background-color: var(--cyan-dark);
     color: var(--lime-light);
-    padding: 0 30px;
-    margin-bottom: 40px;
+    padding: 0 24px;
+    margin-bottom: 32px;
     border: 1px solid var(--lime-light);
-    border-radius: 100px;
+    border-radius: 80px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 12.8px;
     font-weight: 500;
 }
 
 button:hover {
     background-color: var(--lime-light);
     color: var(--cyan-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1.6px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 button:active {

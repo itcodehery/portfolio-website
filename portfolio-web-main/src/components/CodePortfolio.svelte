@@ -95,7 +95,7 @@
         color: #daf4d2;
         display: flex;
         flex-direction: column;
-        height: 700px;
+        height: 560px;
         align-items: center;
         justify-content: center;
     }
@@ -105,11 +105,11 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        margin: 10px;
-        height: 40px;
+        margin: 8px;
+        height: 32px;
         width: 100%;
         color: var(--cyan-dark) !important;
-        padding: 20px;
+        padding: 16px;
         letter-spacing: -1px;
         overflow: hidden;
         white-space: nowrap;
@@ -132,9 +132,9 @@
     }
 
     .marquee-track span {
-        font-size: 48px;
-        margin-top: 5px;
-        margin-right: 20px;
+        font-size: 38.4px;
+        margin-top: 4px;
+        margin-right: 16px;
         display: inline-block;
         flex-shrink: 0;
     }
@@ -149,18 +149,18 @@
     }
 
     button {
-        min-height: 44px;
-        min-width: 80px;
+        min-height: 35.2px;
+        min-width: 64px;
         font-family: "DM Sans", sans-serif;
         background-color: var(--cyan-dark);
         color: var(--lime-light);
-        padding: 2px 25px;
+        padding: 1.6px 20px;
         border: none;
-        gap: 14px;
+        gap: 11.2px;
         align-items: center;
         align-self: center;
         text-align: center;
-        border-radius: 40px;
+        border-radius: 32px;
         display: flex;
         flex-direction: row;
         transition: ease-in 300ms;
@@ -192,15 +192,15 @@
         width: 100%;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         section {
             height: auto;
-            min-height: 600px;
-            padding: 40px 0;
+            min-height: 480px;
+            padding: 32px 0;
         }
 
         .text-container {
-            height: 160px;
+            height: 128px;
             flex-direction: column;
             justify-content: center;
             white-space: normal;
@@ -212,8 +212,8 @@
         }
 
         .marquee-track span {
-            font-size: 36px;
-            margin-bottom: 20px;
+            font-size: 28.8px;
+            margin-bottom: 16px;
         }
 
         /* Hide duplicated span on mobile */

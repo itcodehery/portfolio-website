@@ -23,16 +23,16 @@
     let targetScroll = 0;
     let scrollY = 0;
     let scrollProgress = 0;
-    let innerHeight = 1000; // default for SSR
+    let innerHeight = 800; // default for SSR
 
     const timelineSections = [
         { label: 'Start', z: 0, count: 0 },
-        { label: 'About', z: 1500, count: 0 },
-        { label: 'Stack', z: 3000, count: 0 },
-        { label: 'Code', z: 4500, count: codeProjects.length },
-        { label: 'Music', z: 6000 + codeProjects.length * 1500, count: musicProjects.length },
-        { label: 'Design', z: 7500 + (codeProjects.length + musicProjects.length) * 1500, count: designProjects.length },
-        { label: 'Contact', z: 9000 + (codeProjects.length + musicProjects.length + designProjects.length) * 1500, count: 0 }
+        { label: 'About', z: 1200, count: 0 },
+        { label: 'Stack', z: 2400, count: 0 },
+        { label: 'Code', z: 3600, count: codeProjects.length },
+        { label: 'Music', z: 4800 + codeProjects.length * 1200, count: musicProjects.length },
+        { label: 'Design', z: 6000 + (codeProjects.length + musicProjects.length) * 1200, count: designProjects.length },
+        { label: 'Contact', z: 8400 + (codeProjects.length + musicProjects.length + designProjects.length) * 1200, count: 0 }
     ];
     
     let activeModal: 'links' | 'portfolio' | 'journey' | null = null;
@@ -40,9 +40,9 @@
     $: maxScroll = timelineSections[6].z;
 
     $: activeMode = (!$isPerformanceMode && timelineSections && timelineSections.length >= 7) ? 
-        (scrollY >= timelineSections[5].z - 1000 && scrollY < timelineSections[6].z - 1000 ? 'design' :
-        (scrollY >= timelineSections[4].z - 1000 && scrollY < timelineSections[5].z - 1000 ? 'music' :
-        (scrollY >= timelineSections[3].z - 1000 && scrollY < timelineSections[4].z - 1000 ? 'code' : 'default'))) : 'default';
+        (scrollY >= timelineSections[5].z - 800 && scrollY < timelineSections[6].z - 800 ? 'design' :
+        (scrollY >= timelineSections[4].z - 800 && scrollY < timelineSections[5].z - 800 ? 'music' :
+        (scrollY >= timelineSections[3].z - 800 && scrollY < timelineSections[4].z - 800 ? 'code' : 'default'))) : 'default';
     
     $: if (typeof document !== 'undefined') {
         document.body.style.transition = 'background-color 1.5s ease-in-out';
@@ -86,7 +86,7 @@
     $: {
         let activeIdx = 0;
         for (let i = timelineSections.length - 1; i >= 0; i--) {
-            if (scrollY >= timelineSections[i].z - 1000) {
+            if (scrollY >= timelineSections[i].z - 800) {
                 activeIdx = i;
                 break;
             }
@@ -97,10 +97,10 @@
     }
 
     $: tops = timelineSections.map((sec, i) => {
-        let top = i * 40;
-        if (i > 3) top += $expandCode * timelineSections[3].count * 12;
-        if (i > 4) top += $expandMusic * timelineSections[4].count * 20;
-        if (i > 5) top += $expandDesign * timelineSections[5].count * 20;
+        let top = i * 32;
+        if (i > 3) top += $expandCode * timelineSections[3].count * 10;
+        if (i > 4) top += $expandMusic * timelineSections[4].count * 16;
+        if (i > 5) top += $expandDesign * timelineSections[5].count * 16;
         return top;
     });
 
@@ -140,25 +140,25 @@
             
             if (sec.label === 'Code') {
                 for (let i = 0; i < codeProjects.length; i++) {
-                    const subZ = sec.z + (i + 1) * 1500;
+                    const subZ = sec.z + (i + 1) * 1200;
                     const subDiff = Math.abs(scroll - subZ);
                     if (subDiff < minDiff) minDiff = subDiff;
                 }
             } else if (sec.label === 'Design') {
                 for (let i = 0; i < designProjects.length; i++) {
-                    const subZ = sec.z + (i + 1) * 1500;
+                    const subZ = sec.z + (i + 1) * 1200;
                     const subDiff = Math.abs(scroll - subZ);
                     if (subDiff < minDiff) minDiff = subDiff;
                 }
             } else if (sec.label === 'Music') {
                 for (let i = 0; i < musicProjects.length; i++) {
-                    const subZ = sec.z + (i + 1) * 1500;
+                    const subZ = sec.z + (i + 1) * 1200;
                     const subDiff = Math.abs(scroll - subZ);
                     if (subDiff < minDiff) minDiff = subDiff;
                 }
             }
         }
-        return Math.max(0, 1 - (minDiff / 400));
+        return Math.max(0, 1 - (minDiff / 320));
     }
 
     onMount(() => {
@@ -179,26 +179,26 @@
 
     function getOpacity(sectionZ: number, currentScroll: number) {
         const currentZ = sectionZ + currentScroll;
-        if (currentZ < -1500 || currentZ > 1000) return 0;
+        if (currentZ < -1200 || currentZ > 1000) return 0;
         if (currentZ < 0) {
-            return 1 - (Math.abs(currentZ) / 1500);
+            return 1 - (Math.abs(currentZ) / 1200);
         } else {
-            return 1 - (currentZ / 1000);
+            return 1 - (currentZ / 800);
         }
     }
 
     function getBlur(sectionZ: number, currentScroll: number) {
         const currentZ = sectionZ + currentScroll;
         if (currentZ > 0) {
-            return currentZ / 100; // blurs as it passes behind camera
+            return currentZ / 80; // blurs as it passes behind camera
         } else if (currentZ < 0) {
-            return Math.min(Math.abs(currentZ) / 200, 15);
+            return Math.min(Math.abs(currentZ) / 160, 15);
         }
         return 0;
     }
 
     function getCurveX(z: number) {
-        return Math.sin(z / 2000) * 800;
+        return Math.sin(z / 1600) * 640;
     }
 
     function wipeIn(node: Element, { duration = 800, delay = 0 }) {
@@ -238,9 +238,9 @@
         const designStart = timelineSections[5].z;
         const contactStart = timelineSections[6].z;
         
-        if (scroll >= codeStart - 100 && scroll < musicStart - 100) return 'Code Portfolio';
-        if (scroll >= musicStart - 100 && scroll < designStart - 100) return 'Music Portfolio';
-        if (scroll >= designStart - 100 && scroll < contactStart - 100) return 'Design Portfolio';
+        if (scroll >= codeStart - 80 && scroll < musicStart - 100) return 'Code Portfolio';
+        if (scroll >= musicStart - 80 && scroll < designStart - 100) return 'Music Portfolio';
+        if (scroll >= designStart - 80 && scroll < contactStart - 100) return 'Design Portfolio';
         return '';
     }
 
@@ -309,26 +309,36 @@
     <div class="perf-section who-section"><Who /></div>
     <div class="perf-section stack-section"><TechStack /></div>
     
-    <div class="perf-portfolio-wrap">
-        <h2 class="perf-title">Code Portfolio</h2>
-        <div class="perf-grid">
-            {#each codeProjects as project}
-                <ScatteredProject {...project} />
-            {/each}
+    <div class="perf-section code-section">
+        <div class="perf-portfolio-wrap">
+            <h2 class="perf-title">Code Portfolio</h2>
+            <div class="perf-grid">
+                {#each codeProjects as project}
+                    <ScatteredProject {...project} />
+                {/each}
+            </div>
         </div>
-        
-        <h2 class="perf-title" style="margin-top: 100px;">Music Portfolio</h2>
-        <div class="perf-grid">
-            {#each musicProjects as project}
-                <MusicProject {...project} />
-            {/each}
+    </div>
+    
+    <div class="perf-section music-section">
+        <div class="perf-portfolio-wrap">
+            <h2 class="perf-title">Music Portfolio</h2>
+            <div class="perf-grid">
+                {#each musicProjects as project}
+                    <MusicProject {...project} />
+                {/each}
+            </div>
         </div>
+    </div>
 
-        <h2 class="perf-title" style="margin-top: 100px;">Design Portfolio</h2>
-        <div class="perf-grid">
-            {#each designProjects as project}
-                <ScatteredProject {...project} isDesign={true} />
-            {/each}
+    <div class="perf-section design-section">
+        <div class="perf-portfolio-wrap">
+            <h2 class="perf-title">Design Portfolio</h2>
+            <div class="perf-grid">
+                {#each designProjects as project}
+                    <ScatteredProject {...project} isDesign={true} />
+                {/each}
+            </div>
         </div>
     </div>
     
@@ -338,19 +348,20 @@
 <div class="scroll-container" class:faded={activeModal !== null} style="height: {maxScroll + innerHeight}px;">
     <!-- Snap points for magnetism -->
     <div class="snap-point" style="top: 0px;"></div>
-    <div class="snap-point" style="top: 1500px;"></div>
-    <div class="snap-point" style="top: 3000px;"></div>
-    <div class="snap-point" style="top: 4500px;"></div>
+    <div class="snap-point" style="top: 1200px;"></div>
+    <div class="snap-point" style="top: 2400px;"></div>
+    <div class="snap-point" style="top: 3600px;"></div>
     {#each codeProjects as _, i}
-        <div class="snap-point" style="top: {6000 + (i * 1500)}px;"></div>
+        <div class="snap-point" style="top: {4800 + (i * 1200)}px;"></div>
     {/each}
-    <div class="snap-point" style="top: {6000 + (codeProjects.length * 1500)}px;"></div>
+    <div class="snap-point" style="top: {4800 + (codeProjects.length * 1200)}px;"></div>
     {#each musicProjects as _, i}
-        <div class="snap-point" style="top: {7500 + (codeProjects.length * 1500) + (i * 1500)}px;"></div>
+        <div class="snap-point" style="top: {6000 + (codeProjects.length * 1200) + (i * 1200)}px;"></div>
     {/each}
-    <div class="snap-point" style="top: {7500 + (codeProjects.length * 1500) + (musicProjects.length * 1500)}px;"></div>
+    <div class="snap-point" style="top: {4800 + (codeProjects.length * 1200) + (musicProjects.length * 1200)}px;"></div>
+    <div class="snap-point" style="top: {6000 + (codeProjects.length * 1200) + (musicProjects.length * 1200)}px;"></div>
     {#each designProjects as _, i}
-        <div class="snap-point" style="top: {9000 + (codeProjects.length * 1500) + (musicProjects.length * 1500) + (i * 1500)}px;"></div>
+        <div class="snap-point" style="top: {8400 + (codeProjects.length * 1200) + (musicProjects.length * 1200) + (i * 1200)}px;"></div>
     {/each}
     <div class="snap-point" style="top: {maxScroll}px;"></div>
 
@@ -358,11 +369,11 @@
     <div class="timeline" class:faded={activeModal !== null} style="height: {tops[tops.length - 1]}px;">
         {#if $expandCode > 0.01}
             {#each Array(timelineSections[3].count) as _, j}
-                {@const z = timelineSections[3].z + (j + 1) * 1500}
+                {@const z = timelineSections[3].z + (j + 1) * 1200}
                 {@const progress = (j + 1) / (timelineSections[3].count + 1)}
                 <button 
                     class="timeline-submark" 
-                    style="top: {tops[3] + progress * (tops[4] - tops[3])}px; opacity: {Math.max(0, $expandCode * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
+                    style="top: {tops[3] + progress * (tops[4] - tops[3])}px; opacity: {Math.max(0, $expandCode * (Math.abs(scrollY - z) < 320 ? 1 : 0.3))};"
                     onclick={() => slowScrollTo(z)}
                     aria-label="Code Project {j + 1}"
                 ></button>
@@ -371,11 +382,11 @@
 
         {#if $expandMusic > 0.01}
             {#each Array(timelineSections[4].count) as _, j}
-                {@const z = timelineSections[4].z + (j + 1) * 1500}
+                {@const z = timelineSections[4].z + (j + 1) * 1200}
                 {@const progress = (j + 1) / (timelineSections[4].count + 1)}
                 <button 
                     class="timeline-submark" 
-                    style="top: {tops[4] + progress * (tops[5] - tops[4])}px; opacity: {Math.max(0, $expandMusic * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
+                    style="top: {tops[4] + progress * (tops[5] - tops[4])}px; opacity: {Math.max(0, $expandMusic * (Math.abs(scrollY - z) < 320 ? 1 : 0.3))};"
                     onclick={() => slowScrollTo(z)}
                     aria-label="Music Project {j + 1}"
                 ></button>
@@ -384,11 +395,11 @@
 
         {#if $expandDesign > 0.01}
             {#each Array(timelineSections[5].count) as _, j}
-                {@const z = timelineSections[5].z + (j + 1) * 1500}
-                {@const progress = (j + 1) / (timelineSections[5].count + 1)}
+                {@const z = timelineSections[5].z + (j + 2) * 1200}
+                {@const progress = (j + 2) / (timelineSections[5].count + 2)}
                 <button 
                     class="timeline-submark" 
-                    style="top: {tops[5] + progress * (tops[6] - tops[5])}px; opacity: {Math.max(0, $expandDesign * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
+                    style="top: {tops[5] + progress * (tops[6] - tops[5])}px; opacity: {Math.max(0, $expandDesign * (Math.abs(scrollY - z) < 320 ? 1 : 0.3))};"
                     onclick={() => slowScrollTo(z)}
                     aria-label="Design Project {j + 1}"
                 ></button>
@@ -402,7 +413,7 @@
                 {#if section.label === 'Music' && new Date() < new Date('2026-09-30')}
                     <span class="new-chip">NEW</span>
                 {/if}
-                <span class="timeline-label" class:active={Math.abs(scrollY - section.z) < 400}>{section.label}</span>
+                <span class="timeline-label" class:active={Math.abs(scrollY - section.z) < 320}>{section.label}</span>
             </button>
         {/each}
     </div>
@@ -433,26 +444,26 @@
                 </div>
             </div>
             
-            <div class="section-wrapper" style="transform: translateZ(-1500px) translateX({getCurveX(-1500)}px); pointer-events: {getOpacity(-1500, scrollY) > 0.1 ? 'auto' : 'none'};">
-                <div class="content-wrapper" style="opacity: {getOpacity(-1500, scrollY)}; filter: blur({getBlur(-1500, scrollY)}px);">
+            <div class="section-wrapper" style="transform: translateZ(-1200px) translateX({getCurveX(-1200)}px); pointer-events: {getOpacity(-1200, scrollY) > 0.1 ? 'auto' : 'none'};">
+                <div class="content-wrapper" style="opacity: {getOpacity(-1200, scrollY)}; filter: blur({getBlur(-1200, scrollY)}px);">
                     <Who />
                 </div>
             </div>
 
-            <div class="section-wrapper" style="transform: translateZ(-3000px) translateX({getCurveX(-3000)}px); pointer-events: {getOpacity(-3000, scrollY) > 0.1 ? 'auto' : 'none'};">
-                <div class="content-wrapper" style="opacity: {getOpacity(-3000, scrollY)}; filter: blur({getBlur(-3000, scrollY)}px);">
+            <div class="section-wrapper" style="transform: translateZ(-2400px) translateX({getCurveX(-2400)}px); pointer-events: {getOpacity(-2400, scrollY) > 0.1 ? 'auto' : 'none'};">
+                <div class="content-wrapper" style="opacity: {getOpacity(-2400, scrollY)}; filter: blur({getBlur(-2400, scrollY)}px);">
                     <TechStack />
                 </div>
             </div>
 
-            <div class="section-wrapper title-wrapper" style="transform: translateZ(-4500px) translateX({getCurveX(-4500)}px); pointer-events: none;">
-                <div class="content-wrapper" style="opacity: {getOpacity(-4500, scrollY)}; filter: blur({getBlur(-4500, scrollY)}px);">
+            <div class="section-wrapper title-wrapper" style="transform: translateZ(-3600px) translateX({getCurveX(-3600)}px); pointer-events: none;">
+                <div class="content-wrapper" style="opacity: {getOpacity(-3600, scrollY)}; filter: blur({getBlur(-3600, scrollY)}px);">
                     <h2 class="section-title">Code Portfolio</h2>
                 </div>
             </div>
 
             {#each codeProjects as project, i}
-                {@const zPos = -6000 - (i * 1500)}
+                {@const zPos = -4800 - (i * 1200)}
                 <div class="section-wrapper" 
                      style="transform: translateZ({zPos}px) translateX({getCurveX(zPos) + (i % 2 === 0 ? -1 : 1) * 200}px) translateY({-150 + (i % 3 === 0 ? -1 : 1) * 50}px); 
                             pointer-events: {getOpacity(zPos, scrollY) > 0.1 ? 'auto' : 'none'};">
@@ -462,36 +473,36 @@
                 </div>
             {/each}
 
-            <div class="section-wrapper title-wrapper" style="transform: translateZ({-6000 - (codeProjects.length * 1500)}px) translateX({getCurveX(-6000 - (codeProjects.length * 1500))}px); pointer-events: none;">
-                <div class="content-wrapper" style="opacity: {getOpacity(-6000 - (codeProjects.length * 1500), scrollY)}; filter: blur({getBlur(-6000 - (codeProjects.length * 1500), scrollY)}px);">
+            <div class="section-wrapper title-wrapper" style="transform: translateZ({-4800 - (codeProjects.length * 1200)}px) translateX({getCurveX(-4800 - (codeProjects.length * 1200))}px); pointer-events: none;">
+                <div class="content-wrapper" style="opacity: {getOpacity(-4800 - (codeProjects.length * 1200), scrollY)}; filter: blur({getBlur(-4800 - (codeProjects.length * 1200), scrollY)}px);">
                     <h2 class="section-title">Music Portfolio</h2>
                 </div>
             </div>
 
             <!-- MUSIC PROJECTS HORIZONTAL SCROLL -->
             {#if !$isPerformanceMode || activeMode === 'music'}
-                {@const pinStart = timelineSections[4].z + 1500}
+                {@const pinStart = timelineSections[4].z + 1200}
                 {@const numMusic = musicProjects.length}
-                {@const pinEnd = pinStart + Math.max(0, numMusic - 1) * 1500}
+                {@const pinEnd = pinStart + Math.max(0, numMusic - 1) * 1200}
                 {@const pinnedZ = scrollY < pinStart ? -pinStart : (scrollY > pinEnd ? -pinEnd : -scrollY)}
                 {@const musicProgress = numMusic > 1 ? Math.max(0, Math.min(1, (scrollY - pinStart) / (pinEnd - pinStart))) : 0}
-                {@const slideSpacing = 700}
+                {@const slideSpacing = 560}
                 {@const totalPan = Math.max(0, numMusic - 1) * slideSpacing}
                 {@const centerOffset = totalPan / 2}
                 {@const currentPan = musicProgress * totalPan}
                 {@const xOffset = getCurveX(-scrollY) - currentPan + centerOffset}
                 
                 <div class="section-wrapper" 
-                     style="transform: translateZ({pinnedZ}px) translateX({xOffset}px) translateY(-100px); 
+                     style="transform: translateZ({pinnedZ}px) translateX({xOffset}px) translateY(-80px); 
                             pointer-events: {getOpacity(pinnedZ, scrollY) > 0.1 ? 'auto' : 'none'};">
                     <div class="content-wrapper" style="opacity: {getOpacity(pinnedZ, scrollY)}; filter: blur({getBlur(pinnedZ, scrollY)}px);">
-                        <div class="music-row" style="display: flex; gap: {slideSpacing - 600}px; align-items: center; width: max-content;">
+                        <div class="music-row" style="display: flex; gap: {slideSpacing - 480}px; align-items: center; width: max-content;">
                             {#each musicProjects as project, i}
                                 {@const cardProgress = musicProgress * Math.max(0, numMusic - 1)}
                                 {@const dist = Math.abs(cardProgress - i)}
                                 {@const scale = Math.max(0.8, 1 - (dist * 0.15))}
                                 {@const cardOpacity = Math.max(0.2, 1 - (dist * 0.6))}
-                                <div class="music-slide-container" style="width: 600px; flex-shrink: 0; transform: scale({scale}); opacity: {cardOpacity}; transition: transform 0.1s ease-out, opacity 0.1s ease-out;">
+                                <div class="music-slide-container" style="width: 480px; flex-shrink: 0; transform: scale({scale}); opacity: {cardOpacity}; transition: transform 0.1s ease-out, opacity 0.1s ease-out;">
                                     <MusicProject {...project} />
                                 </div>
                             {/each}
@@ -500,14 +511,14 @@
                 </div>
             {/if}
 
-            <div class="section-wrapper title-wrapper" style="transform: translateZ({-7500 - ((codeProjects.length + musicProjects.length) * 1500)}px) translateX({getCurveX(-7500 - ((codeProjects.length + musicProjects.length) * 1500))}px); pointer-events: none;">
-                <div class="content-wrapper" style="opacity: {getOpacity(-7500 - ((codeProjects.length + musicProjects.length) * 1500), scrollY)}; filter: blur({getBlur(-7500 - ((codeProjects.length + musicProjects.length) * 1500), scrollY)}px);">
+            <div class="section-wrapper title-wrapper" style="transform: translateZ({-6000 - ((codeProjects.length + musicProjects.length) * 1200)}px) translateX({getCurveX(-6000 - ((codeProjects.length + musicProjects.length) * 1200))}px); pointer-events: none;">
+                <div class="content-wrapper" style="opacity: {getOpacity(-6000 - ((codeProjects.length + musicProjects.length) * 1200), scrollY)}; filter: blur({getBlur(-6000 - ((codeProjects.length + musicProjects.length) * 1200), scrollY)}px);">
                     <h2 class="section-title">Design Portfolio</h2>
                 </div>
             </div>
 
             {#each designProjects as project, i}
-                {@const zPos = -9000 - ((codeProjects.length + musicProjects.length) * 1500) - (i * 1500)}
+                {@const zPos = -8400 - ((codeProjects.length + musicProjects.length) * 1200) - (i * 1200)}
                 <div class="section-wrapper" 
                      style="transform: translateZ({zPos}px) translateX({getCurveX(zPos) + (i % 2 === 0 ? 1 : -1) * 200}px) translateY({-150 + (i % 3 === 0 ? 1 : -1) * 50}px); 
                             pointer-events: {getOpacity(zPos, scrollY) > 0.1 ? 'auto' : 'none'};">
@@ -558,18 +569,18 @@
     }
     .top-controls {
         position: fixed;
-        top: 40px;
-        right: 40px;
+        top: 32px;
+        right: 32px;
         display: flex;
-        gap: 20px;
-        z-index: 1000;
+        gap: 16px;
+        z-index: 800;
         align-items: center;
         transition: color 0.3s ease;
     }
     .minimal-toggle {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         background: transparent;
         border: none;
         cursor: pointer;
@@ -580,7 +591,7 @@
     .toggle-label {
         color: #daf4d2;
         font-family: 'DM Sans', sans-serif;
-        font-size: 11px;
+        font-size: 8.8px;
         font-weight: 500;
         opacity: 0.3;
         transition: opacity 0.3s;
@@ -591,25 +602,25 @@
         opacity: 1;
     }
     .toggle-track {
-        width: 36px;
-        height: 18px;
-        border-radius: 18px;
+        width: 28.8px;
+        height: 14.4px;
+        border-radius: 14.4px;
         border: 1px solid rgba(218, 244, 210, 0.4);
         position: relative;
         transition: border-color 0.3s;
     }
     .toggle-knob {
         position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 12px;
-        height: 12px;
+        top: 1.6px;
+        left: 1.6px;
+        width: 9.6px;
+        height: 9.6px;
         background: #daf4d2;
         border-radius: 50%;
         transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .toggle-knob.right {
-        transform: translateX(18px);
+        transform: translateX(14.4px);
     }
     .minimal-toggle:hover .toggle-track {
         border-color: rgba(218, 244, 210, 0.8);
@@ -624,7 +635,7 @@
     .landing-nav {
         position: fixed;
         top: 50%;
-        left: 40px;
+        left: 32px;
         transform: translateY(-50%);
         display: flex;
         flex-direction: column;
@@ -633,36 +644,36 @@
     .nav-links {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 16px;
     }
     .nav-btn {
         background: transparent;
         border: none;
         color: #daf4d2;
         font-family: 'DM Sans', sans-serif;
-        font-size: 18px;
+        font-size: 14.4px;
         display: flex;
         align-items: center;
         cursor: pointer;
         opacity: 0.6;
         transition: color 0.3s, transform 0.3s, opacity 0.3s;
-        text-shadow: 0 2px 4px rgba(4,33,37,0.8);
+        text-shadow: 0 1.6px 3.2px rgba(4,33,37,0.8);
         position: relative;
-        padding: 8px 0;
+        padding: 6.4px 0;
     }
     .nav-text {
         position: absolute;
-        left: 40px; /* 24px icon + 16px gap */
+        left: 32px; /* 19.2px icon + 12.8px gap */
         white-space: nowrap;
         opacity: 0;
-        filter: blur(8px);
-        transform: translateX(-15px);
+        filter: blur(6.4px);
+        transform: translateX(-12px);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         pointer-events: none;
     }
     .nav-btn:hover {
         color: #fff;
-        transform: translateY(-2px);
+        transform: translateY(-1.6px);
         opacity: 1;
     }
     .nav-btn:hover .nav-text {
@@ -676,7 +687,7 @@
         left: 0;
         width: 100vw;
         height: 100vh;
-        perspective: 1000px;
+        perspective: 800px;
         overflow: hidden;
         pointer-events: none;
     }
@@ -684,10 +695,10 @@
     /* Timeline Tracker CSS */
     .timeline {
         position: fixed;
-        right: 40px;
+        right: 32px;
         top: 50%;
         transform: translateY(-50%);
-        width: 120px;
+        width: 96px;
         z-index: 100;
         pointer-events: none;
         will-change: height;
@@ -695,8 +706,8 @@
     .timeline-submark {
         position: absolute;
         right: 0;
-        width: 6px;
-        height: 2px;
+        width: 4.8px;
+        height: 1.6px;
         margin-top: -1px;
         background: #daf4d2;
         border-radius: 1px;
@@ -707,17 +718,17 @@
         z-index: 99;
     }
     .timeline-submark:hover {
-        width: 14px;
+        width: 11.2px;
         background: #fff;
     }
     .timeline-indicator {
         position: absolute;
         right: 0;
-        height: 2px;
+        height: 1.6px;
         margin-top: -1px;
         background: #daf4d2;
-        border-radius: 2px;
-        box-shadow: 0 0 10px rgba(218, 244, 210, 0.8);
+        border-radius: 1.6px;
+        box-shadow: 0 0 8px rgba(218, 244, 210, 0.8);
         will-change: top, width, opacity;
         z-index: 100;
     }
@@ -725,8 +736,8 @@
         position: absolute;
         right: 0;
         width: 100%;
-        height: 24px;
-        margin-top: -12px;
+        height: 19.2px;
+        margin-top: -9.6px;
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -734,14 +745,14 @@
         border: none;
         cursor: pointer;
         pointer-events: auto;
-        padding-right: 45px; /* space for the indicator line */
-        gap: 8px;
+        padding-right: 36px; /* space for the indicator line */
+        gap: 6.4px;
     }
     .timeline-label {
         font-family: 'DM Sans', sans-serif;
-        font-size: 11px;
+        font-size: 8.8px;
         color: rgba(218, 244, 210, 0.4);
-        letter-spacing: 2px;
+        letter-spacing: 1.6px;
         text-transform: uppercase;
         white-space: nowrap;
         transition: color 0.3s;
@@ -750,12 +761,12 @@
         background-color: var(--theme-text, #daf4d2);
         color: #000000;
         font-family: 'DM Sans', sans-serif;
-        font-size: 9px;
+        font-size: 7.2px;
         font-weight: 800;
-        padding: 2px 6px;
-        border-radius: 4px;
+        padding: 1.6px 4.8px;
+        border-radius: 3.2px;
         letter-spacing: 0.5px;
-        box-shadow: 0 0 8px var(--theme-text, #daf4d2);
+        box-shadow: 0 0 6.4px var(--theme-text, #daf4d2);
         pointer-events: none;
         display: flex;
         align-items: center;
@@ -767,7 +778,7 @@
     .timeline-label.active {
         color: #daf4d2;
         font-weight: 600;
-        text-shadow: 0 0 10px rgba(218, 244, 210, 0.5);
+        text-shadow: 0 0 8px rgba(218, 244, 210, 0.5);
     }
     
     .faded {
@@ -783,21 +794,21 @@
         left: 0;
         width: 100vw;
         height: 100vh;
-        z-index: 1000;
+        z-index: 800;
         display: flex;
         justify-content: flex-end;
         background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(6.4px);
+        -webkit-backdrop-filter: blur(6.4px);
     }
     .modal-content {
         width: 90vw;
-        max-width: 1300px;
+        max-width: 1040px;
         height: 96vh;
         margin: 2vh 2vw;
         background: #042125;
-        border-radius: 30px;
-        box-shadow: -20px 0 60px rgba(0,0,0,0.6);
+        border-radius: 24px;
+        box-shadow: -16px 0 48px rgba(0,0,0,0.6);
         position: relative;
         overflow: hidden;
         border: 1px solid rgba(218, 244, 210, 0.15);
@@ -816,8 +827,8 @@
         position: absolute;
         top: 4vh;
         right: calc(90vw + 4vw);
-        width: 56px;
-        height: 56px;
+        width: 44.8px;
+        height: 44.8px;
         border-radius: 50%;
         background: rgba(218, 244, 210, 0.1);
         border: 1px solid rgba(218, 244, 210, 0.3);
@@ -835,7 +846,7 @@
         transform: rotate(90deg) scale(1.1);
     }
     
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         .modal-content {
             width: 100vw;
             height: 100vh;
@@ -843,8 +854,8 @@
             border-radius: 0;
         }
         .close-btn {
-            top: 20px;
-            right: 20px;
+            top: 16px;
+            right: 16px;
             background: rgba(4, 33, 37, 0.8);
             border-color: #daf4d2;
         }
@@ -883,27 +894,27 @@
     }
     .section-title {
         font-family: 'DM Sans', sans-serif;
-        font-size: 72px;
+        font-size: 57.6px;
         color: #daf4d2;
         font-weight: 600;
-        letter-spacing: -2px;
-        text-shadow: 0 4px 20px rgba(7, 59, 66, 0.8);
+        letter-spacing: -1.6px;
+        text-shadow: 0 3.2px 16px rgba(7, 59, 66, 0.8);
     }
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         .section-title {
-            font-size: 42px;
+            font-size: 33.6px;
         }
     }
     .fixed-section-title {
         position: fixed;
-        top: 40px;
-        left: 40px;
+        top: 32px;
+        left: 32px;
         font-family: 'DM Sans', sans-serif;
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 600;
         color: rgba(218, 244, 210, 0.8);
         z-index: 100;
-        text-shadow: 0 4px 20px rgba(7, 59, 66, 0.8);
+        text-shadow: 0 3.2px 16px rgba(7, 59, 66, 0.8);
         pointer-events: none;
         display: flex;
         align-items: center;
@@ -917,8 +928,8 @@
         background: rgba(218, 244, 210, 0.05);
         border: 1px solid rgba(218, 244, 210, 0.2);
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -927,9 +938,9 @@
         opacity: 0;
         pointer-events: none;
         transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
     .back-to-top.visible {
         opacity: 1;
@@ -937,8 +948,8 @@
     }
     .back-to-top:hover {
         background: rgba(218, 244, 210, 0.15);
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(218, 244, 210, 0.1);
+        transform: translateY(-1.6px);
+        box-shadow: 0 8px 16px rgba(218, 244, 210, 0.1);
     }
     
     /* Performance Mode Styles */
@@ -952,8 +963,8 @@
         background-color: #042125;
     }
     .perf-portfolio-wrap {
-        padding: 80px 20px;
-        max-width: 1200px;
+        padding: 64px 16px;
+        max-width: 960px;
         width: 100%;
         margin: 0 auto;
     }
@@ -979,25 +990,42 @@
     }
     .stack-section {
         width: 100%;
-        padding: 60px 0;
+        padding: 48px 0;
+    }
+    
+    .code-section {
+        width: 100%;
+    }
+    
+    .music-section {
+        width: 100%;
+        background-color: #0e051a; /* violet/monochrome bg */
+    }
+    
+    .design-section {
+        width: 100%;
+        background-image: url("/portfolio-bg.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
     }
     
     .floating-app-bar {
         position: fixed;
-        top: 40px;
+        top: 32px;
         bottom: auto;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px;
+        gap: 6.4px;
+        padding: 6.4px;
         background: rgba(4, 33, 37, 0.65);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(218, 244, 210, 0.15);
-        border-radius: 100px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(218, 244, 210, 0.05);
+        border-radius: 80px;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5), inset 0 0 16px rgba(218, 244, 210, 0.05);
         z-index: 900; /* below top-controls but above content */
         transition: opacity 0.4s ease;
     }
@@ -1005,15 +1033,15 @@
     .app-bar-btn {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 12px 24px;
+        gap: 8px;
+        padding: 9.6px 19.2px;
         background: transparent;
         border: none;
         color: #daf4d2;
         font-family: 'DM Sans', sans-serif;
-        font-size: 15px;
+        font-size: 12px;
         font-weight: 500;
-        border-radius: 50px;
+        border-radius: 40px;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         opacity: 0.7;
@@ -1022,8 +1050,8 @@
     .app-bar-btn:hover {
         background: rgba(218, 244, 210, 0.12);
         opacity: 1;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        transform: translateY(-1.6px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 
     .app-bar-icon {
@@ -1032,17 +1060,17 @@
         align-items: center;
     }
     
-    @media (max-width: 600px) {
+    @media (max-width: 480px) {
         .floating-app-bar {
-            top: 20px;
+            top: 16px;
             bottom: auto;
             width: 90%;
             justify-content: space-between;
         }
         .app-bar-btn {
-            padding: 10px 16px;
-            gap: 6px;
-            font-size: 13px;
+            padding: 8px 12.8px;
+            gap: 4.8px;
+            font-size: 10.4px;
         }
     }
     .perf-section {
@@ -1051,20 +1079,29 @@
         align-items: center;
         width: 100%;
     }
-    .finale-section { margin-top: 40px; }
+    .finale-section { margin-top: 32px; }
     .perf-title {
         font-family: 'DM Sans', sans-serif;
-        font-size: 56px;
+        font-size: 44.8px;
         color: #daf4d2;
-        margin: 0 0 40px 0;
+        margin: 0 0 32px 0;
         text-align: center;
-        letter-spacing: -2px;
+        letter-spacing: -1.6px;
     }
     .perf-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-        gap: 60px 40px;
+        grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+        gap: 48px 32px;
         width: 100%;
+    }
+    @media (max-width: 614.4px) {
+        .perf-grid {
+            grid-template-columns: 1fr;
+            justify-items: center;
+        }
+        .music-section .perf-grid {
+            grid-template-columns: 1fr;
+        }
     }
     
     /* Make inner component sections transparent so wrappers show through */
@@ -1082,12 +1119,12 @@
     }
 
     .fixed-title-container h1 {
-        font-size: 100px;
+        font-size: 80px;
         font-weight: 700;
         margin: 0;
-        letter-spacing: -3px;
+        letter-spacing: -2.4px;
         color: #daf4d2;
-        text-shadow: 0 0 20px rgba(218, 244, 210, 0.4);
+        text-shadow: 0 0 16px rgba(218, 244, 210, 0.4);
         transition: color 1.5s ease, text-shadow 1.5s ease;
     }
     
@@ -1128,7 +1165,7 @@
         transition: background 1.5s ease, transform 0.3s ease;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 614.4px) {
         .top-controls {
             display: none !important;
         }
