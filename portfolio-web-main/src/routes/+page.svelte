@@ -399,6 +399,9 @@
         
         {#each timelineSections as section, i}
             <button class="timeline-item" style="top: {tops[i]}px" onclick={() => slowScrollTo(section.z)}>
+                {#if section.label === 'Music' && new Date() < new Date('2026-09-30')}
+                    <span class="new-chip">NEW</span>
+                {/if}
                 <span class="timeline-label" class:active={Math.abs(scrollY - section.z) < 400}>{section.label}</span>
             </button>
         {/each}
@@ -476,7 +479,7 @@
                 {@const totalPan = Math.max(0, numMusic - 1) * slideSpacing}
                 {@const centerOffset = totalPan / 2}
                 {@const currentPan = musicProgress * totalPan}
-                {@const xOffset = getCurveX(pinnedZ) - currentPan + centerOffset}
+                {@const xOffset = getCurveX(-scrollY) - currentPan + centerOffset}
                 
                 <div class="section-wrapper" 
                      style="transform: translateZ({pinnedZ}px) translateX({xOffset}px) translateY(-100px); 
@@ -732,6 +735,7 @@
         cursor: pointer;
         pointer-events: auto;
         padding-right: 45px; /* space for the indicator line */
+        gap: 8px;
     }
     .timeline-label {
         font-family: 'DM Sans', sans-serif;
@@ -741,6 +745,21 @@
         text-transform: uppercase;
         white-space: nowrap;
         transition: color 0.3s;
+    }
+    .new-chip {
+        background-color: var(--theme-text, #daf4d2);
+        color: #000000;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 9px;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 4px;
+        letter-spacing: 0.5px;
+        box-shadow: 0 0 8px var(--theme-text, #daf4d2);
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        transition: background-color 1.5s ease-in-out, box-shadow 1.5s ease-in-out;
     }
     .timeline-item:hover .timeline-label {
         color: rgba(218, 244, 210, 0.8);

@@ -80,38 +80,38 @@ export const designProjects = [
 export const musicProjects: Array<{name: string, description: string, url: string, image?: string, ytLink?: string}> = [
   {
     name: "Human (Intro)",
-    description: "Introductory track.",
+    description: "A late night jazz idea that bloomed into something of a villain's intro towards the end.",
     url: "/music/01_Human_(Intro).mp3"
   },
   {
     name: "Kere",
-    description: "An experimental soundscape.",
+    description: "Meaning 'Well' in Kannada, Kere is supposed to represent my journey of living in the city of Bangalore and dwelling among its cityscape and its wonderful people.",
     url: "/music/02_Kere.mp3"
   },
   {
     name: "Aavattam",
-    description: "A rhythmic journey.",
+    description: "An unfinished symphony which was designed to be a tribute to Kerala and its culture, inspired by one of my trips there.",
     url: "/music/03_Aavattam.mp3"
   },
   {
     name: "Divine",
-    description: "A harmonic exploration.",
+    description: "Inspired by 'MAMA'S FAVORITE' by Kanye West, representing the innocence and inner child of oneself.",
     url: "/music/04_Divine.mp3"
   },
   {
     name: "Kannadi",
-    description: "Reflections and resonance.",
+    description: "Kannadi, which is 'Mirror' in Tamil, represents a reluctance to accept oneself as is and this allure towards putting up a facade.",
     url: "/music/05_Kannadi_(On YT).wav",
     ytLink: "https://youtu.be/R31oD85ADL4?si=zDKCWxnFtsTI2o9V"
   },
   {
     name: "Coffee with a Kaaranam",
-    description: "A caffeinated groove.",
+    description: "An unfinished concept of how I could introduce some of my ideas into the South-Indian soundscape.",
     url: "/music/06_Coffee_with_a_Kaaranam.mp3"
   },
   {
     name: "Temporary",
-    description: "An upbeat finale.",
+    description: "An ethereal instrumental mix of the song \"Temporary\" by Don Toliver meant to convey the emotions of solemn acceptance of uncertainty.",
     url: "/music/07_Temporary.wav",
     ytLink: "https://youtu.be/caVI_fdPF1U?si=lZnYI_pUrUqUwZF1"
   }

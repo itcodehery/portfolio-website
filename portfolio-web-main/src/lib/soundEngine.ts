@@ -242,12 +242,15 @@ function playDropFx() {
 }
 
 // ─── Main play function ───
+import { musicProjects } from './projects';
 
 let currentAudioElement: HTMLAudioElement | null = null;
 let currentAudioSource: MediaElementAudioSourceNode | null = null;
 
-export const currentlyPlaying = writable<{ name: string, isPlaying: boolean } | null>(null);
+export const currentlyPlaying = writable<{ name: string, isPlaying: boolean, isLoading?: boolean, isTransitioning?: boolean } | null>(null);
 export const trackProgress = writable({ currentTime: 0, duration: 0 });
+
+let autoplayTimeout: ReturnType<typeof setTimeout> | null = null;
 
 export function seekTrack(time: number) {
   if (currentAudioElement) {
@@ -257,6 +260,10 @@ export function seekTrack(time: number) {
 }
 
 export function playTrack(url: string, name: string) {
+  if (autoplayTimeout) {
+    clearTimeout(autoplayTimeout);
+    autoplayTimeout = null;
+  }
   const c = ensureContext();
   if (currentAudioElement) {
     currentAudioElement.pause();
@@ -280,22 +287,41 @@ export function playTrack(url: string, name: string) {
         duration: currentAudioElement!.duration || 0
       });
     });
+
+    currentAudioElement.addEventListener('canplay', () => {
+      currentlyPlaying.update(s => s ? { ...s, isLoading: false } : null);
+    });
     
     currentAudioElement.addEventListener('ended', () => {
-      currentlyPlaying.update(s => s ? { ...s, isPlaying: false } : null);
+      let nextUrl = "";
+      let nextName = "";
+      currentlyPlaying.update(s => {
+        if (s) {
+          const currentIndex = musicProjects.findIndex(p => p.name === s.name);
+          if (currentIndex !== -1) {
+             const nextIndex = (currentIndex + 1) % musicProjects.length;
+             nextUrl = musicProjects[nextIndex].url;
+             nextName = musicProjects[nextIndex].name;
+          }
+        }
+        return s ? { name: nextName, isPlaying: false, isLoading: false, isTransitioning: true } : null;
+      });
+      if (nextUrl) {
+          autoplayTimeout = setTimeout(() => playTrack(nextUrl, nextName), 2500);
+      }
     });
   }
   currentAudioElement.src = url;
-  currentAudioElement.play();
+  currentAudioElement.play().catch(e => console.error("Audio playback failed:", e));
   
-  currentlyPlaying.set({ name, isPlaying: true });
+  currentlyPlaying.set({ name, isPlaying: true, isLoading: true });
 }
 
 export function pauseTrack() {
   if (currentAudioElement) {
     currentAudioElement.pause();
     currentlyPlaying.update(state => {
-      if (state) return { ...state, isPlaying: false };
+      if (state) return { ...state, isPlaying: false, isLoading: false };
       return state;
     });
   }

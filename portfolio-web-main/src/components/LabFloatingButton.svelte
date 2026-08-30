@@ -1,8 +1,9 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
-    import { scale, fade, slide } from "svelte/transition";
+    import { scale, fade, slide, blur } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
     import { currentlyPlaying, pauseTrack, resumeTrack, trackProgress, seekTrack } from "../lib/soundEngine";
+    import { musicProjects, codeProjects } from "../lib/projects";
 
     let isOpen = $state(false);
 
@@ -17,6 +18,20 @@
     function toggleMenu(e: MouseEvent) {
         e.stopPropagation();
         isOpen = !isOpen;
+    }
+
+    function jumpToCurrentSong() {
+        if (!$currentlyPlaying) return;
+        const index = musicProjects.findIndex(p => p.name === $currentlyPlaying.name);
+        if (index !== -1) {
+            const pinStart = 7500 + (codeProjects.length * 1500);
+            const numMusic = musicProjects.length;
+            const pinEnd = pinStart + Math.max(0, numMusic - 1) * 1500;
+            
+            const progress = index / Math.max(1, numMusic - 1);
+            const targetScrollY = pinStart + progress * (pinEnd - pinStart);
+            window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+        }
     }
 
     function closeMenu() {
@@ -59,36 +74,48 @@
 
         {#if hasTrack && !isOpen}
             <div class="miniplayer-content" transition:fade={{ duration: 200 }}>
-                <div class="track-info">
-                    <div class="track-header">
-                        <span class="now-playing-label">Now Playing</span>
-                        <span class="time-label">{formatTime($trackProgress.currentTime)} / {formatTime($trackProgress.duration)}</span>
-                    </div>
-                    <div class="track-name-container" class:has-marquee={shouldMarquee} bind:clientWidth={trackNameWidth}>
-                        <div class="track-name-scroller" class:marquee={shouldMarquee}>
-                            <span class="track-name" style="display: inline-block;" bind:clientWidth={trackNameScrollWidth}>{$currentlyPlaying?.name}</span>
-                            {#if shouldMarquee}
-                                <span class="track-name" style="display: inline-block;">{$currentlyPlaying?.name}</span>
-                            {/if}
+                {#if $currentlyPlaying?.isTransitioning}
+                    <div class="transition-overlay" in:blur={{ amount: 15, duration: 600, delay: 300 }} out:blur={{ amount: 15, duration: 1500 }}>
+                        <div class="slide-icon">
+                            <Icon icon="ph:fast-forward-fill" width="24" />
                         </div>
                     </div>
-                    <input 
-                        type="range" 
-                        class="seek-bar" 
-                        min="0" 
-                        max={$trackProgress.duration || 100} 
-                        value={$trackProgress.currentTime} 
-                        oninput={onSeek}
-                        onclick={(e) => e.stopPropagation()}
-                    />
-                </div>
-                <button class="mini-play-btn" onclick={togglePlayState}>
-                    {#if isPlaying}
-                        <Icon icon="mdi:pause" width="24" />
-                    {:else}
-                        <Icon icon="mdi:play" width="24" />
-                    {/if}
-                </button>
+                {/if}
+
+                {#if !$currentlyPlaying?.isTransitioning}
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <!-- svelte-ignore a11y_no_static_element_interactions -->
+                    <div class="track-info" style="cursor: pointer;" in:blur={{ amount: 10, duration: 800, delay: 1000 }} out:blur={{ amount: 10, duration: 300 }} onclick={jumpToCurrentSong}>
+                        <div class="track-header">
+                            <span class="now-playing-label">Now Playing</span>
+                            <span class="time-label">{formatTime($trackProgress.currentTime)} / {formatTime($trackProgress.duration)}</span>
+                        </div>
+                        <div class="track-name-container" class:has-marquee={shouldMarquee} bind:clientWidth={trackNameWidth}>
+                            <div class="track-name-scroller" class:marquee={shouldMarquee}>
+                                <span class="track-name" style="display: inline-block;" bind:clientWidth={trackNameScrollWidth}>{$currentlyPlaying?.name}</span>
+                                {#if shouldMarquee}
+                                    <span class="track-name" style="display: inline-block;">{$currentlyPlaying?.name}</span>
+                                {/if}
+                            </div>
+                        </div>
+                        <input 
+                            type="range" 
+                            class="seek-bar" 
+                            min="0" 
+                            max={$trackProgress.duration || 100} 
+                            value={$trackProgress.currentTime} 
+                            oninput={onSeek}
+                            onclick={(e) => e.stopPropagation()}
+                        />
+                    </div>
+                    <button class="mini-play-btn" in:blur={{ amount: 10, duration: 800, delay: 1000 }} out:blur={{ amount: 10, duration: 300 }} onclick={togglePlayState}>
+                        {#if isPlaying}
+                            <Icon icon="mdi:pause" width="24" />
+                        {:else}
+                            <Icon icon="mdi:play" width="24" />
+                        {/if}
+                    </button>
+                {/if}
             </div>
         {/if}
     </div>
@@ -155,6 +182,7 @@
         width: 50px;
         height: 50px;
         box-sizing: border-box;
+        position: relative;
     }
 
     .pill-wrapper.expanded {
@@ -228,6 +256,30 @@
         white-space: nowrap;
         opacity: 1;
         height: 100%;
+        position: relative;
+    }
+
+    .transition-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    .slide-icon {
+        animation: slideSlowly 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--theme-text, #daf4d2);
+    }
+
+    @keyframes slideSlowly {
+        0% { transform: translateX(-15px); }
+        100% { transform: translateX(15px); }
     }
 
     .track-info {
@@ -250,9 +302,11 @@
         font-family: 'DM Sans', sans-serif;
         font-size: 9px;
         font-weight: 700;
-        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 1px;
+        color: var(--theme-text, #daf4d2);
+        opacity: 0.7;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
+        transition: color 0.4s, opacity 0.4s;
     }
 
     .time-label {
