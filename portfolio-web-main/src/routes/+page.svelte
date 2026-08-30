@@ -6,7 +6,8 @@
     import TechStack from "../components/TechStack.svelte";
     import ThreeScene from "../components/ThreeScene.svelte";
     import ScatteredProject from "../components/ScatteredProject.svelte";
-    import { codeProjects, designProjects } from "../lib/projects";
+    import MusicProject from "../components/MusicProject.svelte";
+    import { codeProjects, designProjects, musicProjects } from "../lib/projects";
     import { goto } from "$app/navigation";
     import { fly, fade } from "svelte/transition";
     import { cubicInOut } from "svelte/easing";
@@ -29,44 +30,58 @@
         { label: 'About', z: 1500, count: 0 },
         { label: 'Stack', z: 3000, count: 0 },
         { label: 'Code', z: 4500, count: codeProjects.length },
-        { label: 'Design', z: 6000 + codeProjects.length * 1500, count: designProjects.length },
-        { label: 'Contact', z: 7500 + (codeProjects.length + designProjects.length) * 1500, count: 0 }
+        { label: 'Music', z: 6000 + codeProjects.length * 1500, count: musicProjects.length },
+        { label: 'Design', z: 7500 + (codeProjects.length + musicProjects.length) * 1500, count: designProjects.length },
+        { label: 'Contact', z: 9000 + (codeProjects.length + musicProjects.length + designProjects.length) * 1500, count: 0 }
     ];
     
     let activeModal: 'links' | 'portfolio' | 'journey' | null = null;
     
-    $: maxScroll = timelineSections[5].z;
+    $: maxScroll = timelineSections[6].z;
 
-    $: activeMode = (!$isPerformanceMode && timelineSections && timelineSections[3] && timelineSections[4] && timelineSections[5]) ? 
-        (scrollY >= timelineSections[4].z - 1000 && scrollY < timelineSections[5].z - 1000 ? 'design' :
-        (scrollY >= timelineSections[3].z - 1000 && scrollY < timelineSections[4].z - 1000 ? 'code' : 'default')) : 'default';
+    $: activeMode = (!$isPerformanceMode && timelineSections && timelineSections.length >= 7) ? 
+        (scrollY >= timelineSections[5].z - 1000 && scrollY < timelineSections[6].z - 1000 ? 'design' :
+        (scrollY >= timelineSections[4].z - 1000 && scrollY < timelineSections[5].z - 1000 ? 'music' :
+        (scrollY >= timelineSections[3].z - 1000 && scrollY < timelineSections[4].z - 1000 ? 'code' : 'default'))) : 'default';
     
     $: if (typeof document !== 'undefined') {
         document.body.style.transition = 'background-color 1.5s ease-in-out';
-        document.body.classList.remove('theme-code', 'theme-design');
+        document.body.style.backgroundImage = 'none';
+        document.body.classList.remove('theme-code', 'theme-design', 'theme-music');
         
         if (activeMode === 'code') {
             document.body.classList.add('theme-code');
-            document.body.style.backgroundColor = '#130b1e'; // deep midnight purple
-            document.documentElement.style.setProperty('--soundlab-bg', 'rgba(19, 11, 30, 0.95)');
-            document.documentElement.style.setProperty('--soundlab-pad-bg', 'rgba(180, 160, 240, 0.05)');
-            document.documentElement.style.setProperty('--soundlab-pad-border', 'rgba(180, 160, 240, 0.15)');
+            document.body.style.backgroundColor = '#000000'; // AMOLED black
+            document.documentElement.style.setProperty('--soundlab-bg', 'rgba(10, 10, 10, 0.95)');
+            document.documentElement.style.setProperty('--soundlab-pad-bg', 'rgba(255, 255, 255, 0.05)');
+            document.documentElement.style.setProperty('--soundlab-pad-border', 'rgba(255, 255, 255, 0.15)');
+            document.documentElement.style.setProperty('--theme-text', '#ffffff');
         } else if (activeMode === 'design') {
             document.body.classList.add('theme-design');
             document.body.style.backgroundColor = '#061329'; // interesting deep ocean blue
             document.documentElement.style.setProperty('--soundlab-bg', 'rgba(6, 19, 41, 0.95)');
             document.documentElement.style.setProperty('--soundlab-pad-bg', 'rgba(150, 200, 255, 0.05)');
             document.documentElement.style.setProperty('--soundlab-pad-border', 'rgba(150, 200, 255, 0.15)');
+            document.documentElement.style.setProperty('--theme-text', '#96c8ff');
+        } else if (activeMode === 'music') {
+            document.body.classList.add('theme-music');
+            document.body.style.backgroundColor = '#0e051a'; // deep violet
+            document.documentElement.style.setProperty('--soundlab-bg', 'rgba(15, 10, 28, 0.95)');
+            document.documentElement.style.setProperty('--soundlab-pad-bg', 'rgba(162, 119, 255, 0.05)');
+            document.documentElement.style.setProperty('--soundlab-pad-border', 'rgba(162, 119, 255, 0.15)');
+            document.documentElement.style.setProperty('--theme-text', '#a277ff');
         } else {
             document.body.style.backgroundColor = '#042125'; // dark green
             document.documentElement.style.removeProperty('--soundlab-bg');
             document.documentElement.style.removeProperty('--soundlab-pad-bg');
             document.documentElement.style.removeProperty('--soundlab-pad-border');
+            document.documentElement.style.setProperty('--theme-text', '#daf4d2');
         }
     }
 
     const expandCode = spring(0, { stiffness: 0.04, damping: 0.3 });
     const expandDesign = spring(0, { stiffness: 0.04, damping: 0.3 });
+    const expandMusic = spring(0, { stiffness: 0.04, damping: 0.3 });
 
     $: {
         let activeIdx = 0;
@@ -77,13 +92,15 @@
             }
         }
         expandCode.set(activeIdx === 3 ? 1 : 0);
-        expandDesign.set(activeIdx === 4 ? 1 : 0);
+        expandMusic.set(activeIdx === 4 ? 1 : 0);
+        expandDesign.set(activeIdx === 5 ? 1 : 0);
     }
 
     $: tops = timelineSections.map((sec, i) => {
         let top = i * 40;
         if (i > 3) top += $expandCode * timelineSections[3].count * 12;
-        if (i > 4) top += $expandDesign * timelineSections[4].count * 20;
+        if (i > 4) top += $expandMusic * timelineSections[4].count * 20;
+        if (i > 5) top += $expandDesign * timelineSections[5].count * 20;
         return top;
     });
 
@@ -129,6 +146,12 @@
                 }
             } else if (sec.label === 'Design') {
                 for (let i = 0; i < designProjects.length; i++) {
+                    const subZ = sec.z + (i + 1) * 1500;
+                    const subDiff = Math.abs(scroll - subZ);
+                    if (subDiff < minDiff) minDiff = subDiff;
+                }
+            } else if (sec.label === 'Music') {
+                for (let i = 0; i < musicProjects.length; i++) {
                     const subZ = sec.z + (i + 1) * 1500;
                     const subDiff = Math.abs(scroll - subZ);
                     if (subDiff < minDiff) minDiff = subDiff;
@@ -209,12 +232,14 @@
     $: activeSection = getActiveSection(scrollY);
 
     function getActiveSection(scroll: number) {
-        if (!timelineSections || timelineSections.length < 6) return '';
+        if (!timelineSections || timelineSections.length < 7) return '';
         const codeStart = timelineSections[3].z;
-        const designStart = timelineSections[4].z;
-        const contactStart = timelineSections[5].z;
+        const musicStart = timelineSections[4].z;
+        const designStart = timelineSections[5].z;
+        const contactStart = timelineSections[6].z;
         
-        if (scroll >= codeStart - 100 && scroll < designStart - 100) return 'Code Portfolio';
+        if (scroll >= codeStart - 100 && scroll < musicStart - 100) return 'Code Portfolio';
+        if (scroll >= musicStart - 100 && scroll < designStart - 100) return 'Music Portfolio';
         if (scroll >= designStart - 100 && scroll < contactStart - 100) return 'Design Portfolio';
         return '';
     }
@@ -292,6 +317,13 @@
             {/each}
         </div>
         
+        <h2 class="perf-title" style="margin-top: 100px;">Music Portfolio</h2>
+        <div class="perf-grid">
+            {#each musicProjects as project}
+                <MusicProject {...project} />
+            {/each}
+        </div>
+
         <h2 class="perf-title" style="margin-top: 100px;">Design Portfolio</h2>
         <div class="perf-grid">
             {#each designProjects as project}
@@ -313,8 +345,12 @@
         <div class="snap-point" style="top: {6000 + (i * 1500)}px;"></div>
     {/each}
     <div class="snap-point" style="top: {6000 + (codeProjects.length * 1500)}px;"></div>
-    {#each designProjects as _, i}
+    {#each musicProjects as _, i}
         <div class="snap-point" style="top: {7500 + (codeProjects.length * 1500) + (i * 1500)}px;"></div>
+    {/each}
+    <div class="snap-point" style="top: {7500 + (codeProjects.length * 1500) + (musicProjects.length * 1500)}px;"></div>
+    {#each designProjects as _, i}
+        <div class="snap-point" style="top: {9000 + (codeProjects.length * 1500) + (musicProjects.length * 1500) + (i * 1500)}px;"></div>
     {/each}
     <div class="snap-point" style="top: {maxScroll}px;"></div>
 
@@ -333,13 +369,26 @@
             {/each}
         {/if}
 
-        {#if $expandDesign > 0.01}
+        {#if $expandMusic > 0.01}
             {#each Array(timelineSections[4].count) as _, j}
                 {@const z = timelineSections[4].z + (j + 1) * 1500}
                 {@const progress = (j + 1) / (timelineSections[4].count + 1)}
                 <button 
                     class="timeline-submark" 
-                    style="top: {tops[4] + progress * (tops[5] - tops[4])}px; opacity: {Math.max(0, $expandDesign * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
+                    style="top: {tops[4] + progress * (tops[5] - tops[4])}px; opacity: {Math.max(0, $expandMusic * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
+                    onclick={() => slowScrollTo(z)}
+                    aria-label="Music Project {j + 1}"
+                ></button>
+            {/each}
+        {/if}
+
+        {#if $expandDesign > 0.01}
+            {#each Array(timelineSections[5].count) as _, j}
+                {@const z = timelineSections[5].z + (j + 1) * 1500}
+                {@const progress = (j + 1) / (timelineSections[5].count + 1)}
+                <button 
+                    class="timeline-submark" 
+                    style="top: {tops[5] + progress * (tops[6] - tops[5])}px; opacity: {Math.max(0, $expandDesign * (Math.abs(scrollY - z) < 400 ? 1 : 0.3))};"
                     onclick={() => slowScrollTo(z)}
                     aria-label="Design Project {j + 1}"
                 ></button>
@@ -412,12 +461,50 @@
 
             <div class="section-wrapper title-wrapper" style="transform: translateZ({-6000 - (codeProjects.length * 1500)}px) translateX({getCurveX(-6000 - (codeProjects.length * 1500))}px); pointer-events: none;">
                 <div class="content-wrapper" style="opacity: {getOpacity(-6000 - (codeProjects.length * 1500), scrollY)}; filter: blur({getBlur(-6000 - (codeProjects.length * 1500), scrollY)}px);">
+                    <h2 class="section-title">Music Portfolio</h2>
+                </div>
+            </div>
+
+            <!-- MUSIC PROJECTS HORIZONTAL SCROLL -->
+            {#if !$isPerformanceMode || activeMode === 'music'}
+                {@const pinStart = timelineSections[4].z + 1500}
+                {@const numMusic = musicProjects.length}
+                {@const pinEnd = pinStart + Math.max(0, numMusic - 1) * 1500}
+                {@const pinnedZ = scrollY < pinStart ? -pinStart : (scrollY > pinEnd ? -pinEnd : -scrollY)}
+                {@const musicProgress = numMusic > 1 ? Math.max(0, Math.min(1, (scrollY - pinStart) / (pinEnd - pinStart))) : 0}
+                {@const slideSpacing = 700}
+                {@const totalPan = Math.max(0, numMusic - 1) * slideSpacing}
+                {@const centerOffset = totalPan / 2}
+                {@const currentPan = musicProgress * totalPan}
+                {@const xOffset = getCurveX(pinnedZ) - currentPan + centerOffset}
+                
+                <div class="section-wrapper" 
+                     style="transform: translateZ({pinnedZ}px) translateX({xOffset}px) translateY(-100px); 
+                            pointer-events: {getOpacity(pinnedZ, scrollY) > 0.1 ? 'auto' : 'none'};">
+                    <div class="content-wrapper" style="opacity: {getOpacity(pinnedZ, scrollY)}; filter: blur({getBlur(pinnedZ, scrollY)}px);">
+                        <div class="music-row" style="display: flex; gap: {slideSpacing - 600}px; align-items: center; width: max-content;">
+                            {#each musicProjects as project, i}
+                                {@const cardProgress = musicProgress * Math.max(0, numMusic - 1)}
+                                {@const dist = Math.abs(cardProgress - i)}
+                                {@const scale = Math.max(0.8, 1 - (dist * 0.15))}
+                                {@const cardOpacity = Math.max(0.2, 1 - (dist * 0.6))}
+                                <div class="music-slide-container" style="width: 600px; flex-shrink: 0; transform: scale({scale}); opacity: {cardOpacity}; transition: transform 0.1s ease-out, opacity 0.1s ease-out;">
+                                    <MusicProject {...project} />
+                                </div>
+                            {/each}
+                        </div>
+                    </div>
+                </div>
+            {/if}
+
+            <div class="section-wrapper title-wrapper" style="transform: translateZ({-7500 - ((codeProjects.length + musicProjects.length) * 1500)}px) translateX({getCurveX(-7500 - ((codeProjects.length + musicProjects.length) * 1500))}px); pointer-events: none;">
+                <div class="content-wrapper" style="opacity: {getOpacity(-7500 - ((codeProjects.length + musicProjects.length) * 1500), scrollY)}; filter: blur({getBlur(-7500 - ((codeProjects.length + musicProjects.length) * 1500), scrollY)}px);">
                     <h2 class="section-title">Design Portfolio</h2>
                 </div>
             </div>
 
             {#each designProjects as project, i}
-                {@const zPos = -7500 - (codeProjects.length * 1500) - (i * 1500)}
+                {@const zPos = -9000 - ((codeProjects.length + musicProjects.length) * 1500) - (i * 1500)}
                 <div class="section-wrapper" 
                      style="transform: translateZ({zPos}px) translateX({getCurveX(zPos) + (i % 2 === 0 ? 1 : -1) * 200}px) translateY({-150 + (i % 3 === 0 ? 1 : -1) * 50}px); 
                             pointer-events: {getOpacity(zPos, scrollY) > 0.1 ? 'auto' : 'none'};">
@@ -427,8 +514,8 @@
                 </div>
             {/each}
 
-            <div class="section-wrapper" style="transform: translateZ({-timelineSections[5].z}px) translateX({getCurveX(-timelineSections[5].z)}px); pointer-events: {getOpacity(-timelineSections[5].z, scrollY) > 0.1 ? 'auto' : 'none'};">
-                <div class="content-wrapper" style="opacity: {getOpacity(-timelineSections[5].z, scrollY)}; filter: blur({getBlur(-timelineSections[5].z, scrollY)}px);">
+            <div class="section-wrapper" style="transform: translateZ({-timelineSections[6].z}px) translateX({getCurveX(-timelineSections[6].z)}px); pointer-events: {getOpacity(-timelineSections[6].z, scrollY) > 0.1 ? 'auto' : 'none'};">
+                <div class="content-wrapper" style="opacity: {getOpacity(-timelineSections[6].z, scrollY)}; filter: blur({getBlur(-timelineSections[6].z, scrollY)}px);">
                     <Finale />
                 </div>
             </div>
@@ -992,7 +1079,7 @@
     :global(body.theme-code .soundlab-wrapper.expanded),
     :global(body.theme-code .expand-btn),
     :global(body.theme-code .lab-floating-button) {
-        background: rgba(19, 11, 30, 0.85) !important;
+        background: rgba(10, 10, 10, 0.85) !important;
         transition: background 1.5s ease, transform 0.3s ease !important;
     }
     
@@ -1006,8 +1093,8 @@
     }
     
     :global(body.theme-code .pad) {
-        background: rgba(180, 160, 240, 0.05) !important;
-        border-color: rgba(180, 160, 240, 0.15) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
     }
     
     :global(body.theme-design .pad) {

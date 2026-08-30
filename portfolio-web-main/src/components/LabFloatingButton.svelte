@@ -1,9 +1,18 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
-    import { scale, fade } from "svelte/transition";
+    import { scale, fade, slide } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
+    import { currentlyPlaying, pauseTrack, resumeTrack, trackProgress, seekTrack } from "../lib/soundEngine";
 
     let isOpen = $state(false);
+
+    // Only show miniplayer if there's an active track. If lab is open, we can optionally hide it or just keep the shape.
+    let isPlaying = $derived($currentlyPlaying?.isPlaying || false);
+    let hasTrack = $derived($currentlyPlaying !== null);
+
+    let trackNameWidth = $state(0);
+    let trackNameScrollWidth = $state(0);
+    let shouldMarquee = $derived(trackNameScrollWidth > trackNameWidth);
 
     function toggleMenu(e: MouseEvent) {
         e.stopPropagation();
@@ -17,14 +26,72 @@
     function preventClose(e: MouseEvent) {
         e.stopPropagation();
     }
+
+    function togglePlayState(e: MouseEvent) {
+        e.stopPropagation();
+        if (isPlaying) {
+            pauseTrack();
+        } else {
+            resumeTrack();
+        }
+    }
+
+    function formatTime(seconds: number) {
+        if (!seconds || isNaN(seconds)) return "0:00";
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function onSeek(e: Event) {
+        const target = e.target as HTMLInputElement;
+        seekTrack(Number(target.value));
+    }
 </script>
 
 <svelte:window onclick={closeMenu} />
 
-<div class="lab-container">
-    <button class="lab-floating-button" class:active={isOpen} onclick={toggleMenu} aria-label="Toggle Lab Menu">
-        <Icon icon={isOpen ? "mdi:close" : "material-symbols:science"} width="24" />
-    </button>
+<div class="lab-container" class:has-player={hasTrack && !isOpen}>
+    <div class="pill-wrapper" class:expanded={hasTrack && !isOpen}>
+        <button class="lab-floating-button" class:active={isOpen} onclick={toggleMenu} aria-label="Toggle Lab Menu">
+            <Icon icon={isOpen ? "mdi:close" : "material-symbols:science"} width="24" />
+        </button>
+
+        {#if hasTrack && !isOpen}
+            <div class="miniplayer-content" transition:fade={{ duration: 200 }}>
+                <div class="track-info">
+                    <div class="track-header">
+                        <span class="now-playing-label">Now Playing</span>
+                        <span class="time-label">{formatTime($trackProgress.currentTime)} / {formatTime($trackProgress.duration)}</span>
+                    </div>
+                    <div class="track-name-container" class:has-marquee={shouldMarquee} bind:clientWidth={trackNameWidth}>
+                        <div class="track-name-scroller" class:marquee={shouldMarquee}>
+                            <span class="track-name" style="display: inline-block;" bind:clientWidth={trackNameScrollWidth}>{$currentlyPlaying?.name}</span>
+                            {#if shouldMarquee}
+                                <span class="track-name" style="display: inline-block;">{$currentlyPlaying?.name}</span>
+                            {/if}
+                        </div>
+                    </div>
+                    <input 
+                        type="range" 
+                        class="seek-bar" 
+                        min="0" 
+                        max={$trackProgress.duration || 100} 
+                        value={$trackProgress.currentTime} 
+                        oninput={onSeek}
+                        onclick={(e) => e.stopPropagation()}
+                    />
+                </div>
+                <button class="mini-play-btn" onclick={togglePlayState}>
+                    {#if isPlaying}
+                        <Icon icon="mdi:pause" width="24" />
+                    {:else}
+                        <Icon icon="mdi:play" width="24" />
+                    {/if}
+                </button>
+            </div>
+        {/if}
+    </div>
 
     {#if isOpen}
         <div 
@@ -79,33 +146,233 @@
         transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
+    .pill-wrapper {
+        display: flex;
+        align-items: center;
+        background-color: transparent;
+        border-radius: 50px;
+        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        width: 50px;
+        height: 50px;
+        box-sizing: border-box;
+    }
+
+    .pill-wrapper.expanded {
+        width: 280px;
+        height: 64px;
+        padding: 4px;
+        background-color: var(--soundlab-bg, rgba(4, 33, 37, 0.85));
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.2));
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        border-radius: 32px;
+    }
+
     .lab-floating-button {
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background-color: rgba(4, 33, 37, 0.6);
+        background-color: var(--soundlab-bg, rgba(4, 33, 37, 0.6));
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        color: rgba(218, 244, 210, 0.7);
-        border: 1px solid rgba(218, 244, 210, 0.15);
+        color: var(--theme-text, rgba(218, 244, 210, 0.7));
+        border: 1px solid var(--soundlab-pad-border, rgba(218, 244, 210, 0.15));
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        flex-shrink: 0;
         transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        margin: 0;
+    }
+
+    .pill-wrapper.expanded .lab-floating-button {
+        width: 54px;
+        height: 54px;
+        background-color: var(--soundlab-bg, rgba(4, 33, 37, 0.9));
+        border-color: var(--soundlab-pad-border, rgba(218, 244, 210, 0.15));
+        color: var(--theme-text, rgba(218, 244, 210, 0.7));
+        box-shadow: none;
     }
 
     .lab-floating-button:hover, .lab-floating-button.active {
         transform: scale(1.1);
-        background-color: rgba(7, 59, 66, 0.9);
-        border-color: rgba(218, 244, 210, 0.4);
-        color: #daf4d2;
-        box-shadow: 0 8px 25px rgba(218, 244, 210, 0.15);
+        background-color: var(--soundlab-bg, rgba(7, 59, 66, 0.9));
+        border-color: var(--soundlab-pad-border, rgba(218, 244, 210, 0.4));
+        color: var(--theme-text, #daf4d2);
+        box-shadow: 0 8px 25px var(--soundlab-pad-border, rgba(218, 244, 210, 0.15));
+    }
+    
+    .pill-wrapper.expanded .lab-floating-button:hover {
+        transform: scale(1.05);
+        background-color: var(--soundlab-bg, rgba(7, 59, 66, 0.9));
+        color: var(--theme-text, #daf4d2);
+        border-color: var(--soundlab-pad-border, rgba(218, 244, 210, 0.3));
     }
 
-    .lab-floating-button:not(.active):hover {
+    .lab-floating-button:not(.active):not(.expanded):hover {
         transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Miniplayer */
+    .miniplayer-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 14px;
+        padding-right: 14px;
+        flex: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        opacity: 1;
+        height: 100%;
+    }
+
+    .track-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+        flex: 1;
+        margin-right: 12px;
+        gap: 3px;
+    }
+
+    .track-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .now-playing-label {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 9px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+
+    .time-label {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 9px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.4);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .track-name-container {
+        width: 100%;
+        overflow: hidden;
+        margin-bottom: 2px;
+        position: relative;
+    }
+
+    .track-name-container.has-marquee {
+        mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+    }
+
+    .track-name-scroller {
+        display: flex;
+        width: max-content;
+        gap: 24px; /* gap between duplicates */
+    }
+
+    .track-name-scroller.marquee {
+        animation: marquee 8s linear infinite;
+    }
+
+    .track-name {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--theme-text, #a277ff);
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    @keyframes marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(calc(-50% - 12px)); }
+    }
+
+    .seek-bar {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 10px; /* Fixed height for reliable layout spacing */
+        background: transparent;
+        outline: none;
+        cursor: pointer;
+        margin: 0;
+        padding: 0;
+    }
+
+    .seek-bar::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 2px;
+        margin-top: 3px;
+    }
+
+    .seek-bar::-moz-range-track {
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 2px;
+    }
+
+    .seek-bar::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--theme-text, #a277ff);
+        cursor: pointer;
+        margin-top: -1px; /* (6 - 4) / 2 = 1 */
+        transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .seek-bar::-moz-range-thumb {
+        width: 16px;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--theme-text, #a277ff);
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .seek-bar::-webkit-slider-thumb:hover {
+        transform: scale(1.3);
+    }
+    
+    .seek-bar::-moz-range-thumb:hover {
+        transform: scale(1.3);
+    }
+
+    .mini-play-btn {
+        background: transparent;
+        border: none;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 50%;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .mini-play-btn:hover {
+        transform: scale(1.1);
+        color: var(--theme-text, #a277ff);
     }
 
     /* Context Menu Styles */

@@ -142,8 +142,9 @@
             // Animate fog color based on activeMode
             // Midnight Purple: 0x130b1e, Ocean Blue: 0x061329, Dark green: 0x042125
             const targetFogColor = new THREE.Color(
-                activeMode === 'code' ? 0x130b1e : 
-                activeMode === 'design' ? 0x061329 : 0x042125
+                activeMode === 'code' ? 0x000000 : // AMOLED Black
+                activeMode === 'design' ? 0x061329 : 
+                activeMode === 'music' ? 0x0e051a : 0x042125 // Deep iridescent violet for music
             );
             if (scene.fog && 'color' in scene.fog) {
                 scene.fog.color.lerp(targetFogColor, 0.05);
@@ -154,7 +155,17 @@
             const targetY = baseTargetY + (mouseY * 2.5);
             camera.position.y += (targetY - camera.position.y) * 0.05;
 
-            // Animate terrain like an ocean
+            // Audio Analysis Data
+            const analyser = window.__soundAnalyser ? window.__soundAnalyser() : null;
+            let audioData = new Uint8Array(0);
+            if (analyser) {
+                if (audioData.length !== analyser.frequencyBinCount) {
+                    audioData = new Uint8Array(analyser.frequencyBinCount);
+                }
+                analyser.getByteFrequencyData(audioData);
+            }
+
+            // Animate terrain like an ocean + audio dancing
             const positions = terrainGeometry.attributes.position.array;
             for (let i = 0; i < positions.length; i += 3) {
                 const x = positions[i];
@@ -162,10 +173,19 @@
                 const distFromCenter = Math.abs(x);
                 const pathMask = Math.min(distFromCenter / 15, 1); 
                 
+                let audioBump = 0;
+                if (audioData.length > 0) {
+                    // Map the Y coordinate (depth) to a frequency bin
+                    const binIndex = Math.floor(Math.abs(y) * 0.5) % audioData.length;
+                    // Much softer bump
+                    audioBump = (audioData[binIndex] / 255.0) * 1.5 * pathMask;
+                }
+
                 const noise = (Math.sin(x * 0.1 + elapsedTime * 0.8) * Math.cos(y * 0.1 + elapsedTime * 0.4) * 1
                             + Math.sin(x * 0.05 - elapsedTime * 0.5) * Math.cos(y * 0.05 + elapsedTime * 0.3) * 3) * pathMask;
                 
-                positions[i+2] = noise; 
+                // Soft lerping for audio bump could be done if we tracked previous state, but just a smaller multiplier works for smooth feeling
+                positions[i+2] = noise + audioBump; 
             }
             terrainGeometry.attributes.position.needsUpdate = true;
 

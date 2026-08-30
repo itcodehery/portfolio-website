@@ -1,4 +1,5 @@
 // Sound Engine — Web Audio API based synthesizer for the 8×8 pad grid
+import { writable } from 'svelte/store';
 
 export interface PadConfig {
   id: number;
@@ -115,6 +116,10 @@ function ensureContext(): AudioContext {
 
 export function getAnalyser(): AnalyserNode | null {
   return analyser;
+}
+
+if (typeof window !== 'undefined') {
+  (window as any).__soundAnalyser = getAnalyser;
 }
 
 // ─── Noise buffer (cached) ───
@@ -237,6 +242,74 @@ function playDropFx() {
 }
 
 // ─── Main play function ───
+
+let currentAudioElement: HTMLAudioElement | null = null;
+let currentAudioSource: MediaElementAudioSourceNode | null = null;
+
+export const currentlyPlaying = writable<{ name: string, isPlaying: boolean } | null>(null);
+export const trackProgress = writable({ currentTime: 0, duration: 0 });
+
+export function seekTrack(time: number) {
+  if (currentAudioElement) {
+    currentAudioElement.currentTime = time;
+    trackProgress.update(p => ({ ...p, currentTime: time }));
+  }
+}
+
+export function playTrack(url: string, name: string) {
+  const c = ensureContext();
+  if (currentAudioElement) {
+    currentAudioElement.pause();
+    currentAudioElement.currentTime = 0;
+  } else {
+    currentAudioElement = new Audio();
+    currentAudioElement.crossOrigin = "anonymous";
+    currentAudioSource = c.createMediaElementSource(currentAudioElement);
+    currentAudioSource.connect(analyser!);
+    
+    currentAudioElement.addEventListener('timeupdate', () => {
+      trackProgress.set({
+        currentTime: currentAudioElement!.currentTime,
+        duration: currentAudioElement!.duration || 0
+      });
+    });
+    
+    currentAudioElement.addEventListener('loadedmetadata', () => {
+      trackProgress.set({
+        currentTime: currentAudioElement!.currentTime,
+        duration: currentAudioElement!.duration || 0
+      });
+    });
+    
+    currentAudioElement.addEventListener('ended', () => {
+      currentlyPlaying.update(s => s ? { ...s, isPlaying: false } : null);
+    });
+  }
+  currentAudioElement.src = url;
+  currentAudioElement.play();
+  
+  currentlyPlaying.set({ name, isPlaying: true });
+}
+
+export function pauseTrack() {
+  if (currentAudioElement) {
+    currentAudioElement.pause();
+    currentlyPlaying.update(state => {
+      if (state) return { ...state, isPlaying: false };
+      return state;
+    });
+  }
+}
+
+export function resumeTrack() {
+  if (currentAudioElement && currentAudioElement.src) {
+    currentAudioElement.play();
+    currentlyPlaying.update(state => {
+      if (state) return { ...state, isPlaying: true };
+      return state;
+    });
+  }
+}
 
 export function playMetronomeClick() {
   const c = ensureContext();

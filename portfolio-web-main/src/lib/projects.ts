@@ -76,3 +76,44 @@ export const designProjects = [
     description: "A redesign of the YouTube website, inspired by Apple's Cupertino Design System.",
   }
 ];
+
+export const musicProjects: Array<{name: string, description: string, url: string, image?: string, ytLink?: string}> = [
+  {
+    name: "Human (Intro)",
+    description: "Introductory track.",
+    url: "/music/01_Human_(Intro).mp3"
+  },
+  {
+    name: "Kere",
+    description: "An experimental soundscape.",
+    url: "/music/02_Kere.mp3"
+  },
+  {
+    name: "Aavattam",
+    description: "A rhythmic journey.",
+    url: "/music/03_Aavattam.mp3"
+  },
+  {
+    name: "Divine",
+    description: "A harmonic exploration.",
+    url: "/music/04_Divine.mp3"
+  },
+  {
+    name: "Kannadi",
+    description: "Reflections and resonance.",
+    url: "/music/05_Kannadi_(On YT).wav",
+    ytLink: "https://youtu.be/R31oD85ADL4?si=zDKCWxnFtsTI2o9V"
+  },
+  {
+    name: "Coffee with a Kaaranam",
+    description: "A caffeinated groove.",
+    url: "/music/06_Coffee_with_a_Kaaranam.mp3"
+  },
+  {
+    name: "Temporary",
+    description: "An upbeat finale.",
+    url: "/music/07_Temporary.wav",
+    ytLink: "https://youtu.be/caVI_fdPF1U?si=lZnYI_pUrUqUwZF1"
+  }
+];
+
