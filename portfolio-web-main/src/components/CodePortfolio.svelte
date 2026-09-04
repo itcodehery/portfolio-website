@@ -13,7 +13,8 @@
             name: "Forward Meridian",
             description: "A sci-fi FPS built in Godot featuring Marathon-inspired art and futuristic South Indian worldbuilding.",
             url: "https://github.com/itcodehery/Forward-Meridian",
-            image: "/code-projects/portfolio_forward_meridian.png"
+            image: "/code-projects/portfolio_forward_meridian.png",
+            playUrl: "https://drive.google.com/drive/folders/1ev6FK1xuq88BIPYJkV__uL-1AZV_Cbu0?usp=sharing"
         },
         {
             name: "Morsels",

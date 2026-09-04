@@ -54,6 +54,17 @@
               <div class="glass-overlay">
                 <h3>{project.name}</h3>
                 <p>{project.description}</p>
+                {#if project.playUrl}
+                  <button 
+                    class="play-button" 
+                    onclick={(e) => {
+                      e.stopPropagation();
+                      openLink(project.playUrl);
+                    }}
+                  >
+                    <Icon icon="material-symbols:play-arrow-rounded" style="font-size: 1.2rem;" /> Play
+                  </button>
+                {/if}
               </div>
             </div>
           </div>
@@ -201,6 +212,32 @@
     color: rgba(218, 244, 210, 0.8);
     font-family: "DM Sans", sans-serif;
     margin: 0;
+  }
+
+  .play-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 12px;
+    padding: 6px 16px;
+    background-color: var(--lime-light, #DAF4D2);
+    color: var(--cyan-dark, #042125);
+    border: none;
+    border-radius: 20px;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .play-button:hover {
+    transform: scale(1.05);
+    background-color: #ffffff;
   }
 
   .details-container {

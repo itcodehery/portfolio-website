@@ -4,12 +4,24 @@
     import { cubicOut } from "svelte/easing";
     import { currentlyPlaying, pauseTrack, resumeTrack, trackProgress, seekTrack } from "../lib/soundEngine";
     import { musicProjects, codeProjects } from "../lib/projects";
+    import { labsSettings } from "../lib/settings";
 
     let isOpen = $state(false);
-
-    // Only show miniplayer if there's an active track. If lab is open, we can optionally hide it or just keep the shape.
+    
     let isPlaying = $derived($currentlyPlaying?.isPlaying || false);
     let hasTrack = $derived($currentlyPlaying !== null);
+    
+    let pauseTimer: ReturnType<typeof setTimeout>;
+    
+    $effect(() => {
+        if (hasTrack && !isPlaying) {
+            pauseTimer = setTimeout(() => {
+                currentlyPlaying.set(null);
+            }, 7000);
+        } else {
+            clearTimeout(pauseTimer);
+        }
+    });
 
     let trackNameWidth = $state(0);
     let trackNameScrollWidth = $state(0);
@@ -68,9 +80,12 @@
 
 <div class="lab-container" class:has-player={hasTrack && !isOpen}>
     <div class="pill-wrapper" class:expanded={hasTrack && !isOpen}>
-        <button class="lab-floating-button" class:active={isOpen} onclick={toggleMenu} aria-label="Toggle Lab Menu">
-            <Icon icon={isOpen ? "mdi:close" : "material-symbols:science"} width="24" />
-        </button>
+        <div style="position: relative; display: flex; flex-shrink: 0;">
+            <span class="popup-new-chip" style="top: -2px; right: -4px; z-index: 10; pointer-events: none;">NEW</span>
+            <button class="lab-floating-button" class:active={isOpen} onclick={toggleMenu} aria-label="Toggle Lab Menu">
+                <Icon icon={isOpen ? "mdi:close" : "material-symbols:science"} width="24" />
+            </button>
+        </div>
 
         {#if hasTrack && !isOpen}
             <div class="miniplayer-content" transition:fade={{ duration: 200 }}>
@@ -129,35 +144,63 @@
         >
             <div class="menu-header">
                 <h3>The Lab</h3>
-                <span class="badge">Experiments</span>
+                <span class="badge">Settings</span>
             </div>
+            <p class="auto-hardware-info">Settings are automatically assigned on startup based on hardware capabilities.</p>
             
-            <div class="menu-items">
-                <button class="menu-item">
-                    <div class="menu-icon"><Icon icon="material-symbols:music-note" width="20" /></div>
+            <div class="menu-items menu-items-scroll" style="max-height: 300px; overflow-y: auto;">
+                <button class="menu-item" onclick={(e) => { e.stopPropagation(); $labsSettings.renderResolution = !$labsSettings.renderResolution; }}>
+                    <div class="menu-icon"><Icon icon="mdi:monitor-screenshot" width="20" /></div>
                     <div class="menu-content">
-                        <h4>The Sound Lab</h4>
-                        <p>Web Audio Synthesizer</p>
+                        <h4>High-Res Render</h4>
+                        <p>High-DPI retina scaling</p>
                     </div>
-                    <span class="status-dot active"></span>
+                    <span class="status-dot" class:active={$labsSettings.renderResolution}></span>
                 </button>
                 
-                <button class="menu-item">
-                    <div class="menu-icon"><Icon icon="material-symbols:deployed-code" width="20" /></div>
+                <button class="menu-item" onclick={(e) => { e.stopPropagation(); $labsSettings.chromaticAberration = !$labsSettings.chromaticAberration; }}>
+                    <div class="menu-icon"><Icon icon="mdi:layers-triple" width="20" /></div>
                     <div class="menu-content">
-                        <h4>WebGL Physics</h4>
-                        <p>Soft-body simulation</p>
+                        <h4>Chromatic Fringe</h4>
+                        <p>Red & cyan color offset layers</p>
                     </div>
-                    <span class="status-dot active"></span>
+                    <span class="status-dot" class:active={$labsSettings.chromaticAberration}></span>
                 </button>
-                
-                <button class="menu-item disabled">
-                    <div class="menu-icon"><Icon icon="material-symbols:animation" width="20" /></div>
+
+                <button class="menu-item" onclick={(e) => { e.stopPropagation(); $labsSettings.highPolyTerrain = !$labsSettings.highPolyTerrain; }}>
+                    <div class="menu-icon"><Icon icon="mdi:terrain" width="20" /></div>
                     <div class="menu-content">
-                        <h4>Generative Art</h4>
-                        <p>Procedural algorithms</p>
+                        <h4>High-Poly Grid</h4>
+                        <p>Dense waving landscape</p>
                     </div>
-                    <span class="status-dot pending"></span>
+                    <span class="status-dot" class:active={$labsSettings.highPolyTerrain}></span>
+                </button>
+
+                <button class="menu-item" onclick={(e) => { e.stopPropagation(); $labsSettings.cssGlassEffects = !$labsSettings.cssGlassEffects; }}>
+                    <div class="menu-icon"><Icon icon="mdi:blur" width="20" /></div>
+                    <div class="menu-content">
+                        <h4>Glass & Blur</h4>
+                        <p>CSS backdrop filters on UI</p>
+                    </div>
+                    <span class="status-dot" class:active={$labsSettings.cssGlassEffects}></span>
+                </button>
+
+                <button class="menu-item" onclick={(e) => { e.stopPropagation(); $labsSettings.ambientParticles = !$labsSettings.ambientParticles; }}>
+                    <div class="menu-icon"><Icon icon="material-symbols:bubble-chart" width="20" /></div>
+                    <div class="menu-content">
+                        <h4>Ambient Particles</h4>
+                        <p>Floating background dots</p>
+                    </div>
+                    <span class="status-dot" class:active={$labsSettings.ambientParticles}></span>
+                </button>
+
+                <button class="menu-item" onclick={(e) => { e.stopPropagation(); $labsSettings.reactivity = !$labsSettings.reactivity; }}>
+                    <div class="menu-icon"><Icon icon="mdi:cursor-move" width="20" /></div>
+                    <div class="menu-content">
+                        <h4>Interactive Camera</h4>
+                        <p>Mouse sway & audio bump</p>
+                    </div>
+                    <span class="status-dot" class:active={$labsSettings.reactivity}></span>
                 </button>
             </div>
         </div>
@@ -475,10 +518,25 @@
         color: rgba(218, 244, 210, 0.7);
     }
 
+    .auto-hardware-info {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.5);
+        margin: 0 16px 8px 16px;
+        line-height: 1.3;
+    }
+
     .menu-items {
         display: flex;
         flex-direction: column;
         gap: 4px;
+    }
+    
+    .menu-items-scroll {
+        scrollbar-width: none;
+    }
+    .menu-items-scroll::-webkit-scrollbar {
+        display: none;
     }
 
     .menu-item {
@@ -542,6 +600,22 @@
 
     .status-dot.pending {
         background: rgba(255, 255, 255, 0.2);
+    }
+
+    .popup-new-chip {
+        position: absolute;
+        top: -8px;
+        right: -12px;
+        transform: scale(0.7);
+        background-color: #daf4d2;
+        color: #000;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 8px;
+        font-weight: 800;
+        padding: 2px 4px;
+        border-radius: 4px;
+        letter-spacing: 0.5px;
+        box-shadow: 0 0 6px #daf4d2;
     }
 
     .menu-item.disabled {

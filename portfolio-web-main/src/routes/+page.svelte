@@ -16,7 +16,8 @@
     import LinksPage from './links/+page.svelte';
     import PortfolioPage from './portfolio/+page.svelte';
     import JourneyPage from './journey/+page.svelte';
-    import { isPerformanceMode } from '../lib/settings';
+    import Labs from '../components/Labs.svelte';
+    import { isPerformanceMode, labsSettings, labsModalOpen } from '../lib/settings';
     import { spring } from "svelte/motion";
 
     let windowScrollY = 0;
@@ -35,7 +36,7 @@
         { label: 'Contact', z: 8400 + (codeProjects.length + musicProjects.length + designProjects.length) * 1200, count: 0 }
     ];
     
-    let activeModal: 'links' | 'portfolio' | 'journey' | null = null;
+    let activeModal: 'links' | 'portfolio' | 'journey' | 'labs' | null = null;
     
     $: maxScroll = timelineSections[6].z;
 
@@ -312,9 +313,9 @@
     <div class="perf-section code-section">
         <div class="perf-portfolio-wrap">
             <h2 class="perf-title">Code Portfolio</h2>
-            <div class="perf-grid">
-                {#each codeProjects as project}
-                    <ScatteredProject {...project} />
+            <div class="perf-stack">
+                {#each codeProjects as project, i}
+                    <ScatteredProject {...project} index={i} />
                 {/each}
             </div>
         </div>
@@ -334,9 +335,9 @@
     <div class="perf-section design-section">
         <div class="perf-portfolio-wrap">
             <h2 class="perf-title">Design Portfolio</h2>
-            <div class="perf-grid">
-                {#each designProjects as project}
-                    <ScatteredProject {...project} isDesign={true} />
+            <div class="perf-stack">
+                {#each designProjects as project, i}
+                    <ScatteredProject {...project} isDesign={true} index={i} />
                 {/each}
             </div>
         </div>
@@ -439,42 +440,45 @@
         <!-- Move scene in opposite direction of curve to make camera follow it -->
         <div class="scene-3d" style="transform: translateZ({scrollY}px) translateX({-getCurveX(-scrollY)}px);">
             <div class="section-wrapper" style="transform: translateZ(0px) translateX(0px); pointer-events: {getOpacity(0, scrollY) > 0.1 ? 'auto' : 'none'};">
-                <div class="content-wrapper" style="opacity: {getOpacity(0, scrollY)}; filter: blur({getBlur(0, scrollY)}px);">
+                <div class="content-wrapper" style="opacity: {getOpacity(0, scrollY)}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(0, scrollY)}px);` : ""}">
                     <Intro />
                 </div>
             </div>
             
             <div class="section-wrapper" style="transform: translateZ(-1200px) translateX({getCurveX(-1200)}px); pointer-events: {getOpacity(-1200, scrollY) > 0.1 ? 'auto' : 'none'};">
-                <div class="content-wrapper" style="opacity: {getOpacity(-1200, scrollY)}; filter: blur({getBlur(-1200, scrollY)}px);">
+                <div class="content-wrapper" style="opacity: {getOpacity(-1200, scrollY)}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(-1200, scrollY)}px);` : ""}">
                     <Who />
                 </div>
             </div>
 
             <div class="section-wrapper" style="transform: translateZ(-2400px) translateX({getCurveX(-2400)}px); pointer-events: {getOpacity(-2400, scrollY) > 0.1 ? 'auto' : 'none'};">
-                <div class="content-wrapper" style="opacity: {getOpacity(-2400, scrollY)}; filter: blur({getBlur(-2400, scrollY)}px);">
+                <div class="content-wrapper" style="opacity: {getOpacity(-2400, scrollY)}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(-2400, scrollY)}px);` : ""}">
                     <TechStack />
                 </div>
             </div>
 
             <div class="section-wrapper title-wrapper" style="transform: translateZ(-3600px) translateX({getCurveX(-3600)}px); pointer-events: none;">
-                <div class="content-wrapper" style="opacity: {getOpacity(-3600, scrollY)}; filter: blur({getBlur(-3600, scrollY)}px);">
+                <div class="content-wrapper" style="opacity: {getOpacity(-3600, scrollY)}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(-3600, scrollY)}px);` : ""}">
                     <h2 class="section-title">Code Portfolio</h2>
                 </div>
             </div>
 
             {#each codeProjects as project, i}
                 {@const zPos = -4800 - (i * 1200)}
+                {@const opacity = getOpacity(zPos, scrollY)}
+                {#if opacity > 0}
                 <div class="section-wrapper" 
-                     style="transform: translateZ({zPos}px) translateX({getCurveX(zPos) + (i % 2 === 0 ? -1 : 1) * 200}px) translateY({-150 + (i % 3 === 0 ? -1 : 1) * 50}px); 
-                            pointer-events: {getOpacity(zPos, scrollY) > 0.1 ? 'auto' : 'none'};">
-                    <div class="content-wrapper" style="opacity: {getOpacity(zPos, scrollY)}; filter: blur({getBlur(zPos, scrollY)}px);">
-                        <ScatteredProject {...project} />
+                     style="transform: translateZ({zPos}px) translateX({getCurveX(zPos)}px) translateY(-50px); 
+                            pointer-events: {opacity > 0.1 ? 'auto' : 'none'};">
+                    <div class="content-wrapper" style="opacity: {opacity}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(zPos, scrollY)}px);` : ""}">
+                        <ScatteredProject {...project} index={i} />
                     </div>
                 </div>
+                {/if}
             {/each}
 
             <div class="section-wrapper title-wrapper" style="transform: translateZ({-4800 - (codeProjects.length * 1200)}px) translateX({getCurveX(-4800 - (codeProjects.length * 1200))}px); pointer-events: none;">
-                <div class="content-wrapper" style="opacity: {getOpacity(-4800 - (codeProjects.length * 1200), scrollY)}; filter: blur({getBlur(-4800 - (codeProjects.length * 1200), scrollY)}px);">
+                <div class="content-wrapper" style="opacity: {getOpacity(-4800 - (codeProjects.length * 1200), scrollY)}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(-4800 - (codeProjects.length * 1200), scrollY)}px);` : ""}">
                     <h2 class="section-title">Music Portfolio</h2>
                 </div>
             </div>
@@ -491,11 +495,13 @@
                 {@const centerOffset = totalPan / 2}
                 {@const currentPan = musicProgress * totalPan}
                 {@const xOffset = getCurveX(-scrollY) - currentPan + centerOffset}
+                {@const opacity = getOpacity(pinnedZ, scrollY)}
                 
+                {#if opacity > 0}
                 <div class="section-wrapper" 
                      style="transform: translateZ({pinnedZ}px) translateX({xOffset}px) translateY(-80px); 
-                            pointer-events: {getOpacity(pinnedZ, scrollY) > 0.1 ? 'auto' : 'none'};">
-                    <div class="content-wrapper" style="opacity: {getOpacity(pinnedZ, scrollY)}; filter: blur({getBlur(pinnedZ, scrollY)}px);">
+                            pointer-events: {opacity > 0.1 ? 'auto' : 'none'};">
+                    <div class="content-wrapper" style="opacity: {opacity}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(pinnedZ, scrollY)}px);` : ""}">
                         <div class="music-row" style="display: flex; gap: {slideSpacing - 480}px; align-items: center; width: max-content;">
                             {#each musicProjects as project, i}
                                 {@const cardProgress = musicProgress * Math.max(0, numMusic - 1)}
@@ -509,27 +515,31 @@
                         </div>
                     </div>
                 </div>
+                {/if}
             {/if}
 
             <div class="section-wrapper title-wrapper" style="transform: translateZ({-6000 - ((codeProjects.length + musicProjects.length) * 1200)}px) translateX({getCurveX(-6000 - ((codeProjects.length + musicProjects.length) * 1200))}px); pointer-events: none;">
-                <div class="content-wrapper" style="opacity: {getOpacity(-6000 - ((codeProjects.length + musicProjects.length) * 1200), scrollY)}; filter: blur({getBlur(-6000 - ((codeProjects.length + musicProjects.length) * 1200), scrollY)}px);">
+                <div class="content-wrapper" style="opacity: {getOpacity(-6000 - ((codeProjects.length + musicProjects.length) * 1200), scrollY)}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(-6000 - ((codeProjects.length + musicProjects.length) * 1200), scrollY)}px);` : ""}">
                     <h2 class="section-title">Design Portfolio</h2>
                 </div>
             </div>
 
             {#each designProjects as project, i}
                 {@const zPos = -8400 - ((codeProjects.length + musicProjects.length) * 1200) - (i * 1200)}
+                {@const opacity = getOpacity(zPos, scrollY)}
+                {#if opacity > 0}
                 <div class="section-wrapper" 
-                     style="transform: translateZ({zPos}px) translateX({getCurveX(zPos) + (i % 2 === 0 ? 1 : -1) * 200}px) translateY({-150 + (i % 3 === 0 ? 1 : -1) * 50}px); 
-                            pointer-events: {getOpacity(zPos, scrollY) > 0.1 ? 'auto' : 'none'};">
-                    <div class="content-wrapper" style="opacity: {getOpacity(zPos, scrollY)}; filter: blur({getBlur(zPos, scrollY)}px);">
-                        <ScatteredProject {...project} isDesign={true} />
+                     style="transform: translateZ({zPos}px) translateX({getCurveX(zPos)}px) translateY(-50px); 
+                            pointer-events: {opacity > 0.1 ? 'auto' : 'none'};">
+                    <div class="content-wrapper" style="opacity: {opacity}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(zPos, scrollY)}px);` : ""}">
+                        <ScatteredProject {...project} isDesign={true} index={i} />
                     </div>
                 </div>
+                {/if}
             {/each}
 
             <div class="section-wrapper" style="transform: translateZ({-timelineSections[6].z}px) translateX({getCurveX(-timelineSections[6].z)}px); pointer-events: {getOpacity(-timelineSections[6].z, scrollY) > 0.1 ? 'auto' : 'none'};">
-                <div class="content-wrapper" style="opacity: {getOpacity(-timelineSections[6].z, scrollY)}; filter: blur({getBlur(-timelineSections[6].z, scrollY)}px);">
+                <div class="content-wrapper" style="opacity: {getOpacity(-timelineSections[6].z, scrollY)}; {$labsSettings.cssGlassEffects ? `filter: blur(${getBlur(-timelineSections[6].z, scrollY)}px);` : ""}">
                     <Finale />
                 </div>
             </div>
@@ -538,9 +548,9 @@
 </div>
 {/if}
 
-{#if activeModal !== null}
+{#if activeModal !== null || $labsModalOpen}
     <div class="modal-overlay" transition:fade={{ duration: 600 }}>
-        <button class="close-btn" onclick={() => activeModal = null} aria-label="Close">
+        <button class="close-btn" onclick={() => { activeModal = null; $labsModalOpen = false; }} aria-label="Close">
             <Icon icon="mdi:close" width="24" />
         </button>
         <div class="modal-content" transition:fly={{ x: 150, duration: 800, easing: cubicInOut }}>
@@ -551,6 +561,8 @@
                     <PortfolioPage />
                 {:else if activeModal === 'journey'}
                     <JourneyPage />
+                {:else if $labsModalOpen}
+                    <Labs />
                 {/if}
             </div>
         </div>
@@ -771,6 +783,12 @@
         display: flex;
         align-items: center;
         transition: background-color 1.5s ease-in-out, box-shadow 1.5s ease-in-out;
+    }
+    .nav-new-chip {
+        position: absolute;
+        top: -12px;
+        right: -16px;
+        transform: scale(0.8);
     }
     .timeline-item:hover .timeline-label {
         color: rgba(218, 244, 210, 0.8);
@@ -1092,6 +1110,13 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
         gap: 48px 32px;
+        width: 100%;
+    }
+    .perf-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 80px;
         width: 100%;
     }
     @media (max-width: 614.4px) {

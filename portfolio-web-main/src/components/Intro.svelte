@@ -1,13 +1,61 @@
 <script>
     import Tag from "./Tag.svelte";
     import { fade } from "svelte/transition";
+    import { spring } from "svelte/motion";
+    import { playJazzChord } from "../lib/soundEngine";
+    
+    let chars = "Hari Prasad".split("");
+    let waveTriggers = chars.map(() => false);
+    
+    // Spring for the SVG liquid displacement scale
+    let liquidScale = spring(0, { stiffness: 0.05, damping: 0.1 });
+    
+    function poke() {
+        // Play a random lush jazz chord
+        playJazzChord();
+
+        // Instant splash, smooth settle back down
+        liquidScale.set(35, { hard: true });
+        setTimeout(() => {
+            liquidScale.set(0);
+        }, 10);
+        
+        // Ripple wave across the letters using CSS classes
+        chars.forEach((_, i) => {
+            setTimeout(() => {
+                waveTriggers[i] = true;
+                waveTriggers = waveTriggers; // trigger Svelte reactivity
+                setTimeout(() => {
+                    waveTriggers[i] = false;
+                    waveTriggers = waveTriggers;
+                }, 50); // short jump duration, letting CSS transition handle the spring down
+            }, i * 35);
+        });
+    }
 </script>
 
 <section>
+    <!-- Hidden SVG filter for the liquid distortion -->
+    <svg style="position: absolute; width: 0; height: 0; pointer-events: none;">
+        <filter id="liquid-name">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015 0.035" numOctaves="1" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale={$liquidScale} xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+
     <div class="globalwrapper" in:fade={{ duration: 2000 }}>
         <div class="text-container">
             <h4>Hello!</h4>
-            <span class="typing-text"><h1>I'm Hari Prasad</h1></span>
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+            <span class="typing-text">
+                <h1 class="liquidy-name" onclick={poke} style="filter: url(#liquid-name);">
+                    I'm 
+                    {#each chars as char, i}
+                        <span class="char" class:waving={waveTriggers[i]}>{char === ' ' ? '\u00A0' : char}</span>
+                    {/each}
+                </h1>
+            </span>
         </div>
         <div class="tags-container">
             <Tag name="Designer" />
@@ -46,7 +94,6 @@
         align-items: center;
         text-align: center;
         align-self: center;
-        gap: none;
     }
 
     h1 {
@@ -57,9 +104,26 @@
         display: inline-block;
     }
 
+    .liquidy-name {
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
 
+    .liquidy-name:hover {
+        color: #ffffff;
+        text-shadow: 0 0 16px rgba(218, 244, 210, 0.5);
+    }
 
+    .char {
+        display: inline-block;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
+    .char.waving {
+        transform: translateY(-15px);
+        transition: transform 0.05s ease-out;
+    }
 
     h4 {
         margin: 0px;

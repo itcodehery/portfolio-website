@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import * as THREE from "three";
+    import { labsSettings } from "../lib/settings";
 
     let canvasEl: HTMLCanvasElement;
     
@@ -44,8 +45,6 @@
 
         // Ground Terrain Geometry
         const terrainGeometry = new THREE.PlaneGeometry(250, 600, 80, 200);
-        
-        // Initial setup for pathMask can be pre-calculated, but for simplicity we will do it in the render loop
         terrainGeometry.computeVertexNormals();
 
         // Create a blurry dot texture for a dreamy look
@@ -65,14 +64,71 @@
         }
         const dotTexture = new THREE.CanvasTexture(dotCanvas);
 
-        // Chromatic Aberration Layers (Cyan/Red offset)
+        // Audio Data Texture for GPU
+        const defaultAudioLength = 128;
+        let audioDataArray = new Uint8Array(defaultAudioLength);
+        let audioTexture = new THREE.DataTexture(audioDataArray, defaultAudioLength, 1, THREE.RedFormat);
+        audioTexture.needsUpdate = true;
+
+        const terrainVertexShader = `
+            uniform float uTime;
+            uniform sampler2D uAudioData;
+            uniform int uHasAudio;
+            uniform float uAudioDataLength;
+            
+            void main() {
+                vec3 pos = position;
+                float distFromCenter = abs(pos.x);
+                float pathMask = min(distFromCenter / 15.0, 1.0);
+                
+                float audioBump = 0.0;
+                if (uHasAudio == 1) {
+                    float binIndex = mod(floor(abs(pos.y) * 0.5), uAudioDataLength);
+                    float u = (binIndex + 0.5) / uAudioDataLength;
+                    float audioVal = texture2D(uAudioData, vec2(u, 0.5)).r;
+                    audioBump = audioVal * 1.5 * pathMask;
+                }
+                
+                float noise = (sin(pos.x * 0.1 + uTime * 0.8) * cos(pos.y * 0.1 + uTime * 0.4) * 1.0
+                             + sin(pos.x * 0.05 - uTime * 0.5) * cos(pos.y * 0.05 + uTime * 0.3) * 3.0) * pathMask;
+                             
+                pos.z = noise + audioBump;
+                
+                vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                gl_PointSize = 0.15 * (300.0 / -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `;
+
+        const terrainFragmentShader = `
+            uniform vec3 uColor;
+            uniform float uOpacity;
+            uniform sampler2D uTexture;
+            
+            void main() {
+                vec4 texColor = texture2D(uTexture, gl_PointCoord);
+                gl_FragColor = vec4(uColor, uOpacity * texColor.a);
+            }
+        `;
+
+        const uniformsBase = {
+            uTime: { value: 0 },
+            uAudioData: { value: audioTexture },
+            uHasAudio: { value: 0 },
+            uAudioDataLength: { value: defaultAudioLength },
+            uTexture: { value: dotTexture }
+        };
+
         const createLayer = (colorHex: number, offsetX: number, opacity: number) => {
-            const mat = new THREE.PointsMaterial({
-                color: colorHex,
-                size: 0.15, // Much smaller dots
-                map: dotTexture,
+            const mat = new THREE.ShaderMaterial({
+                vertexShader: terrainVertexShader,
+                fragmentShader: terrainFragmentShader,
+                uniforms: {
+                    ...uniformsBase,
+                    uColor: { value: new THREE.Color(colorHex) },
+                    uOpacity: { value: opacity }
+                },
                 transparent: true,
-                opacity: opacity,
                 depthWrite: false,
                 blending: THREE.AdditiveBlending
             });
@@ -86,10 +142,22 @@
         };
 
         const layers = [
-            createLayer(0xff0055, -0.05, 0.02), // Even more transparent Red fringe
-            createLayer(0x00ffff, 0.05, 0.02),  // Even more transparent Cyan fringe
-            createLayer(0xdaf4d2, 0, 0.1)       // Much more transparent Main theme color
+            createLayer(0xff0055, -0.05, 0.02), 
+            createLayer(0x00ffff, 0.05, 0.02),  
+            createLayer(0xdaf4d2, 0, 0.1)       
         ];
+
+        const unsubSettings = labsSettings.subscribe(settings => {
+            renderer.setPixelRatio(settings.renderResolution ? Math.min(window.devicePixelRatio, 2) : 1);
+            layers[0].mesh.visible = settings.chromaticAberration;
+            layers[1].mesh.visible = settings.chromaticAberration;
+            particlesMesh.visible = settings.ambientParticles;
+            
+            if (settings.highPolyTerrain) {
+                // To keep it simple, we don't hot-swap geometry to avoid memory leaks
+                // It applies on next load
+            }
+        });
 
         // Draw curved path line
         const pathPoints = [];
@@ -136,15 +204,14 @@
             
             // Curve camera X based on Z and add subtle mouse sway
             const baseTargetX = Math.sin(camera.position.z / 50) * 20;
-            const targetX = baseTargetX + (mouseX * 4);
+            const targetX = baseTargetX + ($labsSettings.reactivity ? mouseX * 4 : 0);
             camera.position.x += (targetX - camera.position.x) * 0.05;
 
             // Animate fog color based on activeMode
-            // Midnight Purple: 0x130b1e, Ocean Blue: 0x061329, Dark green: 0x042125
             const targetFogColor = new THREE.Color(
-                activeMode === 'code' ? 0x000000 : // AMOLED Black
+                activeMode === 'code' ? 0x000000 : 
                 activeMode === 'design' ? 0x061329 : 
-                activeMode === 'music' ? 0x0e051a : 0x042125 // Deep iridescent violet for music
+                activeMode === 'music' ? 0x0e051a : 0x042125
             );
             if (scene.fog && 'color' in scene.fog) {
                 scene.fog.color.lerp(targetFogColor, 0.05);
@@ -152,42 +219,30 @@
 
             // Add gentle bobbing and subtle mouse Y sway
             const baseTargetY = Math.sin(elapsedTime * 0.5) * 0.5;
-            const targetY = baseTargetY + (mouseY * 2.5);
+            const targetY = baseTargetY + ($labsSettings.reactivity ? mouseY * 2.5 : 0);
             camera.position.y += (targetY - camera.position.y) * 0.05;
 
             // Audio Analysis Data
             const analyser = window.__soundAnalyser ? window.__soundAnalyser() : null;
-            let audioData = new Uint8Array(0);
-            if (analyser) {
-                if (audioData.length !== analyser.frequencyBinCount) {
-                    audioData = new Uint8Array(analyser.frequencyBinCount);
+            if (analyser && $labsSettings.reactivity) {
+                if (audioDataArray.length !== analyser.frequencyBinCount) {
+                    audioDataArray = new Uint8Array(analyser.frequencyBinCount);
+                    audioTexture.dispose();
+                    audioTexture = new THREE.DataTexture(audioDataArray, audioDataArray.length, 1, THREE.RedFormat);
+                    layers.forEach(l => {
+                        l.mat.uniforms.uAudioDataLength.value = audioDataArray.length;
+                        l.mat.uniforms.uAudioData.value = audioTexture;
+                    });
                 }
-                analyser.getByteFrequencyData(audioData);
+                analyser.getByteFrequencyData(audioDataArray);
+                audioTexture.needsUpdate = true;
+                layers.forEach(l => l.mat.uniforms.uHasAudio.value = 1);
+            } else {
+                layers.forEach(l => l.mat.uniforms.uHasAudio.value = 0);
             }
 
-            // Animate terrain like an ocean + audio dancing
-            const positions = terrainGeometry.attributes.position.array;
-            for (let i = 0; i < positions.length; i += 3) {
-                const x = positions[i];
-                const y = positions[i+1];
-                const distFromCenter = Math.abs(x);
-                const pathMask = Math.min(distFromCenter / 15, 1); 
-                
-                let audioBump = 0;
-                if (audioData.length > 0) {
-                    // Map the Y coordinate (depth) to a frequency bin
-                    const binIndex = Math.floor(Math.abs(y) * 0.5) % audioData.length;
-                    // Much softer bump
-                    audioBump = (audioData[binIndex] / 255.0) * 1.5 * pathMask;
-                }
-
-                const noise = (Math.sin(x * 0.1 + elapsedTime * 0.8) * Math.cos(y * 0.1 + elapsedTime * 0.4) * 1
-                            + Math.sin(x * 0.05 - elapsedTime * 0.5) * Math.cos(y * 0.05 + elapsedTime * 0.3) * 3) * pathMask;
-                
-                // Soft lerping for audio bump could be done if we tracked previous state, but just a smaller multiplier works for smooth feeling
-                positions[i+2] = noise + audioBump; 
-            }
-            terrainGeometry.attributes.position.needsUpdate = true;
+            // Update shader uniforms
+            layers.forEach(l => l.mat.uniforms.uTime.value = elapsedTime);
 
             renderer.render(scene, camera);
             animationFrameId = requestAnimationFrame(animate);
@@ -207,6 +262,7 @@
             dotTexture.dispose();
             pathGeometry.dispose();
             pathMaterial.dispose();
+            unsubSettings();
         };
     });
 </script>

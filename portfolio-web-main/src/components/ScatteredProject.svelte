@@ -1,10 +1,12 @@
 <script lang="ts">
-    import { isPerformanceMode } from "../lib/settings";
+    import { isPerformanceMode, labsSettings } from "../lib/settings";
     export let name: string;
     export let description: string;
     export let image: string;
     export let url: string = "";
     export let isDesign = false;
+    export let playUrl: string | undefined = undefined;
+    export let index: number = 0;
     
     // Some random floating animation offset
     const floatDelay = Math.random() * -5;
@@ -14,29 +16,25 @@
 </script>
 
 <div class="project-container" class:lite={$isPerformanceMode} style="animation-delay: {floatDelay}s;">
-    <div class="project-card" class:lite={$isPerformanceMode}>
+    <div class="project-card" class:reverse={index % 2 !== 0}>
         <div class="image-wrap">
             <img src={image} alt={name} />
         </div>
         <div class="info">
             <h3>{name}</h3>
-            <div class="description-wrapper">
-                <div class="description-inner">
-                    <p>{description}</p>
-                </div>
-            </div>
-            {#if finalUrl}
-                <div class="button-wrapper">
-                    <div class="button-inner">
-                        <div class="button-reveal">
-                            <a href={finalUrl} target="_blank" rel="noopener noreferrer">{isDesign ? 'View Design ↗' : 'View Project ↗'}</a>
-                        </div>
-                    </div>
+            <p>{description}</p>
+            {#if finalUrl || playUrl}
+                <div class="button-reveal">
+                    {#if finalUrl}
+                        <a href={finalUrl} target="_blank" rel="noopener noreferrer">{isDesign ? 'View Design ↗' : 'View Project ↗'}</a>
+                    {/if}
+                    {#if playUrl}
+                        <a href={playUrl} target="_blank" rel="noopener noreferrer" style="background: var(--lime-light, #daf4d2); color: #042125;">Play ↗</a>
+                    {/if}
                 </div>
             {/if}
         </div>
     </div>
-    <div class="tether-line"></div>
 </div>
 
 <style>
@@ -48,48 +46,26 @@
         position: relative;
     }
 
-    .tether-line {
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 1.2px;
-        height: 640px; /* extends down to the landscape */
-        background: linear-gradient(to bottom, rgba(218, 244, 210, 0.5), transparent);
-        margin-top: 12px;
-        border-radius: 1.6px;
-        box-shadow: 0 0 12px rgba(218, 244, 210, 0.3);
-        pointer-events: none;
-    }
-
     .project-card {
-        width: 288px;
-        background: rgba(4, 33, 37, 0.75);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: none;
-        border-radius: 16px;
-        padding: 0 0 16px 0;
         display: flex;
-        flex-direction: column;
-        gap: 0;
+        align-items: center;
+        gap: 64px;
+        width: 860px;
+        max-width: 90vw;
         color: #daf4d2;
         font-family: 'DM Sans', sans-serif;
-        box-shadow: inset 0 1px 1.6px rgba(255, 255, 255, 0.1), 0 24px 48px rgba(0, 0, 0, 0.6);
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    }
-    
-    .project-card:hover {
-        transform: scale(1.03) translateY(-4px);
-        box-shadow: inset 0 1px 1.6px rgba(255, 255, 255, 0.15), 0 32px 64px rgba(0, 0, 0, 0.6);
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* Firefox fallback because backdrop-filter combined with 3D contexts fails to render */
-    @supports (-moz-appearance: none) {
-        .project-card {
-            background: rgba(4, 33, 37, 0.98);
-            backdrop-filter: none;
-        }
+    .project-card.reverse {
+        flex-direction: row-reverse;
+    }
+
+    .project-card:hover {
+        transform: scale(1.02);
     }
 
     @keyframes float {
@@ -98,19 +74,20 @@
     }
 
     .image-wrap {
-        width: 100%;
-        height: 160px;
-        border-radius: 16px 16px 0 0;
+        width: 420px;
+        height: 260px;
+        border-radius: 16px;
         overflow: hidden;
         background: rgba(0, 0, 0, 0.2);
         flex-shrink: 0;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
     }
 
     .image-wrap img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.85;
+        opacity: 0.9;
         transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
@@ -120,78 +97,36 @@
     }
 
     .info {
+        flex: 1;
         display: flex;
         flex-direction: column;
-        padding: 16px 16px 0 16px;
+        text-align: left;
+    }
+    
+    .project-card.reverse .info {
+        text-align: right;
+        align-items: flex-end;
     }
 
     h3 {
-        margin: 0;
-        font-size: 17.6px;
+        margin: 0 0 16px 0;
+        font-size: 32px;
         font-weight: 600;
         letter-spacing: -0.5px;
     }
 
-    .description-wrapper {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.4s ease, margin-top 0.4s ease;
-        margin-top: 0;
-    }
-
-    .project-card:hover .description-wrapper {
-        grid-template-rows: 1fr;
-        margin-top: 8px;
-    }
-
-    .description-inner {
-        overflow: hidden;
-    }
-
     p {
-        margin: 0;
-        font-size: 11.2px;
-        opacity: 0;
-        transform: translateY(8px);
-        line-height: 1.5;
+        margin: 0 0 32px 0;
+        font-size: 15px;
+        line-height: 1.6;
         font-weight: 400;
-        transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    .project-card:hover p {
-        opacity: 0.75;
-        transform: translateY(0);
-        transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
-    }
-
-    .button-wrapper {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.4s ease, margin-top 0.4s ease;
-        margin-top: 0;
-    }
-
-    .project-card:hover .button-wrapper {
-        grid-template-rows: 1fr;
-        margin-top: 12.8px;
-        transition-delay: 1.2s;
-    }
-
-    .button-inner {
-        overflow: hidden;
+        opacity: 0.85;
     }
 
     .button-reveal {
-        opacity: 0;
-        transform: translateY(8px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        padding-bottom: 8px;
-    }
-
-    .project-card:hover .button-reveal {
-        opacity: 1;
-        transform: translateY(0);
-        transition: opacity 0.4s ease 1.3s, transform 0.4s ease 1.3s;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
     }
 
     a {
@@ -199,60 +134,41 @@
         text-decoration: none;
         font-weight: 500;
         display: inline-flex;
-        padding: 8px 16px;
+        padding: 10px 24px;
         background: rgba(218, 244, 210, 0.05);
         border-radius: 40px;
         transition: all 0.3s ease;
-        backdrop-filter: blur(4px);
+        border: 1px solid rgba(218, 244, 210, 0.2);
     }
 
     a:hover {
         background: var(--lime-light, #daf4d2);
         color: #042125;
-        transform: translateY(-1.6px);
-        box-shadow: 0 8px 16px rgba(218, 244, 210, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(218, 244, 210, 0.15);
     }
 
-    /* Firefox fallback because backdrop-filter combined with 3D contexts fails to render */
-    @supports (-moz-appearance: none) {
-        a {
-            background: rgba(218, 244, 210, 0.15);
-            backdrop-filter: none;
-        }
-    }
-    
-    @media (max-width: 614.4px) {
+    @media (max-width: 860px) {
         .project-card {
-            width: 240px;
-            padding: 0 0 12.8px 0;
-            border-radius: 12.8px;
+            flex-direction: column;
+            width: 100%;
+            gap: 32px;
+            text-align: center;
+        }
+        .project-card.reverse {
+            flex-direction: column;
         }
         .image-wrap {
-            height: 128px;
+            width: 100%;
+            height: 220px;
         }
-        .tether-line {
-            height: 400px;
+        .info {
+            text-align: center;
+            align-items: center;
         }
-    }
-
-    /* LITE mode styles */
-    .project-card.lite .description-wrapper {
-        grid-template-rows: 1fr;
-        margin-top: 8px;
-    }
-    .project-card.lite p {
-        opacity: 0.75;
-        transform: translateY(0);
-    }
-    .project-card.lite .button-wrapper {
-        grid-template-rows: 1fr;
-        margin-top: 12.8px;
-    }
-    .project-card.lite .button-reveal {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    .project-container.lite .tether-line {
-        display: none;
+        .project-card.reverse .info {
+            text-align: center;
+            align-items: center;
+        }
     }
 </style>

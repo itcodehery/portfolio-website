@@ -426,3 +426,53 @@ export function playSound(padId: number): void {
       break;
   }
 }
+function playRhodesNote(freq: number) {
+  const c = ensureContext();
+  const baseGain = 0.25; // Adjusted to compensate for bypassing masterGain
+
+  // Body (Warm Sine)
+  const body = c.createOscillator();
+  body.type = 'sine';
+  body.frequency.value = freq;
+  const bodyEnv = c.createGain();
+  bodyEnv.gain.setValueAtTime(0, c.currentTime);
+  bodyEnv.gain.linearRampToValueAtTime(baseGain, c.currentTime + 0.03);
+  bodyEnv.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 2.5);
+  const analyserNode = getAnalyser();
+  
+  body.connect(bodyEnv);
+  bodyEnv.connect(analyserNode!);
+  body.start(c.currentTime);
+  body.stop(c.currentTime + 2.6);
+
+  // Tine/Bell (Bright strike, 4th harmonic with slight detune)
+  const tine = c.createOscillator();
+  tine.type = 'sine';
+  tine.frequency.value = freq * 4.02; 
+  const tineEnv = c.createGain();
+  tineEnv.gain.setValueAtTime(0, c.currentTime);
+  tineEnv.gain.linearRampToValueAtTime(baseGain * 0.6, c.currentTime + 0.01);
+  tineEnv.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.6);
+  tine.connect(tineEnv);
+  tineEnv.connect(analyserNode!);
+  tine.start(c.currentTime);
+  tine.stop(c.currentTime + 0.7);
+}
+
+export function playJazzChord() {
+  ensureContext();
+  const jazzChords = [
+    [261.63, 329.63, 392.00, 493.88, 587.33], // Cmaj9
+    [293.66, 349.23, 440.00, 523.25, 659.25], // Dmin9
+    [329.63, 392.00, 493.88, 587.33, 739.99], // Emin9
+    [349.23, 440.00, 523.25, 659.25, 783.99], // Fmaj9
+    [392.00, 493.88, 587.33, 698.46, 880.00], // G9
+    [440.00, 523.25, 659.25, 783.99, 987.77], // Amin9
+    [261.63, 311.13, 392.00, 466.16, 587.33], // Cmin9
+    [311.13, 392.00, 466.16, 587.33, 698.46], // Ebmaj9
+  ];
+  const notes = jazzChords[Math.floor(Math.random() * jazzChords.length)];
+  for (const freq of notes) {
+    playRhodesNote(freq);
+  }
+}

@@ -1,6 +1,7 @@
 <script lang="ts">
     import SoundLab from "../components/SoundLab.svelte";
     import LabFloatingButton from "../components/LabFloatingButton.svelte";
+    import Cursor from "../components/Cursor.svelte";
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
     import { onNavigate } from "$app/navigation";
@@ -41,6 +42,7 @@
     <div in:fade={{ duration: 1000 }}>
         <slot />
         <LabFloatingButton />
+        <Cursor />
     </div>
     <SoundLab isAppIntro={true} />
 {/if}
