@@ -7,8 +7,11 @@
     import { onNavigate } from "$app/navigation";
     import { dev } from '$app/environment';
     import { injectAnalytics } from '@vercel/analytics/sveltekit';
+    import { page } from "$app/stores";
 
     injectAnalytics({ mode: dev ? 'development' : 'production' });
+
+    let isForwardMeridian = $derived($page.url.pathname.startsWith('/forward-meridian') || $page.url.hostname.startsWith('forwardmeridian') || $page.url.hostname.startsWith('meridian'));
 
     let isLoading = $state(true);
     let loadedPads = $state(0);
@@ -38,23 +41,27 @@
     });
 </script>
 
-{#if showApp}
-    <div in:fade={{ duration: 1000 }}>
-        <slot />
-        <LabFloatingButton />
-        <Cursor />
-    </div>
-    <SoundLab isAppIntro={true} />
-{/if}
-
-{#if isLoading}
-    <div class="loading-overlay" out:fade={{ duration: 800 }}>
-        <div class="loading-grid">
-            {#each Array(32) as _, i}
-                <div class="loading-dot" class:filled={i < loadedPads}></div>
-            {/each}
+{#if isForwardMeridian}
+    <slot />
+{:else}
+    {#if showApp}
+        <div in:fade={{ duration: 1000 }}>
+            <slot />
+            <LabFloatingButton />
+            <Cursor />
         </div>
-    </div>
+        <SoundLab isAppIntro={true} />
+    {/if}
+
+    {#if isLoading}
+        <div class="loading-overlay" out:fade={{ duration: 800 }}>
+            <div class="loading-grid">
+                {#each Array(32) as _, i}
+                    <div class="loading-dot" class:filled={i < loadedPads}></div>
+                {/each}
+            </div>
+        </div>
+    {/if}
 {/if}
 
 <style>
@@ -109,7 +116,9 @@
         border-radius: 2.4px;
     }
 
-    :global(::-webkit-scrollbar-thumb:hover) {
-        background: rgba(218, 244, 210, 0.5);
+    :global(body:has(.forward-meridian-root)) {
+        padding-bottom: 0 !important;
+        background-color: #001A0B !important;
+        overflow: hidden !important;
     }
 </style>

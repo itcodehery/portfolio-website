@@ -223,7 +223,8 @@
             camera.position.y += (targetY - camera.position.y) * 0.05;
 
             // Audio Analysis Data
-            const analyser = window.__soundAnalyser ? window.__soundAnalyser() : null;
+            const win = window as any;
+            const analyser = win.__soundAnalyser ? win.__soundAnalyser() : null;
             if (analyser && $labsSettings.reactivity) {
                 if (audioDataArray.length !== analyser.frequencyBinCount) {
                     audioDataArray = new Uint8Array(analyser.frequencyBinCount);

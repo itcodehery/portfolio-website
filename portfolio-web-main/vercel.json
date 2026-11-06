@@ -1,0 +1,34 @@
+{
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "forwardmeridian.(.*)"
+        }
+      ],
+      "destination": "/forward-meridian"
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "forward-meridian.(.*)"
+        }
+      ],
+      "destination": "/forward-meridian"
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "meridian.(.*)"
+        }
+      ],
+      "destination": "/forward-meridian"
+    }
+  ]
+}
